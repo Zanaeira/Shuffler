@@ -14,6 +14,7 @@ final class ListsViewController: UIViewController {
     private lazy var dataSource = makeDataSource()
     
     private let lists: [Item] = [
+        Item(text: "My List"),
         Item(text: "Manārah Y2"),
         Item(text: "Madkhal Y1"),
         Item(text: "Hifz Students"),
@@ -72,7 +73,12 @@ final class ListsViewController: UIViewController {
 extension ListsViewController {
     
     private func makeCollectionViewLayout() -> UICollectionViewLayout {
-        UICollectionViewCompositionalLayout.list(using: .init(appearance: .insetGrouped))
+        return UICollectionViewCompositionalLayout { section, layoutEnvironment in
+            var config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+            config.headerMode = .firstItemInSection
+            
+            return NSCollectionLayoutSection.list(using: config, layoutEnvironment: layoutEnvironment)
+        }
     }
     
     private func configureHierarchy() {
