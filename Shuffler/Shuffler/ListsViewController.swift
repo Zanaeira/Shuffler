@@ -11,6 +11,14 @@ final class ListsViewController: UIViewController {
     
     private let addAListLabel = UILabel()
     private lazy var collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: makeCollectionViewLayout())
+    private lazy var dataSource = makeDataSource()
+    
+    private let lists: [Item] = [
+        Item(text: "Manārah Y2"),
+        Item(text: "Madkhal Y1"),
+        Item(text: "Hifz Students"),
+        Item(text: "Dinner options")
+    ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,6 +27,15 @@ final class ListsViewController: UIViewController {
         addNavigationBarButtonToAddList()
         configureHierarchy()
         configureAddAListLabel()
+        updateSnapshot()
+    }
+    
+    private func updateSnapshot() {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(lists, toSection: .main)
+        
+        dataSource.apply(snapshot, animatingDifferences: true)
     }
     
     private func addNavigationBarButtonToAddList() {
@@ -30,6 +47,8 @@ final class ListsViewController: UIViewController {
     }
     
     private func configureAddAListLabel() {
+        guard lists.count == 0 else { return }
+        
         addAListLabel.text = "Tap the + button to add a list"
         addAListLabel.translatesAutoresizingMaskIntoConstraints = false
         addAListLabel.font = .preferredFont(forTextStyle: .title1)
@@ -62,4 +81,33 @@ extension ListsViewController {
         view.addSubview(collectionView)
     }
     
+    private func makeDataSource() -> UICollectionViewDiffableDataSource<Section, Item> {
+        let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, Item> { (cell, indexPath, item) in
+            cell.configure(with: item)
+        }
+        
+        return .init(collectionView: collectionView) { collectionView, indexPath, itemIdentifier in
+            collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: itemIdentifier)
+        }
+    }
+    
+}
+
+private extension UICollectionViewListCell {
+    
+    func configure(with item: Item) {
+        var config = defaultContentConfiguration()
+        config.text = item.text
+        
+        contentConfiguration = config
+    }
+    
+}
+
+private enum Section {
+    case main
+}
+
+private struct Item: Hashable {
+    let text: String
 }
