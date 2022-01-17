@@ -10,12 +10,14 @@ import UIKit
 final class ListsViewController: UIViewController {
     
     private let addAListLabel = UILabel()
+    private lazy var collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: makeCollectionViewLayout())
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .systemGray6
         addNavigationBarButtonToAddList()
+        configureHierarchy()
         configureAddAListLabel()
     }
     
@@ -37,12 +39,27 @@ final class ListsViewController: UIViewController {
         
         let horizontalSpacing: CGFloat = 24
         
-        view.addSubview(addAListLabel)
+        collectionView.addSubview(addAListLabel)
         NSLayoutConstraint.activate([
-            addAListLabel.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor, constant: horizontalSpacing),
-            addAListLabel.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor, constant: -horizontalSpacing),
+            addAListLabel.leadingAnchor.constraint(equalTo: collectionView.readableContentGuide.leadingAnchor, constant: horizontalSpacing),
+            addAListLabel.trailingAnchor.constraint(equalTo: collectionView.readableContentGuide.trailingAnchor, constant: -horizontalSpacing),
             addAListLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
+    }
+    
+}
+
+// MARK: - UICollectionView helpers
+extension ListsViewController {
+    
+    private func makeCollectionViewLayout() -> UICollectionViewLayout {
+        UICollectionViewCompositionalLayout.list(using: .init(appearance: .insetGrouped))
+    }
+    
+    private func configureHierarchy() {
+        collectionView.backgroundColor = .systemGray6
+        collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view.addSubview(collectionView)
     }
     
 }
