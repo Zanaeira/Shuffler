@@ -13,7 +13,8 @@ final class ListsViewController: UIViewController {
     private lazy var collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: makeCollectionViewLayout())
     private lazy var dataSource = makeDataSource()
     
-    private var lists: [Item] = [Item(text: "My lists")]
+    private var lists: [List] = [List(name: "My lists", items: []),
+                                 List(name: "Sample List", items: [])]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,14 +36,14 @@ final class ListsViewController: UIViewController {
             return
         }
         
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
+        var snapshot = NSDiffableDataSourceSnapshot<Section, List>()
         snapshot.appendSections([.main])
         snapshot.appendItems(lists, toSection: .main)
         
         dataSource.apply(snapshot, animatingDifferences: true)
     }
     
-    private func delete(_ list: Item) {
+    private func delete(_ list: List) {
         guard let indexPath = dataSource.indexPath(for: list) else { return }
         
         lists.remove(at: indexPath.item)
@@ -87,7 +88,7 @@ final class ListsViewController: UIViewController {
     }
     
     private func addNewList(_ listName: String) {
-        lists.append(Item(text: listName))
+        lists.append(List(name: listName, items: []))
         
         updateSnapshot()
     }
@@ -152,8 +153,8 @@ extension ListsViewController {
         view.addSubview(collectionView)
     }
     
-    private func makeDataSource() -> UICollectionViewDiffableDataSource<Section, Item> {
-        let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, Item> { (cell, indexPath, item) in
+    private func makeDataSource() -> UICollectionViewDiffableDataSource<Section, List> {
+        let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, List> { (cell, indexPath, item) in
             cell.configure(with: item)
             
             guard indexPath.item != 0 else { return }
@@ -166,7 +167,7 @@ extension ListsViewController {
             cell.accessories = [deleteAccessory, reorderAccessory]
         }
         
-        let dataSource: UICollectionViewDiffableDataSource<Section, Item> = .init(collectionView: collectionView) { collectionView, indexPath, itemIdentifier in
+        let dataSource: UICollectionViewDiffableDataSource<Section, List> = .init(collectionView: collectionView) { collectionView, indexPath, itemIdentifier in
             collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: itemIdentifier)
         }
         
@@ -190,7 +191,7 @@ extension ListsViewController: UICollectionViewDelegate {
             
         let list = lists[indexPath.item]
         let viewController = ListItemsViewController()
-        viewController.title = list.text
+        viewController.title = list.name
         
         show(viewController, sender: self)
         collectionView.deselectItem(at: indexPath, animated: true)
@@ -200,9 +201,9 @@ extension ListsViewController: UICollectionViewDelegate {
 
 private extension UICollectionViewListCell {
     
-    func configure(with item: Item) {
+    func configure(with list: List) {
         var config = defaultContentConfiguration()
-        config.text = item.text
+        config.text = list.name
         
         contentConfiguration = config
     }
@@ -211,9 +212,4 @@ private extension UICollectionViewListCell {
 
 private enum Section {
     case main
-}
-
-private struct Item: Hashable {
-    private let id = UUID()
-    let text: String
 }
