@@ -91,6 +91,8 @@ final class ListItemsViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         button.setTitle("Add", for: .normal)
+        button.titleLabel?.adjustsFontForContentSizeCategory = true
+        button.titleLabel?.font = .preferredFont(forTextStyle: .body)
         button.setTitleColor(.systemBlue, for: .normal)
         button.addTarget(self, action: #selector(addItem), for: .touchUpInside)
     }
