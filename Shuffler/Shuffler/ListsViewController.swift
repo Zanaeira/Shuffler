@@ -114,5 +114,6 @@ private enum Section {
 }
 
 private struct Item: Hashable {
+    private let id = UUID()
     let text: String
 }
