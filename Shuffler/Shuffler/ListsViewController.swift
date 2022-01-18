@@ -148,6 +148,7 @@ extension ListsViewController {
     
     private func configureHierarchy() {
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        collectionView.delegate = self
         view.addSubview(collectionView)
     }
     
@@ -178,6 +179,21 @@ extension ListsViewController {
         }
         
         return dataSource
+    }
+    
+}
+
+extension ListsViewController: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard indexPath.item != 0 else { return }
+            
+        let list = lists[indexPath.item]
+        let viewController = ListItemsViewController()
+        viewController.title = list.text
+        
+        show(viewController, sender: self)
+        collectionView.deselectItem(at: indexPath, animated: true)
     }
     
 }
