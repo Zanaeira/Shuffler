@@ -18,18 +18,31 @@ final class ListItemsViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .systemBackground
-        setupTextFieldForNewItem()
+        setupKeyboardDismissTapGestureRecognizer()
+        setupSubviews()
     }
     
-    private func setupTextFieldForNewItem() {
+    private func setupKeyboardDismissTapGestureRecognizer() {
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGestureRecognizer)
+    }
+    
+    @objc private func dismissKeyboard() {
+        textField.resignFirstResponder()
+    }
+    
+    private func setupSubviews() {
+        setupTextField()
+        setupButton()
+        setupStackView()
+    }
+    
+    private func setupTextField() {
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.placeholder = "New Item"
         textField.font = .preferredFont(forTextStyle: .body)
         textField.adjustsFontForContentSizeCategory = true
         textField.clearButtonMode = .whileEditing
-        
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        view.addGestureRecognizer(tapGestureRecognizer)
         
         textFieldStackView.translatesAutoresizingMaskIntoConstraints = false
         textFieldStackView.addArrangedSubview(textField)
@@ -39,10 +52,14 @@ final class ListItemsViewController: UIViewController {
         textFieldStackView.layer.borderColor = UIColor.label.cgColor
         textFieldStackView.layer.borderWidth = 1
         textFieldStackView.layer.cornerRadius = 8
-        
+    }
+    
+    private func setupButton() {
         button.setTitle("Add", for: .normal)
         button.setTitleColor(.systemBlue, for: .normal)
-        
+    }
+    
+    private func setupStackView() {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.spacing = 10
@@ -55,10 +72,6 @@ final class ListItemsViewController: UIViewController {
             stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
             stackView.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor, constant: -10)
         ])
-    }
-    
-    @objc private func dismissKeyboard() {
-        textField.resignFirstResponder()
     }
     
 }
