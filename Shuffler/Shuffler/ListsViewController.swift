@@ -19,7 +19,8 @@ final class ListsViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .systemBackground
-        addNavigationBarButtonToAddList()
+        setupEditButton()
+        setupAddListBarButtonItem()
         configureHierarchy()
         configureAddAListLabel()
         updateSnapshot()
@@ -27,6 +28,7 @@ final class ListsViewController: UIViewController {
     
     private func updateSnapshot() {
         configureAddAListLabelVisibility()
+        setupEditButton()
         
         guard lists.count > 1 else {
             dataSource.apply(.init())
@@ -40,8 +42,30 @@ final class ListsViewController: UIViewController {
         dataSource.apply(snapshot, animatingDifferences: true)
     }
     
-    private func addNavigationBarButtonToAddList() {
+    private func delete(_ list: Item) {
+        guard let indexPath = dataSource.indexPath(for: list) else { return }
+        
+        lists.remove(at: indexPath.item)
+        updateSnapshot()
+    }
+    
+    private func setupEditButton() {
+        if lists.count > 1 {
+            navigationItem.leftBarButtonItem = editButtonItem
+        } else {
+            setEditing(false, animated: true)
+            navigationItem.leftBarButtonItem = nil
+        }
+    }
+    
+    private func setupAddListBarButtonItem() {
         navigationItem.setRightBarButton(.init(barButtonSystemItem: .add, target: self, action: #selector(addList)), animated: true)
+    }
+    
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        
+        collectionView.isEditing = editing
     }
     
     @objc private func addList() {
@@ -130,6 +154,13 @@ extension ListsViewController {
     private func makeDataSource() -> UICollectionViewDiffableDataSource<Section, Item> {
         let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, Item> { (cell, indexPath, item) in
             cell.configure(with: item)
+            
+            guard indexPath.item != 0 else { return }
+            
+            let deleteAccessory: UICellAccessory = .delete(displayed: .whenEditing) { [weak self] in
+                self?.delete(item)
+            }
+            cell.accessories = [deleteAccessory]
         }
         
         return .init(collectionView: collectionView) { collectionView, indexPath, itemIdentifier in
