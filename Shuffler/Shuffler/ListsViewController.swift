@@ -105,6 +105,8 @@ extension ListsViewController {
             config.headerMode = .firstItemInSection
             
             config.trailingSwipeActionsConfigurationProvider = { indexPath in
+                guard indexPath.item != 0 else { return UISwipeActionsConfiguration() }
+                
                 let delete = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (_, _, completion) in
                     guard let self = self else { return }
                     
