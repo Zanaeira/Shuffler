@@ -10,6 +10,8 @@ import UIKit
 final class ListItemsViewController: UIViewController {
     
     private let textField = UITextField()
+    private let textFieldStackView = UIStackView()
+    private let button = UIButton()
     private let stackView = UIStackView()
     
     override func viewDidLoad() {
@@ -24,14 +26,25 @@ final class ListItemsViewController: UIViewController {
         textField.placeholder = "New Item"
         textField.font = .preferredFont(forTextStyle: .body)
         textField.adjustsFontForContentSizeCategory = true
+        textField.clearButtonMode = .whileEditing
+        
+        textFieldStackView.translatesAutoresizingMaskIntoConstraints = false
+        textFieldStackView.addArrangedSubview(textField)
+        textFieldStackView.layoutMargins = .init(top: 10, left: 10, bottom: 10, right: 10)
+        textFieldStackView.isLayoutMarginsRelativeArrangement = true
+        
+        textFieldStackView.layer.borderColor = UIColor.label.cgColor
+        textFieldStackView.layer.borderWidth = 1
+        textFieldStackView.layer.cornerRadius = 8
+        
+        button.setTitle("Add", for: .normal)
+        button.setTitleColor(.systemBlue, for: .normal)
         
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.addArrangedSubview(textField)
-        stackView.layoutMargins = .init(top: 10, left: 10, bottom: 10, right: 10)
-        stackView.isLayoutMarginsRelativeArrangement = true
-        
-        stackView.layer.borderColor = UIColor.label.cgColor
-        stackView.layer.borderWidth = 1
+        stackView.axis = .vertical
+        stackView.spacing = 10
+        stackView.distribution = .fillProportionally
+        [textFieldStackView, button].forEach(stackView.addArrangedSubview)
         
         view.addSubview(stackView)
         NSLayoutConstraint.activate([
