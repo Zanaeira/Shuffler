@@ -28,6 +28,9 @@ final class ListItemsViewController: UIViewController {
         textField.adjustsFontForContentSizeCategory = true
         textField.clearButtonMode = .whileEditing
         
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGestureRecognizer)
+        
         textFieldStackView.translatesAutoresizingMaskIntoConstraints = false
         textFieldStackView.addArrangedSubview(textField)
         textFieldStackView.layoutMargins = .init(top: 10, left: 10, bottom: 10, right: 10)
@@ -52,6 +55,10 @@ final class ListItemsViewController: UIViewController {
             stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
             stackView.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor, constant: -10)
         ])
+    }
+    
+    @objc private func dismissKeyboard() {
+        textField.resignFirstResponder()
     }
     
 }
