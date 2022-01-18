@@ -213,8 +213,7 @@ extension ListsViewController: UICollectionViewDelegate {
         guard indexPath.item != 0 else { return }
             
         let list = lists[indexPath.item]
-        let viewController = ListItemsViewController()
-        viewController.title = list.name
+        let viewController = ListItemsViewController(list: list)
         
         show(viewController, sender: self)
         collectionView.deselectItem(at: indexPath, animated: true)

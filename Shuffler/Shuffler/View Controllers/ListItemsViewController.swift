@@ -9,11 +9,18 @@ import UIKit
 
 final class ListItemsViewController: UIViewController {
     
+    required init?(coder: NSCoder) {
+        fatalError("Not implemented")
+    }
+    
     private lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: makeCollectionViewLayout())
     private lazy var dataSource = makeDataSource()
     
     private let headerItem = Item(text: "Items")
-    private var items: [Item] = []
+    private var list: List
+    private var items: [Item] {
+        list.items
+    }
     
     private let textField = UITextField()
     private let textFieldStackView = UIStackView()
@@ -22,10 +29,17 @@ final class ListItemsViewController: UIViewController {
     private var normalConstraints: [NSLayoutConstraint] = []
     private var accessibilityConstraints: [NSLayoutConstraint] = []
     
+    init(list: List) {
+        self.list = list
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .systemBackground
+        title = list.name
         setupKeyboardDismissTapGestureRecognizer()
         setupConstraints()
         setupTextFieldAndButton()
@@ -41,7 +55,10 @@ final class ListItemsViewController: UIViewController {
         textField.resignFirstResponder()
         textField.text = ""
         
-        items.append(Item(text: itemText))
+        var newItems = items
+        newItems.append(Item(text: itemText))
+        
+        list = List(name: list.name, items: newItems)
         
         updateSnapshot()
     }
@@ -70,7 +87,7 @@ final class ListItemsViewController: UIViewController {
     }
     
     @objc private func shuffle() {
-        items.shuffle()
+        list = List(name: list.name, items: list.items.shuffled())
         updateSnapshot()
         collectionView.refreshControl?.endRefreshing()
     }
@@ -190,7 +207,10 @@ extension ListItemsViewController {
                 let delete = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (_, _, completion) in
                     guard let self = self else { return }
                     
-                    self.items.remove(at: indexPath.item - 1)
+                    var updatedItems = self.items
+                    updatedItems.remove(at: indexPath.item - 1)
+                    
+                    self.list = List(name: self.list.name, items: updatedItems)
                     self.updateSnapshot()
                     completion(true)
                 }
