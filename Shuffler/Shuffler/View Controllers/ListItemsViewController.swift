@@ -12,7 +12,8 @@ final class ListItemsViewController: UIViewController {
     private lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: makeCollectionViewLayout())
     private lazy var dataSource = makeDataSource()
     
-    private var items: [Item] = [Item(text: "Items")]
+    private let headerItem = Item(text: "Items")
+    private var items: [Item] = []
     
     private let textField = UITextField()
     private let textFieldStackView = UIStackView()
@@ -30,6 +31,7 @@ final class ListItemsViewController: UIViewController {
         setupTextFieldAndButton()
         configureHierarchy()
         updateSnapshot()
+        setupPullToShuffle()
     }
     
     @objc private func addItem() {
@@ -45,16 +47,32 @@ final class ListItemsViewController: UIViewController {
     }
     
     private func updateSnapshot() {
-        guard items.count > 1 else {
+        guard !items.isEmpty else {
             dataSource.apply(.init())
             return
         }
         
+        let itemsToAppend = [headerItem] + items
+        
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
         snapshot.appendSections([.main])
-        snapshot.appendItems(items, toSection: .main)
+        snapshot.appendItems(itemsToAppend, toSection: .main)
         
         dataSource.apply(snapshot, animatingDifferences: true)
+    }
+    
+    private func setupPullToShuffle() {
+        let refreshControl = UIRefreshControl()
+        collectionView.alwaysBounceVertical = true
+        refreshControl.addTarget(self, action: #selector(shuffle), for: .valueChanged)
+        
+        collectionView.refreshControl = refreshControl
+    }
+    
+    @objc private func shuffle() {
+        items.shuffle()
+        updateSnapshot()
+        collectionView.refreshControl?.endRefreshing()
     }
     
     private func setupKeyboardDismissTapGestureRecognizer() {
@@ -172,7 +190,7 @@ extension ListItemsViewController {
                 let delete = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (_, _, completion) in
                     guard let self = self else { return }
                     
-                    self.items.remove(at: indexPath.item)
+                    self.items.remove(at: indexPath.item - 1)
                     self.updateSnapshot()
                     completion(true)
                 }
