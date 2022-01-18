@@ -21,6 +21,8 @@ final class ListsViewController: UIViewController {
     private let headerList = List(name: "My Lists", items: [])
     private var lists: [List] = []
     
+    var onListSelected: ((List) -> Void)?
+    
     init(listLoader: ListLoader) {
         self.listLoader = listLoader
         
@@ -215,9 +217,8 @@ extension ListsViewController: UICollectionViewDelegate {
         guard indexPath.item != 0 else { return }
             
         let list = lists[indexPath.item]
-        let viewController = ListItemsViewController(list: list)
+        onListSelected?(list)
         
-        show(viewController, sender: self)
         collectionView.deselectItem(at: indexPath, animated: true)
     }
     

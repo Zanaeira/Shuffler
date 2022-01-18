@@ -15,6 +15,14 @@ final class ListsCoordinator {
     init(listLoader: ListLoader) {
         listsViewController = ListsViewController(listLoader: listLoader)
         self.navigationController = UINavigationController(rootViewController: listsViewController)
+        
+        listsViewController.onListSelected = listSelected
+    }
+    
+    private func listSelected(_ list: List) {
+        let viewController = ListItemsViewController(list: list)
+        
+        navigationController.pushViewController(viewController, animated: true)
     }
     
 }
