@@ -16,6 +16,8 @@
 		1B855B16279726C700D64F2C /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855B15279726C700D64F2C /* List.swift */; };
 		1B855B18279726EF00D64F2C /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855B17279726EF00D64F2C /* Item.swift */; };
 		1B855B1C27972AF200D64F2C /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855B1B27972AF200D64F2C /* Section.swift */; };
+		1B855B1E27974A5800D64F2C /* ListLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855B1D27974A5800D64F2C /* ListLoader.swift */; };
+		1B855B2127974A9100D64F2C /* LocalListLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855B2027974A9100D64F2C /* LocalListLoader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +32,8 @@
 		1B855B15279726C700D64F2C /* List.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = List.swift; sourceTree = "<group>"; };
 		1B855B17279726EF00D64F2C /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		1B855B1B27972AF200D64F2C /* Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section.swift; sourceTree = "<group>"; };
+		1B855B1D27974A5800D64F2C /* ListLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListLoader.swift; sourceTree = "<group>"; };
+		1B855B2027974A9100D64F2C /* LocalListLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalListLoader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +68,7 @@
 			children = (
 				1B855AFB2796244700D64F2C /* AppDelegate.swift */,
 				1B855AFD2796244700D64F2C /* SceneDelegate.swift */,
+				1B855B1F27974A5E00D64F2C /* API */,
 				1B855B192797270500D64F2C /* Models */,
 				1B855B1A2797271200D64F2C /* View Controllers */,
 				1B855B042796244800D64F2C /* Assets.xcassets */,
@@ -90,6 +95,15 @@
 				1B855B132796513900D64F2C /* ListItemsViewController.swift */,
 			);
 			path = "View Controllers";
+			sourceTree = "<group>";
+		};
+		1B855B1F27974A5E00D64F2C /* API */ = {
+			isa = PBXGroup;
+			children = (
+				1B855B1D27974A5800D64F2C /* ListLoader.swift */,
+				1B855B2027974A9100D64F2C /* LocalListLoader.swift */,
+			);
+			path = API;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -168,6 +182,8 @@
 				1B855B1C27972AF200D64F2C /* Section.swift in Sources */,
 				1B855B16279726C700D64F2C /* List.swift in Sources */,
 				1B855B18279726EF00D64F2C /* Item.swift in Sources */,
+				1B855B2127974A9100D64F2C /* LocalListLoader.swift in Sources */,
+				1B855B1E27974A5800D64F2C /* ListLoader.swift in Sources */,
 				1B855B102796258800D64F2C /* ListsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
