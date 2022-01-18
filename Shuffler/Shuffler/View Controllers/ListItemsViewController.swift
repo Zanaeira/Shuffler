@@ -25,6 +25,7 @@ final class ListItemsViewController: UIViewController {
         view.backgroundColor = .systemBackground
         setupKeyboardDismissTapGestureRecognizer()
         setupTextFieldAndButton()
+        updateStackView()
         configureHierarchy()
         updateSnapshot()
     }
@@ -102,6 +103,24 @@ final class ListItemsViewController: UIViewController {
             stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
             stackView.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor, constant: -10)
         ])
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        let isAccessibilityCategory = traitCollection.preferredContentSizeCategory.isAccessibilityCategory
+        if isAccessibilityCategory != previousTraitCollection?.preferredContentSizeCategory.isAccessibilityCategory {
+            updateStackView()
+        }
+    }
+    
+    private func updateStackView() {
+        let isAccessibilityCategory = traitCollection.preferredContentSizeCategory.isAccessibilityCategory
+        if isAccessibilityCategory {
+            stackView.axis = .vertical
+        } else {
+            stackView.axis = .horizontal
+        }
     }
     
 }
