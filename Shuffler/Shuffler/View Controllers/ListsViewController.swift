@@ -9,12 +9,23 @@ import UIKit
 
 final class ListsViewController: UIViewController {
     
+    required init?(coder: NSCoder) {
+        fatalError("Not implemented")
+    }
+    
     private let addAListLabel = UILabel()
     private lazy var collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: makeCollectionViewLayout())
     private lazy var dataSource = makeDataSource()
     
-    private var lists: [List] = [List(name: "My lists", items: []),
-                                 List(name: "Sample List", items: [])]
+    private let listLoader: ListLoader
+    private let headerList = List(name: "My Lists", items: [])
+    private var lists: [List] = []
+    
+    init(listLoader: ListLoader) {
+        self.listLoader = listLoader
+        
+        super.init(nibName: nil, bundle: nil)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,7 +35,19 @@ final class ListsViewController: UIViewController {
         setupAddListBarButtonItem()
         configureHierarchy()
         configureAddAListLabel()
+        loadLists()
         updateSnapshot()
+    }
+    
+    private func loadLists() {
+        listLoader.load { result in
+            switch result {
+            case .success(let lists):
+                self.lists = [headerList] + lists
+            case .failure:
+                return
+            }
+        }
     }
     
     private func updateSnapshot() {
