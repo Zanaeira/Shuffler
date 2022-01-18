@@ -13,13 +13,7 @@ final class ListsViewController: UIViewController {
     private lazy var collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: makeCollectionViewLayout())
     private lazy var dataSource = makeDataSource()
     
-    private let lists: [Item] = [
-        Item(text: "My List"),
-        Item(text: "Manārah Y2"),
-        Item(text: "Madkhal Y1"),
-        Item(text: "Hifz Students"),
-        Item(text: "Dinner options")
-    ]
+    private var lists: [Item] = [Item(text: "My lists")]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,10 +22,13 @@ final class ListsViewController: UIViewController {
         addNavigationBarButtonToAddList()
         configureHierarchy()
         configureAddAListLabel()
+        configureAddAListLabelVisibility()
         updateSnapshot()
     }
     
     private func updateSnapshot() {
+        guard lists.count > 1 else { return }
+        
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
         snapshot.appendSections([.main])
         snapshot.appendItems(lists, toSection: .main)
@@ -44,12 +41,31 @@ final class ListsViewController: UIViewController {
     }
     
     @objc private func addList() {
+        let alertController = UIAlertController(title: "Add list", message: "Enter the name of your new list", preferredStyle: .alert)
+        alertController.addTextField()
+        alertController.textFields?.first?.autocapitalizationType = .words
         
+        let submitAction = UIAlertAction(title: "Submit", style: .default) { _ in
+            guard let newListName = alertController.textFields?.first?.text,
+                  !newListName.isEmpty else { return }
+            
+            self.addNewList(newListName)
+        }
+        
+        alertController.addAction(submitAction)
+        alertController.addAction(.init(title: "Cancel", style: .cancel))
+        
+        present(alertController, animated: true)
+    }
+    
+    private func addNewList(_ listName: String) {
+        lists.append(Item(text: listName))
+        
+        configureAddAListLabelVisibility()
+        updateSnapshot()
     }
     
     private func configureAddAListLabel() {
-        guard lists.count == 0 else { return }
-        
         addAListLabel.text = "Tap the + button to add a list"
         addAListLabel.translatesAutoresizingMaskIntoConstraints = false
         addAListLabel.font = .preferredFont(forTextStyle: .title1)
@@ -65,6 +81,10 @@ final class ListsViewController: UIViewController {
             addAListLabel.trailingAnchor.constraint(equalTo: collectionView.readableContentGuide.trailingAnchor, constant: -horizontalSpacing),
             addAListLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
+    }
+    
+    private func configureAddAListLabelVisibility() {
+        addAListLabel.isHidden = lists.count > 1
     }
     
 }
