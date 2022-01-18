@@ -15,13 +15,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         let listLoader = LocalListLoader()
-        
-        let viewController = ListsViewController(listLoader: listLoader)
-        viewController.title = "Shuffler"
+        let listsCoordinator = ListsCoordinator(listLoader: listLoader)
         
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        window?.rootViewController = UINavigationController(rootViewController: viewController)
+        window?.rootViewController = listsCoordinator.navigationController
         window?.makeKeyAndVisible()
     }
     
