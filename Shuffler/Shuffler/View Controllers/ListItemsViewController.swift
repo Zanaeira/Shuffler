@@ -17,15 +17,17 @@ final class ListItemsViewController: UIViewController {
     private let textField = UITextField()
     private let textFieldStackView = UIStackView()
     private let button = UIButton()
-    private let stackView = UIStackView()
+    
+    private var normalConstraints: [NSLayoutConstraint] = []
+    private var accessibilityConstraints: [NSLayoutConstraint] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .systemBackground
         setupKeyboardDismissTapGestureRecognizer()
+        setupConstraints()
         setupTextFieldAndButton()
-        updateStackView()
         configureHierarchy()
         updateSnapshot()
     }
@@ -63,11 +65,12 @@ final class ListItemsViewController: UIViewController {
     private func setupTextFieldAndButton() {
         setupTextField()
         setupButton()
-        setupStackView()
+        addTextFieldAndButton()
     }
     
     private func setupTextField() {
         textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         textField.placeholder = "New Item"
         textField.font = .preferredFont(forTextStyle: .body)
         textField.adjustsFontForContentSizeCategory = true
@@ -85,24 +88,38 @@ final class ListItemsViewController: UIViewController {
     }
     
     private func setupButton() {
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         button.setTitle("Add", for: .normal)
         button.setTitleColor(.systemBlue, for: .normal)
         button.addTarget(self, action: #selector(addItem), for: .touchUpInside)
     }
     
-    private func setupStackView() {
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .horizontal
-        stackView.spacing = 16
-        stackView.distribution = .fill
-        [textFieldStackView, button].forEach(stackView.addArrangedSubview)
+    private func setupConstraints() {
+        normalConstraints = [
+            button.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
+            button.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24),
+            textFieldStackView.trailingAnchor.constraint(equalTo: button.leadingAnchor, constant: -24),
+            textFieldStackView.topAnchor.constraint(equalTo: button.topAnchor),
+            textFieldStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10),
+            button.centerYAnchor.constraint(equalTo: textFieldStackView.centerYAnchor)
+        ]
         
-        view.addSubview(stackView)
-        NSLayoutConstraint.activate([
-            stackView.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor, constant: 10),
-            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
-            stackView.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor, constant: -10)
-        ])
+        accessibilityConstraints = [
+            textFieldStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10),
+            textFieldStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
+            textFieldStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10),
+            
+            button.topAnchor.constraint(equalTo: textFieldStackView.bottomAnchor, constant: 10),
+            button.centerXAnchor.constraint(equalTo: textFieldStackView.centerXAnchor)
+        ]
+    }
+    
+    private func addTextFieldAndButton() {
+        view.addSubview(textFieldStackView)
+        view.addSubview(button)
+        
+        updateConstraints()
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -110,16 +127,18 @@ final class ListItemsViewController: UIViewController {
         
         let isAccessibilityCategory = traitCollection.preferredContentSizeCategory.isAccessibilityCategory
         if isAccessibilityCategory != previousTraitCollection?.preferredContentSizeCategory.isAccessibilityCategory {
-            updateStackView()
+            updateConstraints()
         }
     }
     
-    private func updateStackView() {
+    private func updateConstraints() {
         let isAccessibilityCategory = traitCollection.preferredContentSizeCategory.isAccessibilityCategory
         if isAccessibilityCategory {
-            stackView.axis = .vertical
+            NSLayoutConstraint.deactivate(normalConstraints)
+            NSLayoutConstraint.activate(accessibilityConstraints)
         } else {
-            stackView.axis = .horizontal
+            NSLayoutConstraint.deactivate(accessibilityConstraints)
+            NSLayoutConstraint.activate(normalConstraints)
         }
     }
     
@@ -134,7 +153,7 @@ extension ListItemsViewController {
         view.addSubview(collectionView)
         NSLayoutConstraint.activate([
             collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            collectionView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 10),
+            collectionView.topAnchor.constraint(equalTo: button.bottomAnchor, constant: 16),
             collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10)
         ])
