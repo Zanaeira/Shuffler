@@ -42,7 +42,10 @@ final class ListItemsViewController: UIViewController {
     }
     
     private func updateSnapshot() {
-        guard items.count > 1 else { return }
+        guard items.count > 1 else {
+            dataSource.apply(.init())
+            return
+        }
         
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
         snapshot.appendSections([.main])
