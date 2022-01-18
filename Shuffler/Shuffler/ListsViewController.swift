@@ -22,12 +22,16 @@ final class ListsViewController: UIViewController {
         addNavigationBarButtonToAddList()
         configureHierarchy()
         configureAddAListLabel()
-        configureAddAListLabelVisibility()
         updateSnapshot()
     }
     
     private func updateSnapshot() {
-        guard lists.count > 1 else { return }
+        configureAddAListLabelVisibility()
+        
+        guard lists.count > 1 else {
+            dataSource.apply(.init())
+            return
+        }
         
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
         snapshot.appendSections([.main])
@@ -61,7 +65,6 @@ final class ListsViewController: UIViewController {
     private func addNewList(_ listName: String) {
         lists.append(Item(text: listName))
         
-        configureAddAListLabelVisibility()
         updateSnapshot()
     }
     
@@ -100,6 +103,18 @@ extension ListsViewController {
         return UICollectionViewCompositionalLayout { section, layoutEnvironment in
             var config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
             config.headerMode = .firstItemInSection
+            
+            config.trailingSwipeActionsConfigurationProvider = { indexPath in
+                let delete = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (_, _, completion) in
+                    guard let self = self else { return }
+                    
+                    self.lists.remove(at: indexPath.item)
+                    self.updateSnapshot()
+                    completion(true)
+                }
+                
+                return UISwipeActionsConfiguration(actions: [delete])
+            }
             
             return NSCollectionLayoutSection.list(using: config, layoutEnvironment: layoutEnvironment)
         }
