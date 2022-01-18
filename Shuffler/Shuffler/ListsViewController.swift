@@ -66,7 +66,11 @@ final class ListsViewController: UIViewController {
     }
     
     private func configureAddAListLabel() {
-        addAListLabel.text = "Tap the + button to add a list"
+        let text = "Tap the + button to add a list"
+        let attributedText = NSMutableAttributedString(string: text, attributes: [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .title1)])
+        attributedText.addAttribute(.foregroundColor, value: UIColor.systemBlue, range: .init(location: 8, length: 1))
+        
+        addAListLabel.attributedText = attributedText
         addAListLabel.translatesAutoresizingMaskIntoConstraints = false
         addAListLabel.font = .preferredFont(forTextStyle: .title1)
         addAListLabel.textAlignment = .center
