@@ -23,12 +23,8 @@ final class ListItemsViewController: UIViewController {
     }
     
     private func setupKeyboardDismissTapGestureRecognizer() {
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        let tapGestureRecognizer = UITapGestureRecognizer(target: textField, action: #selector(resignFirstResponder))
         view.addGestureRecognizer(tapGestureRecognizer)
-    }
-    
-    @objc private func dismissKeyboard() {
-        textField.resignFirstResponder()
     }
     
     private func setupSubviews() {
