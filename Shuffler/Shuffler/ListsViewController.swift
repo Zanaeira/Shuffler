@@ -24,7 +24,7 @@ final class ListsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .systemGray6
+        view.backgroundColor = .systemBackground
         addNavigationBarButtonToAddList()
         configureHierarchy()
         configureAddAListLabel()
@@ -82,7 +82,6 @@ extension ListsViewController {
     }
     
     private func configureHierarchy() {
-        collectionView.backgroundColor = .systemGray6
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(collectionView)
     }
