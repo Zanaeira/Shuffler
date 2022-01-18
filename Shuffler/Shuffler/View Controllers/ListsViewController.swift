@@ -209,7 +209,3 @@ private extension UICollectionViewListCell {
     }
     
 }
-
-private enum Section {
-    case main
-}
