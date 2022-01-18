@@ -8,5 +8,5 @@
 import Foundation
 
 protocol ListLoader {
-    func load(completion: (Result<[List], Error>) -> Void)
+    func load(completion: @escaping (Result<[List], Error>) -> Void)
 }

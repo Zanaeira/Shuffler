@@ -11,7 +11,7 @@ class LocalListLoader: ListLoader {
     
     private var lists = [List]()
     
-    func load(completion: (Result<[List], Error>) -> Void) {
+    func load(completion: @escaping (Result<[List], Error>) -> Void) {
         loadSampleLists()
         
         completion(.success(lists))

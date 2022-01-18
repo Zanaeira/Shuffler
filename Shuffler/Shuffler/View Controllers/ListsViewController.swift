@@ -40,10 +40,12 @@ final class ListsViewController: UIViewController {
     }
     
     private func loadLists() {
-        listLoader.load { result in
+        listLoader.load { [weak self] result in
+            guard let self = self else { return }
+            
             switch result {
             case .success(let lists):
-                self.lists = [headerList] + lists
+                self.lists = [self.headerList] + lists
             case .failure:
                 return
             }
