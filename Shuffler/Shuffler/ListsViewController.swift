@@ -160,12 +160,24 @@ extension ListsViewController {
             let deleteAccessory: UICellAccessory = .delete(displayed: .whenEditing) { [weak self] in
                 self?.delete(item)
             }
-            cell.accessories = [deleteAccessory]
+            let reorderAccessory: UICellAccessory = .reorder(displayed: .whenEditing)
+            
+            cell.accessories = [deleteAccessory, reorderAccessory]
         }
         
-        return .init(collectionView: collectionView) { collectionView, indexPath, itemIdentifier in
+        let dataSource: UICollectionViewDiffableDataSource<Section, Item> = .init(collectionView: collectionView) { collectionView, indexPath, itemIdentifier in
             collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: itemIdentifier)
         }
+        
+        dataSource.reorderingHandlers.canReorderItem = { list -> Bool in
+            return true
+        }
+        
+        dataSource.reorderingHandlers.didReorder = { transaction in
+            self.lists = transaction.finalSnapshot.itemIdentifiers(inSection: .main)
+        }
+        
+        return dataSource
     }
     
 }
