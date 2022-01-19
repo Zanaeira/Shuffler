@@ -230,14 +230,6 @@ extension ListItemsViewController {
     private func makeDataSource() -> UICollectionViewDiffableDataSource<Section, Item> {
         let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, Item> { (cell, indexPath, item) in
             cell.configure(with: item)
-            
-            guard indexPath.item != 0 else { return }
-            
-            let deleteAccessory: UICellAccessory = .delete(displayed: .whenEditing) { [weak self] in
-                self?.delete(item)
-            }
-            
-            cell.accessories = [deleteAccessory]
         }
         
         return .init(collectionView: collectionView) { collectionView, indexPath, itemIdentifier in
