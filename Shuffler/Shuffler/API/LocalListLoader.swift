@@ -7,7 +7,7 @@
 
 import Foundation
 
-class LocalListLoader: ListLoader {
+class LocalListLoader: ListLoader, ListUpdater {
     
     private var cache = ListCache()
     
@@ -22,6 +22,10 @@ class LocalListLoader: ListLoader {
                 return
             }
         }
+    }
+    
+    func update(list: List, newItems: [Item]) {
+        cache.update(list: list, newItems: newItems)
     }
     
 }

@@ -41,6 +41,13 @@ final class ListsViewController: UIViewController {
         updateSnapshot()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        loadLists()
+        updateSnapshot()
+    }
+    
     private func loadLists() {
         listLoader.load { [weak self] result in
             guard let self = self else { return }
@@ -215,7 +222,7 @@ extension ListsViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard indexPath.item != 0 else { return }
-            
+        
         let list = lists[indexPath.item]
         onListSelected?(list)
         

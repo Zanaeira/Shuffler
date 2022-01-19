@@ -20,6 +20,7 @@
 		1B855B2127974A9100D64F2C /* LocalListLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855B2027974A9100D64F2C /* LocalListLoader.swift */; };
 		1B855B232797677E00D64F2C /* ListsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855B222797677E00D64F2C /* ListsCoordinator.swift */; };
 		1B855B26279781EE00D64F2C /* ListCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855B25279781EE00D64F2C /* ListCache.swift */; };
+		1B855B28279787D600D64F2C /* ListUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855B27279787D600D64F2C /* ListUpdater.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		1B855B2027974A9100D64F2C /* LocalListLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalListLoader.swift; sourceTree = "<group>"; };
 		1B855B222797677E00D64F2C /* ListsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListsCoordinator.swift; sourceTree = "<group>"; };
 		1B855B25279781EE00D64F2C /* ListCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCache.swift; sourceTree = "<group>"; };
+		1B855B27279787D600D64F2C /* ListUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListUpdater.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +108,7 @@
 			isa = PBXGroup;
 			children = (
 				1B855B1D27974A5800D64F2C /* ListLoader.swift */,
+				1B855B27279787D600D64F2C /* ListUpdater.swift */,
 				1B855B2027974A9100D64F2C /* LocalListLoader.swift */,
 				1B855B25279781EE00D64F2C /* ListCache.swift */,
 			);
@@ -199,6 +202,7 @@
 				1B855B18279726EF00D64F2C /* Item.swift in Sources */,
 				1B855B26279781EE00D64F2C /* ListCache.swift in Sources */,
 				1B855B2127974A9100D64F2C /* LocalListLoader.swift in Sources */,
+				1B855B28279787D600D64F2C /* ListUpdater.swift in Sources */,
 				1B855B1E27974A5800D64F2C /* ListLoader.swift in Sources */,
 				1B855B102796258800D64F2C /* ListsViewController.swift in Sources */,
 			);

@@ -29,8 +29,11 @@ final class ListItemsViewController: UIViewController {
     private var normalConstraints: [NSLayoutConstraint] = []
     private var accessibilityConstraints: [NSLayoutConstraint] = []
     
-    init(list: List) {
+    private let onListUpdated: ((List, [Item]) -> Void)
+    
+    init(list: List, onListUpdated: @escaping (List, [Item]) -> Void) {
         self.list = list
+        self.onListUpdated = onListUpdated
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -58,7 +61,8 @@ final class ListItemsViewController: UIViewController {
         var newItems = items
         newItems.append(Item(text: itemText))
         
-        list = List(name: list.name, items: newItems)
+        list = List(id: list.id, name: list.name, items: newItems)
+        onListUpdated(list, newItems)
         
         updateSnapshot()
     }
@@ -87,7 +91,7 @@ final class ListItemsViewController: UIViewController {
     }
     
     @objc private func shuffle() {
-        list = List(name: list.name, items: list.items.shuffled())
+        list = List(id: list.id, name: list.name, items: list.items.shuffled())
         updateSnapshot()
         collectionView.refreshControl?.endRefreshing()
     }
@@ -210,7 +214,8 @@ extension ListItemsViewController {
                     var updatedItems = self.items
                     updatedItems.remove(at: indexPath.item - 1)
                     
-                    self.list = List(name: self.list.name, items: updatedItems)
+                    self.list = List(id: self.list.id, name: self.list.name, items: updatedItems)
+                    self.onListUpdated(self.list, updatedItems)
                     self.updateSnapshot()
                     completion(true)
                 }

@@ -15,7 +15,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         let listLoader = LocalListLoader()
-        let listsCoordinator = ListsCoordinator(listLoader: listLoader)
+        let listsCoordinator = ListsCoordinator(listLoader: listLoader, listUpdater: listLoader)
         
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene

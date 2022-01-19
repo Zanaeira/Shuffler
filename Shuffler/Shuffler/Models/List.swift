@@ -8,7 +8,15 @@
 import Foundation
 
 struct List: Hashable {
-    private let id = UUID()
+    
+    let id: UUID
     let name: String
     let items: [Item]
+    
+    init(id: UUID = UUID(), name: String, items: [Item]) {
+        self.id = id
+        self.name = name
+        self.items = items
+    }
+    
 }

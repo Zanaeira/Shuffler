@@ -9,15 +9,28 @@ import Foundation
 
 final class ListCache {
     
-    private var lists: [List] = []
+    private var lists: [List] = loadSampleLists()
     
     func retrieve(completion: @escaping (Result<[List], Error>) -> Void) {
-        loadSampleLists()
-        
         completion(.success(lists))
     }
     
-    private func loadSampleLists() {
+    func update(list: List, newItems: [Item]) {
+        var newLists = [List]()
+        for originalList in lists {
+            if originalList.id == list.id {
+                newLists.append(List(name: list.name, items: newItems))
+            } else {
+                newLists.append(originalList)
+            }
+        }
+        
+        lists = newLists
+    }
+    
+    private static func loadSampleLists() -> [List] {
+        var lists = [List]()
+        
         lists.append(.init(name: "Manārah Y2", items: [
             .init(text: "Abdullah"),
             .init(text: "Ali"),
@@ -53,6 +66,8 @@ final class ListCache {
             .init(text: "Erina"),
             .init(text: "Zafir")
         ]))
+        
+        return lists
     }
     
 }
