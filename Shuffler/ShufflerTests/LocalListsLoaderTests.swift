@@ -28,19 +28,25 @@ protocol Cache {
 class LocalListsLoaderTests: XCTestCase {
     
     func test_init_doesNotMessageCache() {
-        let cacheSpy = CacheSpy()
-        let _ = LocalListLoader(cache: cacheSpy)
+        let (cacheSpy, _) = makeSUT()
         
         XCTAssertEqual(cacheSpy.messages, 0)
     }
     
     func test_load_sendsMessageToCache() {
-        let cacheSpy = CacheSpy()
-        let sut = LocalListLoader(cache: cacheSpy)
+        let (cacheSpy, sut) = makeSUT()
         
         sut.load()
         
         XCTAssertEqual(cacheSpy.messages, 1)
+    }
+    
+    // MARK: - SUT helper
+    private func makeSUT() -> (cacheSpy: CacheSpy, sut: LocalListLoader) {
+        let cacheSpy = CacheSpy()
+        let sut = LocalListLoader(cache: cacheSpy)
+        
+        return (cacheSpy, sut)
     }
     
     // MARK: - CacheSpy helper class
