@@ -11,50 +11,50 @@ import Shuffler
 class LocalListsLoaderTests: XCTestCase {
     
     func test_init_doesNotMessageCache() {
-        let (cacheSpy, _) = makeSUT()
+        let (listsStoreSpy, _) = makeSUT()
         
-        XCTAssertEqual(cacheSpy.messages, [])
+        XCTAssertEqual(listsStoreSpy.messages, [])
     }
     
     func test_load_sendsRetrieveMessageToCache() {
-        let (cacheSpy, sut) = makeSUT()
+        let (listsStoreSpy, sut) = makeSUT()
         
         sut.load() { _ in }
         
-        XCTAssertEqual(cacheSpy.messages, [.retrieve])
+        XCTAssertEqual(listsStoreSpy.messages, [.retrieve])
     }
     
     func test_load_failsOnRetrievalError() {
-        let (cacheSpy, sut) = makeSUT()
+        let (listsStoreSpy, sut) = makeSUT()
         
         expect(sut, toCompleteWith: .failure(NSError(domain: "Any error", code: 0))) {
-            cacheSpy.completeWithError()
+            listsStoreSpy.completeWithError()
         }
     }
     
     func test_load_returnsEmptyListsForEmptyCache() {
-        let (cacheSpy, sut) = makeSUT()
+        let (listsStoreSpy, sut) = makeSUT()
         
         expect(sut, toCompleteWith: .success([])) {
-            cacheSpy.completeWithSuccess([])
+            listsStoreSpy.completeWithSuccess([])
         }
     }
     
     func test_load_returnsListsForNonEmptyCache() {
-        let (cacheSpy, sut) = makeSUT()
+        let (listsStoreSpy, sut) = makeSUT()
         
         let lists = [List(), List(), List()]
         expect(sut, toCompleteWith: .success(lists)) {
-            cacheSpy.completeWithSuccess(lists)
+            listsStoreSpy.completeWithSuccess(lists)
         }
     }
     
     // MARK: - SUT helper
-    private func makeSUT() -> (cacheSpy: CacheSpy, sut: LocalListsLoader) {
-        let cacheSpy = CacheSpy()
-        let sut = LocalListsLoader(cache: cacheSpy)
+    private func makeSUT() -> (listsStoreSpy: ListsStoreSpy, sut: LocalListsLoader) {
+        let listsStoreSpy = ListsStoreSpy()
+        let sut = LocalListsLoader(store: listsStoreSpy)
         
-        return (cacheSpy, sut)
+        return (listsStoreSpy, sut)
     }
     
     private func expect(_ sut: LocalListsLoader, toCompleteWith expectedResult: Result<[List], Error>, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
@@ -78,8 +78,8 @@ class LocalListsLoaderTests: XCTestCase {
 
     }
     
-    // MARK: - CacheSpy helper class
-    private final class CacheSpy: Cache {
+    // MARK: - ListsStoreSpy helper class
+    private final class ListsStoreSpy: ListsStore {
         
         enum Message {
             case retrieve

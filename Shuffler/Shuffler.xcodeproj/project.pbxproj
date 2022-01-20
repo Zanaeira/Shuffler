@@ -10,7 +10,7 @@
 		1B855B7F2799C71300D64F2C /* Shuffler.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B855B762799C71200D64F2C /* Shuffler.framework */; };
 		1B855B8F2799C7BF00D64F2C /* LocalListsLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855B8E2799C7BF00D64F2C /* LocalListsLoaderTests.swift */; };
 		1B855B91279A1D5D00D64F2C /* LocalListsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855B90279A1D5D00D64F2C /* LocalListsLoader.swift */; };
-		1B855B93279A1D8200D64F2C /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855B92279A1D8200D64F2C /* Cache.swift */; };
+		1B855B93279A1D8200D64F2C /* ListsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855B92279A1D8200D64F2C /* ListsStore.swift */; };
 		1B855B95279A1D9A00D64F2C /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855B94279A1D9A00D64F2C /* List.swift */; };
 /* End PBXBuildFile section */
 
@@ -29,7 +29,7 @@
 		1B855B7E2799C71300D64F2C /* ShufflerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ShufflerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1B855B8E2799C7BF00D64F2C /* LocalListsLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalListsLoaderTests.swift; sourceTree = "<group>"; };
 		1B855B90279A1D5D00D64F2C /* LocalListsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalListsLoader.swift; sourceTree = "<group>"; };
-		1B855B92279A1D8200D64F2C /* Cache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
+		1B855B92279A1D8200D64F2C /* ListsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListsStore.swift; sourceTree = "<group>"; };
 		1B855B94279A1D9A00D64F2C /* List.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = List.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -75,7 +75,7 @@
 			children = (
 				1B855B94279A1D9A00D64F2C /* List.swift */,
 				1B855B90279A1D5D00D64F2C /* LocalListsLoader.swift */,
-				1B855B92279A1D8200D64F2C /* Cache.swift */,
+				1B855B92279A1D8200D64F2C /* ListsStore.swift */,
 			);
 			path = Shuffler;
 			sourceTree = "<group>";
@@ -198,7 +198,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1B855B93279A1D8200D64F2C /* Cache.swift in Sources */,
+				1B855B93279A1D8200D64F2C /* ListsStore.swift in Sources */,
 				1B855B91279A1D5D00D64F2C /* LocalListsLoader.swift in Sources */,
 				1B855B95279A1D9A00D64F2C /* List.swift in Sources */,
 			);

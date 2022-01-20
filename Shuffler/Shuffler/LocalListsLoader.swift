@@ -9,14 +9,14 @@ import Foundation
 
 public class LocalListsLoader {
     
-    private let cache: Cache
+    private let store: ListsStore
     
-    public init(cache: Cache) {
-        self.cache = cache
+    public init(store: ListsStore) {
+        self.store = store
     }
     
     public func load(completion: @escaping (Result<[List], Error>) -> Void) {
-        cache.retrieve() { result in
+        store.retrieve() { result in
             completion(result)
         }
     }
