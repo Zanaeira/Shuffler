@@ -30,15 +30,15 @@ class LocalListsLoaderTests: XCTestCase {
     func test_init_doesNotMessageCache() {
         let (cacheSpy, _) = makeSUT()
         
-        XCTAssertEqual(cacheSpy.messages, 0)
+        XCTAssertEqual(cacheSpy.messages, [])
     }
     
-    func test_load_sendsMessageToCache() {
+    func test_load_sendsRetrieveMessageToCache() {
         let (cacheSpy, sut) = makeSUT()
         
         sut.load()
         
-        XCTAssertEqual(cacheSpy.messages, 1)
+        XCTAssertEqual(cacheSpy.messages, [.retrieve])
     }
     
     // MARK: - SUT helper
@@ -52,10 +52,14 @@ class LocalListsLoaderTests: XCTestCase {
     // MARK: - CacheSpy helper class
     private final class CacheSpy: Cache {
         
-        var messages: Int = 0
+        enum Message {
+            case retrieve
+        }
+        
+        var messages: [Message] = []
         
         func retrieve() {
-            messages += 1
+            messages.append(.retrieve)
         }
         
     }
