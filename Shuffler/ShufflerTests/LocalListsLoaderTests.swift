@@ -15,17 +15,19 @@ final class LocalListLoader {
         self.cache = cache
     }
     
-    func load(completion: @escaping (Error) -> Void) {
-        cache.retrieve() { error in
-            completion(error)
+    func load(completion: @escaping (Result<[List], Error>) -> Void) {
+        cache.retrieve() { result in
+            completion(result)
         }
     }
     
 }
 
 protocol Cache {
-    func retrieve(completion: @escaping (Error) -> Void)
+    func retrieve(completion: @escaping (Result<[List], Error>) -> Void)
 }
+
+struct List: Equatable {}
 
 class LocalListsLoaderTests: XCTestCase {
     
@@ -50,8 +52,10 @@ class LocalListsLoaderTests: XCTestCase {
         let exp = expectation(description: "Wait for load to complete")
         
         var receivedError: NSError?
-        sut.load { error in
-            receivedError = error as NSError
+        sut.load { result in
+            if case let Result.failure(error) = result {
+                receivedError = error as NSError
+            }
             exp.fulfill()
         }
         
@@ -59,6 +63,25 @@ class LocalListsLoaderTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
         
         XCTAssertEqual(receivedError, retrievalError)
+    }
+    
+    func test_load_returnsEmptyListsForEmptyCache() {
+        let (cacheSpy, sut) = makeSUT()
+        
+        let exp = expectation(description: "Wait for load to complete")
+        
+        var receivedLists: [List]?
+        sut.load { result in
+            if case let Result.success(lists) = result {
+                receivedLists = lists
+            }
+            exp.fulfill()
+        }
+        
+        cacheSpy.completeWithSuccess([])
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertEqual(receivedLists, [])
     }
     
     // MARK: - SUT helper
@@ -77,15 +100,19 @@ class LocalListsLoaderTests: XCTestCase {
         }
         
         var messages: [Message] = []
-        var completions: [(Error) -> Void] = []
+        var completions: [(Result<[List], Error>) -> Void] = []
         
-        func retrieve(completion: @escaping (Error) -> Void) {
+        func retrieve(completion: @escaping (Result<[List], Error>) -> Void) {
             messages.append(.retrieve)
             completions.append(completion)
         }
         
         func completeWithError() {
-            completions[0](NSError(domain: "Any error", code: 0))
+            completions[0](.failure(NSError(domain: "Any error", code: 0)))
+        }
+        
+        func completeWithSuccess(_ lists: [List]) {
+            completions[0](.success(lists))
         }
         
     }
