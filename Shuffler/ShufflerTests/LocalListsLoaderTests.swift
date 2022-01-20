@@ -15,9 +15,15 @@ final class LocalListLoader {
         self.cache = cache
     }
     
+    func load() {
+        cache.retrieve()
+    }
+    
 }
 
-protocol Cache {}
+protocol Cache {
+    func retrieve()
+}
 
 class LocalListsLoaderTests: XCTestCase {
     
@@ -28,9 +34,24 @@ class LocalListsLoaderTests: XCTestCase {
         XCTAssertEqual(cacheSpy.messages, 0)
     }
     
+    func test_load_sendsMessageToCache() {
+        let cacheSpy = CacheSpy()
+        let sut = LocalListLoader(cache: cacheSpy)
+        
+        sut.load()
+        
+        XCTAssertEqual(cacheSpy.messages, 1)
+    }
+    
     // MARK: - CacheSpy helper class
     private final class CacheSpy: Cache {
+        
         var messages: Int = 0
+        
+        func retrieve() {
+            messages += 1
+        }
+        
     }
     
 }
