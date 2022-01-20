@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1B855B7F2799C71300D64F2C /* Shuffler.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B855B762799C71200D64F2C /* Shuffler.framework */; };
+		1B855B8F2799C7BF00D64F2C /* LocalListsLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855B8E2799C7BF00D64F2C /* LocalListsLoaderTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -23,6 +24,7 @@
 /* Begin PBXFileReference section */
 		1B855B762799C71200D64F2C /* Shuffler.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Shuffler.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1B855B7E2799C71300D64F2C /* ShufflerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ShufflerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1B855B8E2799C7BF00D64F2C /* LocalListsLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalListsLoaderTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +74,7 @@
 		1B855B822799C71300D64F2C /* ShufflerTests */ = {
 			isa = PBXGroup;
 			children = (
+				1B855B8E2799C7BF00D64F2C /* LocalListsLoaderTests.swift */,
 			);
 			path = ShufflerTests;
 			sourceTree = "<group>";
@@ -140,6 +143,7 @@
 					};
 					1B855B7D2799C71300D64F2C = {
 						CreatedOnToolsVersion = 13.2.1;
+						LastSwiftMigration = 1320;
 					};
 				};
 			};
@@ -191,6 +195,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B855B8F2799C7BF00D64F2C /* LocalListsLoaderTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -385,14 +390,21 @@
 		1B855B8C2799C71300D64F2C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = HHWJTGZ862;
 				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Zanaeira.ShufflerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -400,10 +412,16 @@
 		1B855B8D2799C71300D64F2C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = HHWJTGZ862;
 				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Zanaeira.ShufflerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
