@@ -50,14 +50,14 @@ class LocalListsLoaderTests: XCTestCase {
     }
     
     // MARK: - SUT helper
-    private func makeSUT() -> (cacheSpy: CacheSpy, sut: LocalListLoader) {
+    private func makeSUT() -> (cacheSpy: CacheSpy, sut: LocalListsLoader) {
         let cacheSpy = CacheSpy()
-        let sut = LocalListLoader(cache: cacheSpy)
+        let sut = LocalListsLoader(cache: cacheSpy)
         
         return (cacheSpy, sut)
     }
     
-    private func expect(_ sut: LocalListLoader, toCompleteWith expectedResult: Result<[List], Error>, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    private func expect(_ sut: LocalListsLoader, toCompleteWith expectedResult: Result<[List], Error>, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "Wait for load to complete")
         
         sut.load { receivedResult in

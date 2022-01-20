@@ -1,5 +1,5 @@
 //
-//  LocalListLoader.swift
+//  LocalListsLoader.swift
 //  Shuffler
 //
 //  Created by Suhayl Ahmed on 20/01/2022.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class LocalListLoader {
+public class LocalListsLoader {
     
     private let cache: Cache
     
