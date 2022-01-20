@@ -61,6 +61,15 @@ class LocalListsLoaderTests: XCTestCase {
         }
     }
     
+    func test_load_returnsListsForNonEmptyCache() {
+        let (cacheSpy, sut) = makeSUT()
+        
+        let lists = [List(), List(), List()]
+        expect(sut, toCompleteWith: .success(lists)) {
+            cacheSpy.completeWithSuccess(lists)
+        }
+    }
+    
     // MARK: - SUT helper
     private func makeSUT() -> (cacheSpy: CacheSpy, sut: LocalListLoader) {
         let cacheSpy = CacheSpy()
