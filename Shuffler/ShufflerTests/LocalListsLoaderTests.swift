@@ -47,41 +47,18 @@ class LocalListsLoaderTests: XCTestCase {
     
     func test_load_failsOnRetrievalError() {
         let (cacheSpy, sut) = makeSUT()
-        let retrievalError = NSError(domain: "Any error", code: 0)
         
-        let exp = expectation(description: "Wait for load to complete")
-        
-        var receivedError: NSError?
-        sut.load { result in
-            if case let Result.failure(error) = result {
-                receivedError = error as NSError
-            }
-            exp.fulfill()
+        expect(sut, toCompleteWith: .failure(NSError(domain: "Any error", code: 0))) {
+            cacheSpy.completeWithError()
         }
-        
-        cacheSpy.completeWithError()
-        wait(for: [exp], timeout: 1.0)
-        
-        XCTAssertEqual(receivedError, retrievalError)
     }
     
     func test_load_returnsEmptyListsForEmptyCache() {
         let (cacheSpy, sut) = makeSUT()
         
-        let exp = expectation(description: "Wait for load to complete")
-        
-        var receivedLists: [List]?
-        sut.load { result in
-            if case let Result.success(lists) = result {
-                receivedLists = lists
-            }
-            exp.fulfill()
+        expect(sut, toCompleteWith: .success([])) {
+            cacheSpy.completeWithSuccess([])
         }
-        
-        cacheSpy.completeWithSuccess([])
-        wait(for: [exp], timeout: 1.0)
-        
-        XCTAssertEqual(receivedLists, [])
     }
     
     // MARK: - SUT helper
@@ -90,6 +67,27 @@ class LocalListsLoaderTests: XCTestCase {
         let sut = LocalListLoader(cache: cacheSpy)
         
         return (cacheSpy, sut)
+    }
+    
+    private func expect(_ sut: LocalListLoader, toCompleteWith expectedResult: Result<[List], Error>, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+        let exp = expectation(description: "Wait for load to complete")
+        
+        sut.load { receivedResult in
+            switch (receivedResult, expectedResult) {
+            case let (.success(receivedLists), .success(expectedLists)):
+                XCTAssertEqual(receivedLists, expectedLists, file: file, line: line)
+            case let (.failure(receivedError as NSError), .failure(expectedError as NSError)):
+                XCTAssertEqual(receivedError, expectedError, file: file, line: line)
+            default:
+                XCTFail("Expected result: \(expectedResult), got \(receivedResult) instead.", file: file, line: line)
+            }
+            
+            exp.fulfill()
+        }
+        
+        action()
+        wait(for: [exp], timeout: 1.0)
+
     }
     
     // MARK: - CacheSpy helper class
