@@ -32,20 +32,7 @@ class CodableListsStoreTests: XCTestCase {
     func test_retrieve_deliversEmptyOnEmptyCache() {
         let sut = CodableListsStore(storeUrl: URL(string: "www.any-url.com")!)
         
-        let exp = expectation(description: "Wait for retrieve to finish")
-        
-        sut.retrieve { result in
-            switch result {
-            case let .success(lists):
-                XCTAssertEqual(lists, [])
-            default:
-                XCTFail("Expected empty list, got \(result) instead.")
-            }
-            
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 1.0)
+        expect(sut, toRetrieve: .success([])) { }
     }
     
     func test_insert_returnsInsertedListOnEmptyCache() {
@@ -71,14 +58,12 @@ class CodableListsStoreTests: XCTestCase {
     func test_retrieve_deliversValuesOnNonEmptyCache() {
         let sut = CodableListsStore(storeUrl: URL(string: "www.any-url.com")!)
         
+        let lists: [List] = [List(), List()]
         let exp = expectation(description: "Wait for insertion to finish")
         
-        let lists: [List] = [List(), List()]
-        var receivedListsAfterInsertion: [List]?
         sut.insert(lists) { result in
             switch result {
             case let .success(updatedLists):
-                receivedListsAfterInsertion = updatedLists
                 XCTAssertEqual(lists, updatedLists)
             default:
                 XCTFail("Expected insert to succeed. Got \(result) instead")
@@ -89,20 +74,28 @@ class CodableListsStoreTests: XCTestCase {
         
         wait(for: [exp], timeout: 1.0)
         
-        let exp2 = expectation(description: "Wait for retrieve to finish")
+        expect(sut, toRetrieve: .success(lists)) { }
+    }
+    
+    // MARK: - Helpers
+    private func expect(_ sut: CodableListsStore, toRetrieve expectedResult: Result<[List], Error>, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+        let exp = expectation(description: "Wait for load to complete")
         
-        sut.retrieve { result in
-            switch result {
-            case let .success(lists):
-                XCTAssertEqual(lists, receivedListsAfterInsertion)
+        sut.retrieve { receivedResult in
+            switch (receivedResult, expectedResult) {
+            case let (.success(receivedLists), .success(expectedLists)):
+                XCTAssertEqual(receivedLists, expectedLists, file: file, line: line)
+            case let (.failure(receivedError as NSError), .failure(expectedError as NSError)):
+                XCTAssertEqual(receivedError, expectedError, file: file, line: line)
             default:
-                XCTFail("Expected empty list, got \(result) instead.")
+                XCTFail("Expected result: \(expectedResult), got \(receivedResult) instead.", file: file, line: line)
             }
             
-            exp2.fulfill()
+            exp.fulfill()
         }
         
-        wait(for: [exp2], timeout: 1.0)
+        action()
+        wait(for: [exp], timeout: 1.0)
     }
     
 }
