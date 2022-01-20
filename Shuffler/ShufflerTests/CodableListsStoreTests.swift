@@ -48,6 +48,26 @@ class CodableListsStoreTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
+    func test_insert_returnsInsertedListOnEmptyCache() {
+        let sut = CodableListsStore(storeUrl: URL(string: "www.any-url.com")!)
+        
+        let exp = expectation(description: "Wait for insertion to finish")
+        
+        let lists: [List] = [List(), List()]
+        sut.insert(lists) { result in
+            switch result {
+            case let .success(updatedLists):
+                XCTAssertEqual(lists, updatedLists)
+            default:
+                XCTFail("Expected insert to succeed. Got \(result) instead")
+            }
+            
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
     func test_retrieve_deliversValuesOnNonEmptyCache() {
         let sut = CodableListsStore(storeUrl: URL(string: "www.any-url.com")!)
         
