@@ -56,7 +56,7 @@
 		1B855AEF2796244700D64F2C = {
 			isa = PBXGroup;
 			children = (
-				1B855AFA2796244700D64F2C /* Shuffler */,
+				1B855AFA2796244700D64F2C /* ShuffleriOS */,
 				1B855AF92796244700D64F2C /* Products */,
 			);
 			sourceTree = "<group>";
@@ -69,7 +69,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		1B855AFA2796244700D64F2C /* Shuffler */ = {
+		1B855AFA2796244700D64F2C /* ShuffleriOS */ = {
 			isa = PBXGroup;
 			children = (
 				1B855AFB2796244700D64F2C /* AppDelegate.swift */,
@@ -82,7 +82,7 @@
 				1B855B062796244800D64F2C /* LaunchScreen.storyboard */,
 				1B855B092796244800D64F2C /* Info.plist */,
 			);
-			path = Shuffler;
+			path = ShuffleriOS;
 			sourceTree = "<group>";
 		};
 		1B855B192797270500D64F2C /* Models */ = {
@@ -158,7 +158,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 1B855AF32796244700D64F2C /* Build configuration list for PBXProject "Shuffler" */;
+			buildConfigurationList = 1B855AF32796244700D64F2C /* Build configuration list for PBXProject "ShuffleriOS" */;
 			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -347,7 +347,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = HHWJTGZ862;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Shuffler/Info.plist;
+				INFOPLIST_FILE = ShuffleriOS/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -376,7 +376,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = HHWJTGZ862;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Shuffler/Info.plist;
+				INFOPLIST_FILE = ShuffleriOS/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -399,7 +399,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1B855AF32796244700D64F2C /* Build configuration list for PBXProject "Shuffler" */ = {
+		1B855AF32796244700D64F2C /* Build configuration list for PBXProject "ShuffleriOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1B855B0A2796244800D64F2C /* Debug */,

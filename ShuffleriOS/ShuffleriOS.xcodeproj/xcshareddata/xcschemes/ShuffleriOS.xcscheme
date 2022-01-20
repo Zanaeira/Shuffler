@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1B855AF72796244700D64F2C"
-               BuildableName = "Shuffler.app"
+               BuildableName = "ShuffleriOSiOS.app"
                BlueprintName = "ShuffleriOS"
-               ReferencedContainer = "container:Shuffler.xcodeproj">
+               ReferencedContainer = "container:ShuffleriOS.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,9 +45,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1B855AF72796244700D64F2C"
-            BuildableName = "Shuffler.app"
+            BuildableName = "ShuffleriOSiOS.app"
             BlueprintName = "ShuffleriOS"
-            ReferencedContainer = "container:Shuffler.xcodeproj">
+            ReferencedContainer = "container:ShuffleriOS.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -62,9 +62,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1B855AF72796244700D64F2C"
-            BuildableName = "Shuffler.app"
+            BuildableName = "ShuffleriOSiOS.app"
             BlueprintName = "ShuffleriOS"
-            ReferencedContainer = "container:Shuffler.xcodeproj">
+            ReferencedContainer = "container:ShuffleriOS.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
