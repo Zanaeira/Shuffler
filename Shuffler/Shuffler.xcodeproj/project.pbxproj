@@ -24,7 +24,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		1B855AF82796244700D64F2C /* Shuffler.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Shuffler.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1B855AF82796244700D64F2C /* ShuffleriOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShuffleriOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1B855AFB2796244700D64F2C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1B855AFD2796244700D64F2C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		1B855B042796244800D64F2C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -64,7 +64,7 @@
 		1B855AF92796244700D64F2C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1B855AF82796244700D64F2C /* Shuffler.app */,
+				1B855AF82796244700D64F2C /* ShuffleriOS.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -126,9 +126,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1B855AF72796244700D64F2C /* Shuffler */ = {
+		1B855AF72796244700D64F2C /* ShuffleriOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1B855B0C2796244800D64F2C /* Build configuration list for PBXNativeTarget "Shuffler" */;
+			buildConfigurationList = 1B855B0C2796244800D64F2C /* Build configuration list for PBXNativeTarget "ShuffleriOS" */;
 			buildPhases = (
 				1B855AF42796244700D64F2C /* Sources */,
 				1B855AF52796244700D64F2C /* Frameworks */,
@@ -138,9 +138,9 @@
 			);
 			dependencies = (
 			);
-			name = Shuffler;
+			name = ShuffleriOS;
 			productName = Shuffler;
-			productReference = 1B855AF82796244700D64F2C /* Shuffler.app */;
+			productReference = 1B855AF82796244700D64F2C /* ShuffleriOS.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -171,7 +171,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				1B855AF72796244700D64F2C /* Shuffler */,
+				1B855AF72796244700D64F2C /* ShuffleriOS */,
 			);
 		};
 /* End PBXProject section */
@@ -408,7 +408,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1B855B0C2796244800D64F2C /* Build configuration list for PBXNativeTarget "Shuffler" */ = {
+		1B855B0C2796244800D64F2C /* Build configuration list for PBXNativeTarget "ShuffleriOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1B855B0D2796244800D64F2C /* Debug */,
