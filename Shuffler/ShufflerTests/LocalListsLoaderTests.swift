@@ -15,14 +15,16 @@ final class LocalListLoader {
         self.cache = cache
     }
     
-    func load() {
-        cache.retrieve()
+    func load(completion: @escaping (Error) -> Void) {
+        cache.retrieve() { error in
+            completion(error)
+        }
     }
     
 }
 
 protocol Cache {
-    func retrieve()
+    func retrieve(completion: @escaping (Error) -> Void)
 }
 
 class LocalListsLoaderTests: XCTestCase {
@@ -36,9 +38,27 @@ class LocalListsLoaderTests: XCTestCase {
     func test_load_sendsRetrieveMessageToCache() {
         let (cacheSpy, sut) = makeSUT()
         
-        sut.load()
+        sut.load() { _ in }
         
         XCTAssertEqual(cacheSpy.messages, [.retrieve])
+    }
+    
+    func test_load_failsOnRetrievalError() {
+        let (cacheSpy, sut) = makeSUT()
+        let retrievalError = NSError(domain: "Any error", code: 0)
+        
+        let exp = expectation(description: "Wait for load to complete")
+        
+        var receivedError: NSError?
+        sut.load { error in
+            receivedError = error as NSError
+            exp.fulfill()
+        }
+        
+        cacheSpy.completeWithError()
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertEqual(receivedError, retrievalError)
     }
     
     // MARK: - SUT helper
@@ -57,9 +77,15 @@ class LocalListsLoaderTests: XCTestCase {
         }
         
         var messages: [Message] = []
+        var completions: [(Error) -> Void] = []
         
-        func retrieve() {
+        func retrieve(completion: @escaping (Error) -> Void) {
             messages.append(.retrieve)
+            completions.append(completion)
+        }
+        
+        func completeWithError() {
+            completions[0](NSError(domain: "Any error", code: 0))
         }
         
     }
