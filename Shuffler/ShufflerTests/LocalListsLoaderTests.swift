@@ -6,28 +6,7 @@
 //
 
 import XCTest
-
-final class LocalListLoader {
-    
-    private let cache: Cache
-    
-    init(cache: Cache) {
-        self.cache = cache
-    }
-    
-    func load(completion: @escaping (Result<[List], Error>) -> Void) {
-        cache.retrieve() { result in
-            completion(result)
-        }
-    }
-    
-}
-
-protocol Cache {
-    func retrieve(completion: @escaping (Result<[List], Error>) -> Void)
-}
-
-struct List: Equatable {}
+import Shuffler
 
 class LocalListsLoaderTests: XCTestCase {
     

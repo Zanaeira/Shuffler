@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		1B855B7F2799C71300D64F2C /* Shuffler.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B855B762799C71200D64F2C /* Shuffler.framework */; };
 		1B855B8F2799C7BF00D64F2C /* LocalListsLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855B8E2799C7BF00D64F2C /* LocalListsLoaderTests.swift */; };
+		1B855B91279A1D5D00D64F2C /* LocalListLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855B90279A1D5D00D64F2C /* LocalListLoader.swift */; };
+		1B855B93279A1D8200D64F2C /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855B92279A1D8200D64F2C /* Cache.swift */; };
+		1B855B95279A1D9A00D64F2C /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855B94279A1D9A00D64F2C /* List.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -25,6 +28,9 @@
 		1B855B762799C71200D64F2C /* Shuffler.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Shuffler.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1B855B7E2799C71300D64F2C /* ShufflerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ShufflerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1B855B8E2799C7BF00D64F2C /* LocalListsLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalListsLoaderTests.swift; sourceTree = "<group>"; };
+		1B855B90279A1D5D00D64F2C /* LocalListLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalListLoader.swift; sourceTree = "<group>"; };
+		1B855B92279A1D8200D64F2C /* Cache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
+		1B855B94279A1D9A00D64F2C /* List.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = List.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +73,9 @@
 		1B855B782799C71200D64F2C /* Shuffler */ = {
 			isa = PBXGroup;
 			children = (
+				1B855B94279A1D9A00D64F2C /* List.swift */,
+				1B855B90279A1D5D00D64F2C /* LocalListLoader.swift */,
+				1B855B92279A1D8200D64F2C /* Cache.swift */,
 			);
 			path = Shuffler;
 			sourceTree = "<group>";
@@ -140,6 +149,7 @@
 				TargetAttributes = {
 					1B855B752799C71200D64F2C = {
 						CreatedOnToolsVersion = 13.2.1;
+						LastSwiftMigration = 1320;
 					};
 					1B855B7D2799C71300D64F2C = {
 						CreatedOnToolsVersion = 13.2.1;
@@ -188,6 +198,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B855B93279A1D8200D64F2C /* Cache.swift in Sources */,
+				1B855B91279A1D5D00D64F2C /* LocalListLoader.swift in Sources */,
+				1B855B95279A1D9A00D64F2C /* List.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -334,6 +347,7 @@
 		1B855B892799C71300D64F2C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -355,6 +369,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -362,6 +377,7 @@
 		1B855B8A2799C71300D64F2C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -390,6 +406,7 @@
 		1B855B8C2799C71300D64F2C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -412,6 +429,7 @@
 		1B855B8D2799C71300D64F2C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
