@@ -121,14 +121,14 @@ class CodableListsStoreTests: XCTestCase {
         
         let lists: [List] = [anyList(), anyList()]
         
-        expectAppend(lists, intoSUT: sut, toCompleteWith: .success(lists)) { }
+        expectAppend(lists, intoSUT: sut, toCompleteWith: .success(lists))
     }
     
     func test_retrieve_deliversValuesOnNonEmptyCache() {
         let sut = makeSUT()
         
         let lists: [List] = [anyList(), anyList()]
-        expectAppend(lists, intoSUT: sut, toCompleteWith: .success(lists)) { }
+        expectAppend(lists, intoSUT: sut, toCompleteWith: .success(lists))
         expect(sut, toRetrieve: .success(lists)) { }
     }
     
@@ -136,7 +136,7 @@ class CodableListsStoreTests: XCTestCase {
         let sut = makeSUT()
         
         let lists: [List] = [anyList(), anyList()]
-        expectAppend(lists, intoSUT: sut, toCompleteWith: .success(lists)) { }
+        expectAppend(lists, intoSUT: sut, toCompleteWith: .success(lists))
         expect(sut, toRetrieve: .success(lists)) { }
         expect(sut, toRetrieve: .success(lists)) { }
     }
@@ -180,7 +180,7 @@ class CodableListsStoreTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    private func expectAppend(_ lists: [List], intoSUT sut: CodableListsStore, toCompleteWith expectedResult: Result<[List], Error>, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    private func expectAppend(_ lists: [List], intoSUT sut: CodableListsStore, toCompleteWith expectedResult: Result<[List], Error>, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "Wait for insertion to finish")
         
         sut.append(lists) { receivedResult in
