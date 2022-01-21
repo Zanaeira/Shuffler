@@ -121,22 +121,31 @@ class CodableListsStoreTests: XCTestCase {
         
         let lists: [List] = [anyList(), anyList()]
         
-        expectAppend(lists, intoSUT: sut, toCompleteWith: .success(lists))
+        sut.append(lists) { result in
+            if case .success(let receivedLists) = result {
+                XCTAssertEqual(lists, receivedLists)
+            }
+        }
     }
     
     func test_retrieve_deliversValuesOnNonEmptyCache() {
         let sut = makeSUT()
         
         let lists: [List] = [anyList(), anyList()]
-        expectAppend(lists, intoSUT: sut, toCompleteWith: .success(lists))
+        
+        sut.append(lists) { _ in }
+        
         expect(sut, toRetrieve: .success(lists)) { }
+        
     }
     
     func test_retrieveTwice_deliversSameValuesOnNonEmptyCache() {
         let sut = makeSUT()
         
         let lists: [List] = [anyList(), anyList()]
-        expectAppend(lists, intoSUT: sut, toCompleteWith: .success(lists))
+        
+        sut.append(lists) { _ in }
+        
         expect(sut, toRetrieve: .success(lists)) { }
         expect(sut, toRetrieve: .success(lists)) { }
     }
@@ -179,26 +188,7 @@ class CodableListsStoreTests: XCTestCase {
         action()
         wait(for: [exp], timeout: 1.0)
     }
-    
-    private func expectAppend(_ lists: [List], intoSUT sut: CodableListsStore, toCompleteWith expectedResult: Result<[List], Error>, file: StaticString = #filePath, line: UInt = #line) {
-        let exp = expectation(description: "Wait for insertion to finish")
         
-        sut.append(lists) { receivedResult in
-            switch (receivedResult, expectedResult) {
-            case let (.success(receivedLists), .success(expectedLists)):
-                XCTAssertEqual(receivedLists, expectedLists, file: file, line: line)
-            case let (.failure(receivedError as NSError), .failure(expectedError as NSError)):
-                XCTAssertEqual(receivedError, expectedError, file: file, line: line)
-            default:
-                XCTFail("Expected result: \(expectedResult), got \(receivedResult) instead.", file: file, line: line)
-            }
-            
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 1.0)
-    }
-    
     private func testStoreUrl() -> URL {
         let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first
         let storeUrl = cachesDirectory?.appendingPathComponent("\(type(of: self)).store")
