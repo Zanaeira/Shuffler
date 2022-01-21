@@ -10,33 +10,69 @@ import Shuffler
 
 final class CodableListsStore: ListsStore {
     
-    private var lists: [List] = []
+    private let storeUrl: URL
     
     init(storeUrl: URL) {
-        
+        self.storeUrl = storeUrl
     }
     
     func retrieve(completion: @escaping (Result<[List], Error>) -> Void) {
-        completion(.success(lists))
+        guard let data = try? Data(contentsOf: storeUrl) else {
+            completion(.success([]))
+            return
+        }
+        
+        do {
+            let lists = try JSONDecoder().decode([List].self, from: data)
+            completion(.success(lists))
+        } catch {
+            completion(.failure(error))
+        }
     }
     
-    func insert(_ lists: [List], completion: ((Result<[List], Error>) -> Void)) {
-        self.lists += lists
-        completion(.success(lists))
+    func insert(_ lists: [List], completion: @escaping ((Result<[List], Error>) -> Void)) {
+        retrieve { result in
+            switch result {
+            case let .success(cachedLists):
+                let updatedLists = cachedLists + lists
+                do {
+                    let encoded = try JSONEncoder().encode(updatedLists)
+                    try encoded.write(to: self.storeUrl)
+                    completion(.success(updatedLists))
+                } catch {
+                    completion(.failure(error))
+                }
+            case let .failure(error):
+                completion(.failure(error))
+            }
+        }
     }
     
 }
 
 class CodableListsStoreTests: XCTestCase {
     
+    override func setUp() {
+        super.setUp()
+        
+        try? FileManager.default.removeItem(at: testStoreUrl())
+    }
+    
+    
+    override func tearDown() {
+        super.tearDown()
+        
+        try? FileManager.default.removeItem(at: testStoreUrl())
+    }
+    
     func test_retrieve_deliversEmptyOnEmptyCache() {
-        let sut = CodableListsStore(storeUrl: URL(string: "www.any-url.com")!)
+        let sut = CodableListsStore(storeUrl: testStoreUrl())
         
         expect(sut, toRetrieve: .success([])) { }
     }
     
     func test_insert_returnsInsertedListOnEmptyCache() {
-        let sut = CodableListsStore(storeUrl: URL(string: "www.any-url.com")!)
+        let sut = CodableListsStore(storeUrl: testStoreUrl())
         
         let lists: [List] = [anyList(), anyList()]
         
@@ -44,7 +80,7 @@ class CodableListsStoreTests: XCTestCase {
     }
     
     func test_retrieve_deliversValuesOnNonEmptyCache() {
-        let sut = CodableListsStore(storeUrl: URL(string: "www.any-url.com")!)
+        let sut = CodableListsStore(storeUrl: testStoreUrl())
         
         let lists: [List] = [anyList(), anyList()]
         expectInsert(lists, intoSUT: sut, toCompleteWith: .success(lists)) { }
@@ -52,7 +88,7 @@ class CodableListsStoreTests: XCTestCase {
     }
     
     func test_insertTwice_appendsTheListsToTheCurrentCache() {
-        let sut = CodableListsStore(storeUrl: URL(string: "www.any-url.com")!)
+        let sut = CodableListsStore(storeUrl: testStoreUrl())
         
         let lists1 = [anyList(), anyList()]
         let lists2 = [anyList(), anyList(), anyList()]
@@ -101,6 +137,13 @@ class CodableListsStoreTests: XCTestCase {
         }
         
         wait(for: [exp], timeout: 1.0)
+    }
+    
+    private func testStoreUrl() -> URL {
+        let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first
+        let storeUrl = cachesDirectory?.appendingPathComponent("\(type(of: self)).store")
+        
+        return storeUrl!
     }
     
 }

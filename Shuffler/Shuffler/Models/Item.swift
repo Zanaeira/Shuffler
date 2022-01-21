@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Item: Equatable {
+public struct Item: Equatable, Codable {
     public let id: UUID
     public let text: String
 }
