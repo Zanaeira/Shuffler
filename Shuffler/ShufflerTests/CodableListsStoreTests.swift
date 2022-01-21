@@ -121,11 +121,15 @@ class CodableListsStoreTests: XCTestCase {
         
         let lists: [List] = [anyList(), anyList()]
         
+        let exp = expectation(description: "Wait for append to finish")
         sut.append(lists) { result in
             if case .success(let receivedLists) = result {
                 XCTAssertEqual(lists, receivedLists)
             }
+            exp.fulfill()
         }
+        
+        wait(for: [exp], timeout: 1.0)
     }
     
     func test_retrieve_deliversValuesOnNonEmptyCache() {
