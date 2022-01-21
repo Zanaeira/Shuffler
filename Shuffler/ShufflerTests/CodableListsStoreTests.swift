@@ -68,7 +68,7 @@ final class CodableListsStore: ListsStore {
         }
     }
     
-    func insert(_ lists: [List], completion: @escaping ((Result<[List], Error>) -> Void)) {
+    func append(_ lists: [List], completion: @escaping ((Result<[List], Error>) -> Void)) {
         retrieve { result in
             switch result {
             case let .success(cachedLists):
@@ -116,19 +116,19 @@ class CodableListsStoreTests: XCTestCase {
         expect(sut, toRetrieve: .success([])) { }
     }
     
-    func test_insert_returnsInsertedListOnEmptyCache() {
+    func test_append_returnsAppendedListOnEmptyCache() {
         let sut = makeSUT()
         
         let lists: [List] = [anyList(), anyList()]
         
-        expectInsert(lists, intoSUT: sut, toCompleteWith: .success(lists)) { }
+        expectAppend(lists, intoSUT: sut, toCompleteWith: .success(lists)) { }
     }
     
     func test_retrieve_deliversValuesOnNonEmptyCache() {
         let sut = makeSUT()
         
         let lists: [List] = [anyList(), anyList()]
-        expectInsert(lists, intoSUT: sut, toCompleteWith: .success(lists)) { }
+        expectAppend(lists, intoSUT: sut, toCompleteWith: .success(lists)) { }
         expect(sut, toRetrieve: .success(lists)) { }
     }
     
@@ -136,19 +136,19 @@ class CodableListsStoreTests: XCTestCase {
         let sut = makeSUT()
         
         let lists: [List] = [anyList(), anyList()]
-        expectInsert(lists, intoSUT: sut, toCompleteWith: .success(lists)) { }
+        expectAppend(lists, intoSUT: sut, toCompleteWith: .success(lists)) { }
         expect(sut, toRetrieve: .success(lists)) { }
         expect(sut, toRetrieve: .success(lists)) { }
     }
     
-    func test_insertTwice_appendsTheListsToTheCurrentCache() {
+    func test_appendTwice_appendsTheListsToTheCurrentCache() {
         let sut = makeSUT()
         
         let lists1 = [anyList(), anyList()]
         let lists2 = [anyList(), anyList(), anyList()]
         
-        sut.insert(lists1) { _ in }
-        sut.insert(lists2) { _ in }
+        sut.append(lists1) { _ in }
+        sut.append(lists2) { _ in }
         
         expect(sut, toRetrieve: .success(lists1 + lists2)) { }
     }
@@ -180,10 +180,10 @@ class CodableListsStoreTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    private func expectInsert(_ lists: [List], intoSUT sut: CodableListsStore, toCompleteWith expectedResult: Result<[List], Error>, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    private func expectAppend(_ lists: [List], intoSUT sut: CodableListsStore, toCompleteWith expectedResult: Result<[List], Error>, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "Wait for insertion to finish")
         
-        sut.insert(lists) { receivedResult in
+        sut.append(lists) { receivedResult in
             switch (receivedResult, expectedResult) {
             case let (.success(receivedLists), .success(expectedLists)):
                 XCTAssertEqual(receivedLists, expectedLists, file: file, line: line)
