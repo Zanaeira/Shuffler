@@ -14,6 +14,7 @@
 		1B855B95279A1D9A00D64F2C /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855B94279A1D9A00D64F2C /* List.swift */; };
 		1B855B97279A1F9100D64F2C /* CodableListsStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855B96279A1F9100D64F2C /* CodableListsStoreTests.swift */; };
 		1B855B99279A308900D64F2C /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855B98279A308900D64F2C /* Item.swift */; };
+		1B855B9C279A328700D64F2C /* SharedTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855B9B279A328700D64F2C /* SharedTestHelpers.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,6 +36,7 @@
 		1B855B94279A1D9A00D64F2C /* List.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = List.swift; sourceTree = "<group>"; };
 		1B855B96279A1F9100D64F2C /* CodableListsStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableListsStoreTests.swift; sourceTree = "<group>"; };
 		1B855B98279A308900D64F2C /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		1B855B9B279A328700D64F2C /* SharedTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedTestHelpers.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,10 +90,19 @@
 		1B855B822799C71300D64F2C /* ShufflerTests */ = {
 			isa = PBXGroup;
 			children = (
+				1B855B9A279A326400D64F2C /* Helpers */,
 				1B855B8E2799C7BF00D64F2C /* LocalListsLoaderTests.swift */,
 				1B855B96279A1F9100D64F2C /* CodableListsStoreTests.swift */,
 			);
 			path = ShufflerTests;
+			sourceTree = "<group>";
+		};
+		1B855B9A279A326400D64F2C /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				1B855B9B279A328700D64F2C /* SharedTestHelpers.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -217,6 +228,7 @@
 			files = (
 				1B855B97279A1F9100D64F2C /* CodableListsStoreTests.swift in Sources */,
 				1B855B8F2799C7BF00D64F2C /* LocalListsLoaderTests.swift in Sources */,
+				1B855B9C279A328700D64F2C /* SharedTestHelpers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -103,8 +103,4 @@ class CodableListsStoreTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    private func anyList() -> List {
-        List(id: UUID(), name: "Any List", items: [])
-    }
-    
 }

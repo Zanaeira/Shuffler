@@ -77,10 +77,6 @@ class LocalListsLoaderTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    private func anyList() -> List {
-        List(id: UUID(), name: "Any List", items: [])
-    }
-    
     // MARK: - ListsStoreSpy helper class
     private final class ListsStoreSpy: ListsStore {
         
