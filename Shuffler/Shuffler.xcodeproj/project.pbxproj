@@ -79,10 +79,8 @@
 		1B855B782799C71200D64F2C /* Shuffler */ = {
 			isa = PBXGroup;
 			children = (
-				1B855B94279A1D9A00D64F2C /* List.swift */,
-				1B855B98279A308900D64F2C /* Item.swift */,
-				1B855B90279A1D5D00D64F2C /* LocalListsLoader.swift */,
-				1B855B92279A1D8200D64F2C /* ListsStore.swift */,
+				1B855B9D279A32E700D64F2C /* Models */,
+				1B855B9E279A32F500D64F2C /* Lists Cache */,
 			);
 			path = Shuffler;
 			sourceTree = "<group>";
@@ -103,6 +101,24 @@
 				1B855B9B279A328700D64F2C /* SharedTestHelpers.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		1B855B9D279A32E700D64F2C /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				1B855B94279A1D9A00D64F2C /* List.swift */,
+				1B855B98279A308900D64F2C /* Item.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		1B855B9E279A32F500D64F2C /* Lists Cache */ = {
+			isa = PBXGroup;
+			children = (
+				1B855B90279A1D5D00D64F2C /* LocalListsLoader.swift */,
+				1B855B92279A1D8200D64F2C /* ListsStore.swift */,
+			);
+			path = "Lists Cache";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
