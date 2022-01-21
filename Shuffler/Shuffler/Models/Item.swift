@@ -7,7 +7,14 @@
 
 import Foundation
 
-public struct Item: Equatable, Codable {
+public struct Item: Equatable {
+    
     public let id: UUID
     public let text: String
+    
+    public init(id: UUID, text: String) {
+        self.id = id
+        self.text = text
+    }
+    
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct List: Equatable, Codable {
+public struct List: Equatable {
     
     public let id: UUID
     public let name: String

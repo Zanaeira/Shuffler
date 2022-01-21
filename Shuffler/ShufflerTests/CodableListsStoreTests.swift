@@ -10,6 +10,44 @@ import Shuffler
 
 final class CodableListsStore: ListsStore {
     
+    private struct Cache: Codable {
+        let codableLists: [CodableList]
+        
+        var modelLists: [List] {
+            codableLists.map({ $0.modelList })
+        }
+    }
+    
+    private struct CodableList: Codable {
+        let id: UUID
+        let name: String
+        let items: [CodableItem]
+        
+        init(_ list: List) {
+            id = list.id
+            name = list.name
+            items = list.items.map(CodableItem.init)
+        }
+        
+        var modelList: List {
+            List(id: id, name: name, items: items.map({ $0.modelItem }))
+        }
+    }
+    
+    private struct CodableItem: Codable {
+        let id: UUID
+        let text: String
+        
+        init(_ item: Item) {
+            id = item.id
+            text = item.text
+        }
+        
+        var modelItem: Item {
+            Item(id: id, text: text)
+        }
+    }
+    
     private let storeUrl: URL
     
     init(storeUrl: URL) {
@@ -23,8 +61,8 @@ final class CodableListsStore: ListsStore {
         }
         
         do {
-            let lists = try JSONDecoder().decode([List].self, from: data)
-            completion(.success(lists))
+            let lists = try JSONDecoder().decode([CodableList].self, from: data)
+            completion(.success(lists.map({$0.modelList})))
         } catch {
             completion(.failure(error))
         }
@@ -36,7 +74,7 @@ final class CodableListsStore: ListsStore {
             case let .success(cachedLists):
                 let updatedLists = cachedLists + lists
                 do {
-                    let encoded = try JSONEncoder().encode(updatedLists)
+                    let encoded = try JSONEncoder().encode(updatedLists.map(CodableList.init))
                     try encoded.write(to: self.storeUrl)
                     completion(.success(updatedLists))
                 } catch {
