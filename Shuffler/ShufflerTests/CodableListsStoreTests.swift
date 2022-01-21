@@ -86,6 +86,10 @@ final class CodableListsStore: ListsStore {
         }
     }
     
+    func delete(_ lists: [List], completion: @escaping ((Result<[List], Error>) -> Void)) {
+        completion(.success([]))
+    }
+    
 }
 
 class CodableListsStoreTests: XCTestCase {
@@ -164,6 +168,22 @@ class CodableListsStoreTests: XCTestCase {
         sut.append(lists2) { _ in }
         
         expect(sut, toRetrieve: .success(lists1 + lists2)) { }
+    }
+    
+    func test_delete_completesWithEmptyListOnEmptyCache() {
+        let sut = makeSUT()
+        
+        let exp = expectation(description: "Wait for delete to finish")
+        
+        let lists = [anyList()]
+        sut.delete(lists) { result in
+            if case .success(let lists) = result {
+                XCTAssertEqual(lists, [])
+            }
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
     }
     
     // MARK: - Helpers
