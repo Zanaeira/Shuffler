@@ -132,6 +132,15 @@ class CodableListsStoreTests: XCTestCase {
         expect(sut, toRetrieve: .success(lists)) { }
     }
     
+    func test_retrieveTwice_deliversSameValuesOnNonEmptyCache() {
+        let sut = makeSUT()
+        
+        let lists: [List] = [anyList(), anyList()]
+        expectInsert(lists, intoSUT: sut, toCompleteWith: .success(lists)) { }
+        expect(sut, toRetrieve: .success(lists)) { }
+        expect(sut, toRetrieve: .success(lists)) { }
+    }
+    
     func test_insertTwice_appendsTheListsToTheCurrentCache() {
         let sut = makeSUT()
         
