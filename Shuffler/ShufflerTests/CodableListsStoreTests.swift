@@ -109,6 +109,13 @@ class CodableListsStoreTests: XCTestCase {
         expect(sut, toRetrieve: .success([])) { }
     }
     
+    func test_retrieveTwice_hasNoSideEffectsAndDeliversEmptyOnEmptyCache() {
+        let sut = makeSUT()
+        
+        expect(sut, toRetrieve: .success([])) { }
+        expect(sut, toRetrieve: .success([])) { }
+    }
+    
     func test_insert_returnsInsertedListOnEmptyCache() {
         let sut = makeSUT()
         
