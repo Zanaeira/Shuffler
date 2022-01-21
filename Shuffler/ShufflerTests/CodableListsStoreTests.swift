@@ -38,42 +38,16 @@ class CodableListsStoreTests: XCTestCase {
     func test_insert_returnsInsertedListOnEmptyCache() {
         let sut = CodableListsStore(storeUrl: URL(string: "www.any-url.com")!)
         
-        let exp = expectation(description: "Wait for insertion to finish")
-        
         let lists: [List] = [List(), List()]
-        sut.insert(lists) { result in
-            switch result {
-            case let .success(updatedLists):
-                XCTAssertEqual(lists, updatedLists)
-            default:
-                XCTFail("Expected insert to succeed. Got \(result) instead")
-            }
-            
-            exp.fulfill()
-        }
         
-        wait(for: [exp], timeout: 1.0)
+        expectInsert(lists, intoSUT: sut, toCompleteWith: .success(lists)) { }
     }
     
     func test_retrieve_deliversValuesOnNonEmptyCache() {
         let sut = CodableListsStore(storeUrl: URL(string: "www.any-url.com")!)
         
         let lists: [List] = [List(), List()]
-        let exp = expectation(description: "Wait for insertion to finish")
-        
-        sut.insert(lists) { result in
-            switch result {
-            case let .success(updatedLists):
-                XCTAssertEqual(lists, updatedLists)
-            default:
-                XCTFail("Expected insert to succeed. Got \(result) instead")
-            }
-            
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 1.0)
-        
+        expectInsert(lists, intoSUT: sut, toCompleteWith: .success(lists)) { }
         expect(sut, toRetrieve: .success(lists)) { }
     }
     
@@ -95,6 +69,25 @@ class CodableListsStoreTests: XCTestCase {
         }
         
         action()
+        wait(for: [exp], timeout: 1.0)
+    }
+    
+    private func expectInsert(_ lists: [List], intoSUT sut: CodableListsStore, toCompleteWith expectedResult: Result<[List], Error>, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+        let exp = expectation(description: "Wait for insertion to finish")
+        
+        sut.insert(lists) { receivedResult in
+            switch (receivedResult, expectedResult) {
+            case let (.success(receivedLists), .success(expectedLists)):
+                XCTAssertEqual(receivedLists, expectedLists, file: file, line: line)
+            case let (.failure(receivedError as NSError), .failure(expectedError as NSError)):
+                XCTAssertEqual(receivedError, expectedError, file: file, line: line)
+            default:
+                XCTFail("Expected result: \(expectedResult), got \(receivedResult) instead.", file: file, line: line)
+            }
+            
+            exp.fulfill()
+        }
+        
         wait(for: [exp], timeout: 1.0)
     }
     
