@@ -21,7 +21,7 @@ final class CodableListsStore: ListsStore {
     }
     
     func insert(_ lists: [List], completion: ((Result<[List], Error>) -> Void)) {
-        self.lists = lists
+        self.lists += lists
         completion(.success(lists))
     }
     
@@ -49,6 +49,18 @@ class CodableListsStoreTests: XCTestCase {
         let lists: [List] = [List(), List()]
         expectInsert(lists, intoSUT: sut, toCompleteWith: .success(lists)) { }
         expect(sut, toRetrieve: .success(lists)) { }
+    }
+    
+    func test_insertTwice_appendsTheListsToTheCurrentCache() {
+        let sut = CodableListsStore(storeUrl: URL(string: "www.any-url.com")!)
+        
+        let lists1 = [List(), List()]
+        let lists2 = [List(), List(), List()]
+        
+        sut.insert(lists1) { _ in }
+        sut.insert(lists2) { _ in }
+        
+        expect(sut, toRetrieve: .success(lists1 + lists2)) { }
     }
     
     // MARK: - Helpers
