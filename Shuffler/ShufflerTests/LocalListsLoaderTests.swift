@@ -43,7 +43,7 @@ class LocalListsLoaderTests: XCTestCase {
     func test_load_returnsListsForNonEmptyCache() {
         let (listsStoreSpy, sut) = makeSUT()
         
-        let lists = [List(), List(), List()]
+        let lists: [List] = [anyList(), anyList(), anyList()]
         expect(sut, toCompleteWith: .success(lists)) {
             listsStoreSpy.completeWithSuccess(lists)
         }
@@ -75,7 +75,10 @@ class LocalListsLoaderTests: XCTestCase {
         
         action()
         wait(for: [exp], timeout: 1.0)
-
+    }
+    
+    private func anyList() -> List {
+        List(id: UUID(), name: "Any List", items: [])
     }
     
     // MARK: - ListsStoreSpy helper class

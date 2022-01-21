@@ -38,7 +38,7 @@ class CodableListsStoreTests: XCTestCase {
     func test_insert_returnsInsertedListOnEmptyCache() {
         let sut = CodableListsStore(storeUrl: URL(string: "www.any-url.com")!)
         
-        let lists: [List] = [List(), List()]
+        let lists: [List] = [anyList(), anyList()]
         
         expectInsert(lists, intoSUT: sut, toCompleteWith: .success(lists)) { }
     }
@@ -46,7 +46,7 @@ class CodableListsStoreTests: XCTestCase {
     func test_retrieve_deliversValuesOnNonEmptyCache() {
         let sut = CodableListsStore(storeUrl: URL(string: "www.any-url.com")!)
         
-        let lists: [List] = [List(), List()]
+        let lists: [List] = [anyList(), anyList()]
         expectInsert(lists, intoSUT: sut, toCompleteWith: .success(lists)) { }
         expect(sut, toRetrieve: .success(lists)) { }
     }
@@ -54,8 +54,8 @@ class CodableListsStoreTests: XCTestCase {
     func test_insertTwice_appendsTheListsToTheCurrentCache() {
         let sut = CodableListsStore(storeUrl: URL(string: "www.any-url.com")!)
         
-        let lists1 = [List(), List()]
-        let lists2 = [List(), List(), List()]
+        let lists1 = [anyList(), anyList()]
+        let lists2 = [anyList(), anyList(), anyList()]
         
         sut.insert(lists1) { _ in }
         sut.insert(lists2) { _ in }
@@ -101,6 +101,10 @@ class CodableListsStoreTests: XCTestCase {
         }
         
         wait(for: [exp], timeout: 1.0)
+    }
+    
+    private func anyList() -> List {
+        List(id: UUID(), name: "Any List", items: [])
     }
     
 }

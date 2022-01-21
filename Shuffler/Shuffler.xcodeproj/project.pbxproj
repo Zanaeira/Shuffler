@@ -13,6 +13,7 @@
 		1B855B93279A1D8200D64F2C /* ListsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855B92279A1D8200D64F2C /* ListsStore.swift */; };
 		1B855B95279A1D9A00D64F2C /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855B94279A1D9A00D64F2C /* List.swift */; };
 		1B855B97279A1F9100D64F2C /* CodableListsStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855B96279A1F9100D64F2C /* CodableListsStoreTests.swift */; };
+		1B855B99279A308900D64F2C /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855B98279A308900D64F2C /* Item.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,6 +34,7 @@
 		1B855B92279A1D8200D64F2C /* ListsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListsStore.swift; sourceTree = "<group>"; };
 		1B855B94279A1D9A00D64F2C /* List.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = List.swift; sourceTree = "<group>"; };
 		1B855B96279A1F9100D64F2C /* CodableListsStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableListsStoreTests.swift; sourceTree = "<group>"; };
+		1B855B98279A308900D64F2C /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +78,7 @@
 			isa = PBXGroup;
 			children = (
 				1B855B94279A1D9A00D64F2C /* List.swift */,
+				1B855B98279A308900D64F2C /* Item.swift */,
 				1B855B90279A1D5D00D64F2C /* LocalListsLoader.swift */,
 				1B855B92279A1D8200D64F2C /* ListsStore.swift */,
 			);
@@ -201,6 +204,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B855B99279A308900D64F2C /* Item.swift in Sources */,
 				1B855B93279A1D8200D64F2C /* ListsStore.swift in Sources */,
 				1B855B91279A1D5D00D64F2C /* LocalListsLoader.swift in Sources */,
 				1B855B95279A1D9A00D64F2C /* List.swift in Sources */,

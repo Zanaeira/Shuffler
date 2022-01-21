@@ -9,6 +9,14 @@ import Foundation
 
 public struct List: Equatable {
     
-    public init() {}
+    public let id: UUID
+    public let name: String
+    public let items: [Item]
+    
+    public init(id: UUID, name: String, items: [Item]) {
+        self.id = id
+        self.name = name
+        self.items = items
+    }
     
 }
