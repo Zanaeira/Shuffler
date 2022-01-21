@@ -104,13 +104,13 @@ class CodableListsStoreTests: XCTestCase {
     }
     
     func test_retrieve_deliversEmptyOnEmptyCache() {
-        let sut = CodableListsStore(storeUrl: testStoreUrl())
+        let sut = makeSUT()
         
         expect(sut, toRetrieve: .success([])) { }
     }
     
     func test_insert_returnsInsertedListOnEmptyCache() {
-        let sut = CodableListsStore(storeUrl: testStoreUrl())
+        let sut = makeSUT()
         
         let lists: [List] = [anyList(), anyList()]
         
@@ -118,7 +118,7 @@ class CodableListsStoreTests: XCTestCase {
     }
     
     func test_retrieve_deliversValuesOnNonEmptyCache() {
-        let sut = CodableListsStore(storeUrl: testStoreUrl())
+        let sut = makeSUT()
         
         let lists: [List] = [anyList(), anyList()]
         expectInsert(lists, intoSUT: sut, toCompleteWith: .success(lists)) { }
@@ -126,7 +126,7 @@ class CodableListsStoreTests: XCTestCase {
     }
     
     func test_insertTwice_appendsTheListsToTheCurrentCache() {
-        let sut = CodableListsStore(storeUrl: testStoreUrl())
+        let sut = makeSUT()
         
         let lists1 = [anyList(), anyList()]
         let lists2 = [anyList(), anyList(), anyList()]
@@ -138,6 +138,12 @@ class CodableListsStoreTests: XCTestCase {
     }
     
     // MARK: - Helpers
+    private func makeSUT() -> CodableListsStore {
+        let sut = CodableListsStore(storeUrl: testStoreUrl())
+        
+        return sut
+    }
+    
     private func expect(_ sut: CodableListsStore, toRetrieve expectedResult: Result<[List], Error>, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "Wait for load to complete")
         
