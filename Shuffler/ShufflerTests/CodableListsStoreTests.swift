@@ -69,28 +69,22 @@ final class CodableListsStore: ListsStore {
     }
     
     func append(_ lists: [List], completion: @escaping ((Result<[List], Error>) -> Void)) {
-        retrieve { result in
-            switch result {
-            case let .success(cachedLists):
-                let updatedLists = cachedLists + lists
-                do {
-                    let encoded = try JSONEncoder().encode(updatedLists.map(CodableList.init))
-                    try encoded.write(to: self.storeUrl)
-                    completion(.success(updatedLists))
-                } catch {
-                    completion(.failure(error))
-                }
-            case let .failure(error):
-                completion(.failure(error))
-            }
-        }
+        retrieveCachedListsAndAmend(using: lists, by: +, completion: completion)
     }
     
     func delete(_ lists: [List], completion: @escaping ((Result<[List], Error>) -> Void)) {
+        retrieveCachedListsAndAmend(using: lists, by: removingFrom, completion: completion)
+    }
+    
+    private func removingFrom(mainList: [List], lists: [List]) -> [List] {
+        mainList.filter({ !lists.contains($0) })
+    }
+    
+    private func retrieveCachedListsAndAmend(using lists: [List], by updatingListsFrom: @escaping ([List], [List]) -> [List], completion: @escaping (Result<[List], Error>) -> Void) {
         retrieve { result in
             switch result {
             case let .success(cachedLists):
-                let updatedLists = cachedLists.filter({ !lists.contains($0) })
+                let updatedLists = updatingListsFrom(cachedLists, lists)
                 do {
                     let encoded = try JSONEncoder().encode(updatedLists.map(CodableList.init))
                     try encoded.write(to: self.storeUrl)
