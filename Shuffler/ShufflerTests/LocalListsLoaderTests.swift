@@ -100,6 +100,10 @@ class LocalListsLoaderTests: XCTestCase {
             completions[0](.success(lists))
         }
         
+        func update(_ list: List, updatedList: List, completion: @escaping (Result<[List], UpdateError>) -> Void) { }
+        func append(_ lists: [List], completion: @escaping ((Result<[List], Error>) -> Void)) { }
+        func delete(_ lists: [List], completion: @escaping ((Result<[List], Error>) -> Void)) { }
+        
     }
     
 }

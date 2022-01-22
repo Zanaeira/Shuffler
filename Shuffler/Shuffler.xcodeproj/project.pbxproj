@@ -16,6 +16,7 @@
 		1B855B99279A308900D64F2C /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855B98279A308900D64F2C /* Item.swift */; };
 		1B855B9C279A328700D64F2C /* SharedTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855B9B279A328700D64F2C /* SharedTestHelpers.swift */; };
 		1B855BA0279B9C2D00D64F2C /* CodableListsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855B9F279B9C2D00D64F2C /* CodableListsStore.swift */; };
+		1B855BA2279B9DC400D64F2C /* UpdateError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855BA1279B9DC400D64F2C /* UpdateError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,6 +40,7 @@
 		1B855B98279A308900D64F2C /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		1B855B9B279A328700D64F2C /* SharedTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedTestHelpers.swift; sourceTree = "<group>"; };
 		1B855B9F279B9C2D00D64F2C /* CodableListsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableListsStore.swift; sourceTree = "<group>"; };
+		1B855BA1279B9DC400D64F2C /* UpdateError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateError.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +121,7 @@
 			children = (
 				1B855B90279A1D5D00D64F2C /* LocalListsLoader.swift */,
 				1B855B92279A1D8200D64F2C /* ListsStore.swift */,
+				1B855BA1279B9DC400D64F2C /* UpdateError.swift */,
 				1B855B9F279B9C2D00D64F2C /* CodableListsStore.swift */,
 			);
 			path = "Lists Cache";
@@ -235,6 +238,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1B855B99279A308900D64F2C /* Item.swift in Sources */,
+				1B855BA2279B9DC400D64F2C /* UpdateError.swift in Sources */,
 				1B855B93279A1D8200D64F2C /* ListsStore.swift in Sources */,
 				1B855B91279A1D5D00D64F2C /* LocalListsLoader.swift in Sources */,
 				1B855BA0279B9C2D00D64F2C /* CodableListsStore.swift in Sources */,

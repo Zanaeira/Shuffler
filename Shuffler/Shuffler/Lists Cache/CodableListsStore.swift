@@ -37,12 +37,6 @@ public final class CodableListsStore: ListsStore {
         }
     }
     
-    public enum UpdateError: Error {
-        case listNotFound
-        case couldNotSaveCache
-        case couldNotRetrieveCache
-    }
-    
     public func update(_ list: List, updatedList: List, completion: @escaping (Result<[List], UpdateError>) -> Void) {
         retrieve { result in
             switch result {
