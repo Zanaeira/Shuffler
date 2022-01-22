@@ -86,11 +86,11 @@ final class CodableListsStore: ListsStore {
         }
     }
     
-    func delete(_ list: List, completion: @escaping ((Result<[List], Error>) -> Void)) {
+    func delete(_ lists: [List], completion: @escaping ((Result<[List], Error>) -> Void)) {
         retrieve { result in
             switch result {
             case let .success(cachedLists):
-                let updatedLists = cachedLists.filter({ ![list].contains($0) })
+                let updatedLists = cachedLists.filter({ !lists.contains($0) })
                 do {
                     let encoded = try JSONEncoder().encode(updatedLists.map(CodableList.init))
                     try encoded.write(to: self.storeUrl)
@@ -188,7 +188,7 @@ class CodableListsStoreTests: XCTestCase {
         
         let exp = expectation(description: "Wait for delete to finish")
         
-        sut.delete(anyList()) { result in
+        sut.delete([anyList()]) { result in
             if case .success(let lists) = result {
                 XCTAssertEqual(lists, [])
             }
@@ -201,7 +201,7 @@ class CodableListsStoreTests: XCTestCase {
     func test_delete_hasNoSideEffectsOnEmptyCache() {
         let sut = makeSUT()
         
-        sut.delete(anyList()) { _ in }
+        sut.delete([anyList()]) { _ in }
         expect(sut, toRetrieve: .success([]))
     }
     
@@ -212,7 +212,7 @@ class CodableListsStoreTests: XCTestCase {
         let list2 = anyList()
         
         sut.append([list, list2]) { _ in }
-        sut.delete(list2) { _ in }
+        sut.delete([list2]) { _ in }
         
         expect(sut, toRetrieve: .success([list]))
     }
@@ -227,7 +227,7 @@ class CodableListsStoreTests: XCTestCase {
         let list5 = anyList()
         
         sut.append([list1, list2, list3, list4, list5]) { _ in }
-        sut.delete(list3) { _ in }
+        sut.delete([list3]) { _ in }
         
         expect(sut, toRetrieve: .success([list1, list2, list4, list5]))
     }
