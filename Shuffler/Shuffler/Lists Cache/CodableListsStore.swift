@@ -70,22 +70,22 @@ public final class CodableListsStore: ListsStore {
     }
     
     public func append(_ lists: [List], completion: @escaping ((Result<[List], Error>) -> Void)) {
-        retrieveCachedListsAndAmend(using: lists, by: addingTo(), completion: completion)
+        retrieveCachedListsAndAmend(by: adding(), lists: lists, completion: completion)
     }
     
     public func delete(_ lists: [List], completion: @escaping ((Result<[List], Error>) -> Void)) {
-        retrieveCachedListsAndAmend(using: lists, by: removingFrom, completion: completion)
+        retrieveCachedListsAndAmend(by: removing, lists: lists, completion: completion)
     }
     
-    private func addingTo() -> ([List], [List]) -> [List] {
+    private func adding() -> ([List], [List]) -> [List] {
         return (+)
     }
     
-    private func removingFrom(mainList: [List], lists: [List]) -> [List] {
+    private func removing(mainList: [List], lists: [List]) -> [List] {
         mainList.filter({ !lists.contains($0) })
     }
     
-    private func retrieveCachedListsAndAmend(using lists: [List], by updatingListsFrom: @escaping ([List], [List]) -> [List], completion: @escaping (Result<[List], Error>) -> Void) {
+    private func retrieveCachedListsAndAmend(by updatingListsFrom: @escaping ([List], [List]) -> [List], lists: [List], completion: @escaping (Result<[List], Error>) -> Void) {
         retrieve { result in
             switch result {
             case let .success(cachedLists):
