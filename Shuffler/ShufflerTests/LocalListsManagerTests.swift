@@ -14,6 +14,10 @@ final class LocalListsManager {
         
     }
     
+    func load(completion: ([List]) -> Void) {
+        completion([])
+    }
+    
 }
 
 class LocalListsManagerTests: XCTestCase {
@@ -23,6 +27,21 @@ class LocalListsManagerTests: XCTestCase {
         _ = LocalListsManager(store: listsStoreSpy)
         
         XCTAssertEqual(listsStoreSpy.receivedMessages, 0)
+    }
+    
+    func test_load_onEmptyCacheReturnsEmptyLists() {
+        let listsStoreSpy = ListsStoreSpy()
+        let sut = LocalListsManager(store: listsStoreSpy)
+        
+        let exp = expectation(description: "Wait for load to complete.")
+        
+        sut.load() { lists in
+            XCTAssertEqual(lists, [])
+            
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
     }
     
     private class ListsStoreSpy: ListsStore {
