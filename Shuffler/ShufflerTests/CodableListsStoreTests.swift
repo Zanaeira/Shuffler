@@ -186,6 +186,15 @@ class CodableListsStoreTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
+    func test_delete_hasNoSideEffectsOnEmptyCache() {
+        let sut = makeSUT()
+        
+        expect(sut, toRetrieve: .success([])) {
+            let lists = [anyList()]
+            sut.delete(lists) { _ in }
+        }
+    }
+    
     // MARK: - Helpers
     private func makeSUT() -> CodableListsStore {
         let sut = CodableListsStore(storeUrl: testStoreUrl())
