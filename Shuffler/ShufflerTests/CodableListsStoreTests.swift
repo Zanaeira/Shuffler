@@ -202,9 +202,8 @@ class CodableListsStoreTests: XCTestCase {
     func test_delete_hasNoSideEffectsOnEmptyCache() {
         let sut = makeSUT()
         
-        expect(sut, toRetrieve: .success([])) {
-            sut.delete(anyList()) { _ in }
-        }
+        sut.delete(anyList()) { _ in }
+        expect(sut, toRetrieve: .success([])) { }
     }
     
     func test_delete_removesSpecificListOnNonEmptyCache() {
