@@ -58,6 +58,25 @@ class LocalListsManagerTests: XCTestCase {
         
         XCTAssertEqual(listsStoreSpy.receivedMessages, [.retrieve])
     }
+    
+    func test_load_returnsListsFromNonEmptyCache() {
+        let listsStoreSpy = ListsStoreSpy()
+        let sut = LocalListsManager(store: listsStoreSpy)
+        
+        let exp = expectation(description: "Wait for load to complete.")
+        
+        let list = anyList()
+        listsStoreSpy.lists = [list]
+        
+        sut.load() { lists in
+            XCTAssertEqual(lists, [list])
+            
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
     private class ListsStoreSpy: ListsStore {
         
         enum Message {
@@ -65,9 +84,11 @@ class LocalListsManagerTests: XCTestCase {
         }
         
         var receivedMessages: [Message] = []
+        var lists: [List] = []
         
         func retrieve(completion: @escaping (Result<[List], Error>) -> Void) {
             receivedMessages.append(.retrieve)
+            completion(.success(lists))
         }
         
         func update(_ list: List, updatedList: List, completion: @escaping (Result<[List], UpdateError>) -> Void) {
