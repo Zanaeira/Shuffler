@@ -70,10 +70,32 @@ final class CodableListsStore: ListsStore {
     
     enum UpdateError: Error {
         case listNotFound
+        case couldNotRetrieveCache
     }
     
     func update(_ list: List, updatedList: List, completion: @escaping (Result<[List], UpdateError>) -> Void) {
-        completion(.failure(.listNotFound))
+        retrieve { result in
+            switch result {
+            case let .success(cachedLists):
+                guard cachedLists.contains(list) else {
+                    completion(.failure(.listNotFound))
+                    return
+                }
+                
+                var updatedLists = [List]()
+                for cachedList in cachedLists {
+                    if cachedList.id == list.id {
+                        updatedLists.append(updatedList)
+                    } else {
+                        updatedLists.append(cachedList)
+                    }
+                }
+                
+                completion(.success(updatedLists))
+            case .failure:
+                completion(.failure(.couldNotRetrieveCache))
+            }
+        }
     }
     
     func append(_ lists: [List], completion: @escaping ((Result<[List], Error>) -> Void)) {
@@ -281,6 +303,27 @@ class CodableListsStoreTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
+    func test_update_deliversUpdatedListIfListFoundInCache() {
+        let sut = makeSUT()
+        
+        let (list, updatedList) = listAndUpdatedList()
+        
+        sut.append([list]) { _ in }
+        
+        let exp = expectation(description: "Wait for update to complete")
+        
+        sut.update(list, updatedList: updatedList) { result in
+            if case .success(let receivedLists) = result {
+                XCTAssertEqual(receivedLists, [updatedList])
+            } else {
+                XCTFail("Expected \(updatedList), got \(result) instead")
+            }
+            
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+    }
     
     // MARK: - Helpers
     private func makeSUT() -> CodableListsStore {
