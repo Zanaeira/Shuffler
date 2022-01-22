@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class LocalListsLoader {
+public class LocalListsLoader: ListsLoader {
     
     private let store: ListsStore
     
