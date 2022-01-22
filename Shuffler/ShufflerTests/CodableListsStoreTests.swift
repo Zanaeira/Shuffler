@@ -252,14 +252,7 @@ class CodableListsStoreTests: XCTestCase {
     func test_update_doesNothingOnEmptyCache() {
         let sut = makeSUT()
         
-        let items: [Item] = [
-            .init(id: UUID(), text: "Item 1"),
-            .init(id: UUID(), text: "Item 2")
-        ]
-        let list = List(id: UUID(), name: "My List", items: items)
-        
-        let updatedItems: [Item] = [items.first!]
-        let updatedList = List(id: list.id, name: list.name, items: updatedItems)
+        let (list, updatedList) = listAndUpdatedList()
         
         sut.update(list, updatedList: updatedList) { _ in }
         
@@ -269,14 +262,7 @@ class CodableListsStoreTests: XCTestCase {
     func test_update_deliversErrorOnUpdatingListThatIsNotInCache() {
         let sut = makeSUT()
         
-        let items: [Item] = [
-            .init(id: UUID(), text: "Item 1"),
-            .init(id: UUID(), text: "Item 2")
-        ]
-        let list = List(id: UUID(), name: "My List", items: items)
-        
-        let updatedItems: [Item] = [items.first!]
-        let updatedList = List(id: list.id, name: list.name, items: updatedItems)
+        let (list, updatedList) = listAndUpdatedList()
         
         sut.append([anyList()]) { _ in }
         
@@ -299,6 +285,19 @@ class CodableListsStoreTests: XCTestCase {
         let sut = CodableListsStore(storeUrl: testStoreUrl())
         
         return sut
+    }
+    
+    private func listAndUpdatedList() -> (list: List, updatedList: List) {
+        let items: [Item] = [
+            .init(id: UUID(), text: "Item 1"),
+            .init(id: UUID(), text: "Item 2")
+        ]
+        let list = List(id: UUID(), name: "My List", items: items)
+        
+        let updatedItems: [Item] = [items.first!]
+        let updatedList = List(id: list.id, name: list.name, items: updatedItems)
+        
+        return (list, updatedList)
     }
     
     private func expect(_ sut: CodableListsStore, toRetrieve expectedResult: Result<[List], Error>, file: StaticString = #filePath, line: UInt = #line) {
