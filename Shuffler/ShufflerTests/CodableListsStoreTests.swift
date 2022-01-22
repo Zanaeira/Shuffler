@@ -70,6 +70,7 @@ final class CodableListsStore: ListsStore {
     
     enum UpdateError: Error {
         case listNotFound
+        case couldNotSaveCache
         case couldNotRetrieveCache
     }
     
@@ -91,7 +92,14 @@ final class CodableListsStore: ListsStore {
                     }
                 }
                 
-                completion(.success(updatedLists))
+                do {
+                    let encoded = try JSONEncoder().encode(updatedLists.map(CodableList.init))
+                    try encoded.write(to: self.storeUrl)
+                    
+                    completion(.success(updatedLists))
+                } catch {
+                    completion(.failure(.couldNotSaveCache))
+                }
             case .failure:
                 completion(.failure(.couldNotRetrieveCache))
             }
@@ -323,6 +331,17 @@ class CodableListsStoreTests: XCTestCase {
         }
         
         wait(for: [exp], timeout: 1.0)
+    }
+    
+    func test_update_updatesListInCacheIfListFoundInCache() {
+        let sut = makeSUT()
+        
+        let (list, updatedList) = listAndUpdatedList()
+        
+        sut.append([list]) { _ in }
+        sut.update(list, updatedList: updatedList) { _ in }
+        
+        expect(sut, toRetrieve: .success([updatedList]))
     }
     
     // MARK: - Helpers
