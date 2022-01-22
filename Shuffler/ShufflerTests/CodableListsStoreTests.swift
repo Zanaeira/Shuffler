@@ -124,14 +124,13 @@ class CodableListsStoreTests: XCTestCase {
     func test_retrieve_deliversEmptyOnEmptyCache() {
         let sut = makeSUT()
         
-        expect(sut, toRetrieve: .success([])) { }
+        expect(sut, toRetrieve: .success([]))
     }
     
     func test_retrieveTwice_hasNoSideEffectsAndDeliversEmptyOnEmptyCache() {
         let sut = makeSUT()
         
-        expect(sut, toRetrieve: .success([])) { }
-        expect(sut, toRetrieve: .success([])) { }
+        expect(sut, toRetrieve: .success([]))
     }
     
     func test_append_returnsAppendedListOnEmptyCache() {
@@ -157,7 +156,7 @@ class CodableListsStoreTests: XCTestCase {
         
         sut.append(lists) { _ in }
         
-        expect(sut, toRetrieve: .success(lists)) { }
+        expect(sut, toRetrieve: .success(lists))
         
     }
     
@@ -168,8 +167,8 @@ class CodableListsStoreTests: XCTestCase {
         
         sut.append(lists) { _ in }
         
-        expect(sut, toRetrieve: .success(lists)) { }
-        expect(sut, toRetrieve: .success(lists)) { }
+        expect(sut, toRetrieve: .success(lists))
+        expect(sut, toRetrieve: .success(lists))
     }
     
     func test_appendTwice_appendsTheListsToTheCurrentCache() {
@@ -181,7 +180,7 @@ class CodableListsStoreTests: XCTestCase {
         sut.append(lists1) { _ in }
         sut.append(lists2) { _ in }
         
-        expect(sut, toRetrieve: .success(lists1 + lists2)) { }
+        expect(sut, toRetrieve: .success(lists1 + lists2))
     }
     
     func test_delete_completesWithEmptyListOnEmptyCache() {
@@ -203,7 +202,7 @@ class CodableListsStoreTests: XCTestCase {
         let sut = makeSUT()
         
         sut.delete(anyList()) { _ in }
-        expect(sut, toRetrieve: .success([])) { }
+        expect(sut, toRetrieve: .success([]))
     }
     
     func test_delete_removesSpecificListOnNonEmptyCache() {
@@ -215,7 +214,7 @@ class CodableListsStoreTests: XCTestCase {
         sut.append([list, list2]) { _ in }
         sut.delete(list2) { _ in }
         
-        expect(sut, toRetrieve: .success([list])) { }
+        expect(sut, toRetrieve: .success([list]))
     }
     
     // MARK: - Helpers
@@ -225,7 +224,7 @@ class CodableListsStoreTests: XCTestCase {
         return sut
     }
     
-    private func expect(_ sut: CodableListsStore, toRetrieve expectedResult: Result<[List], Error>, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    private func expect(_ sut: CodableListsStore, toRetrieve expectedResult: Result<[List], Error>, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "Wait for load to complete")
         
         sut.retrieve { receivedResult in
@@ -241,7 +240,6 @@ class CodableListsStoreTests: XCTestCase {
             exp.fulfill()
         }
         
-        action()
         wait(for: [exp], timeout: 1.0)
     }
         
