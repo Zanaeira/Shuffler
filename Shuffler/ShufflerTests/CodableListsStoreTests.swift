@@ -68,6 +68,10 @@ final class CodableListsStore: ListsStore {
         }
     }
     
+    func update(_ list: List, updatedList: List) {
+        
+    }
+    
     func append(_ lists: [List], completion: @escaping ((Result<[List], Error>) -> Void)) {
         retrieveCachedListsAndAmend(using: lists, by: +, completion: completion)
     }
@@ -239,6 +243,23 @@ class CodableListsStoreTests: XCTestCase {
         sut.delete([list1, list3, list5]) { _ in }
         
         expect(sut, toRetrieve: .success([list2, list4]))
+    }
+    
+    func test_update_doesNothingOnEmptyCache() {
+        let sut = makeSUT()
+        
+        let items: [Item] = [
+            .init(id: UUID(), text: "Item 1"),
+            .init(id: UUID(), text: "Item 2")
+        ]
+        let list = List(id: UUID(), name: "My List", items: items)
+        
+        let updatedItems: [Item] = [items.first!]
+        let updatedList = List(id: list.id, name: list.name, items: updatedItems)
+        
+        sut.update(list, updatedList: updatedList)
+        
+        expect(sut, toRetrieve: .success([]))
     }
     
     // MARK: - Helpers
