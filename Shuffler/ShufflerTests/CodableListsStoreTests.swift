@@ -271,6 +271,8 @@ class CodableListsStoreTests: XCTestCase {
         sut.update(list, updatedList: updatedList) { result in
             if case .failure(let error) = result {
                 XCTAssertEqual(error, .listNotFound)
+            } else {
+                XCTFail("Expected .listNotFound UpdateError, got \(result) instead")
             }
             
             exp.fulfill()
