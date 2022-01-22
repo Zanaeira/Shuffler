@@ -29,15 +29,13 @@ final class LocalListsManager {
 class LocalListsManagerTests: XCTestCase {
     
     func test_init_doesNotMessageCache() {
-        let listsStoreSpy = ListsStoreSpy()
-        _ = LocalListsManager(store: listsStoreSpy)
+        let (listsStoreSpy, _) = makeSUT()
         
         XCTAssertEqual(listsStoreSpy.receivedMessages, [])
     }
     
     func test_load_onEmptyCacheReturnsEmptyLists() {
-        let listsStoreSpy = ListsStoreSpy()
-        let sut = LocalListsManager(store: listsStoreSpy)
+        let (listsStoreSpy, sut) = makeSUT()
         
         let exp = expectation(description: "Wait for load to complete.")
         
@@ -51,8 +49,7 @@ class LocalListsManagerTests: XCTestCase {
     }
     
     func test_load_sendsRetrieveMessageToCache() {
-        let listsStoreSpy = ListsStoreSpy()
-        let sut = LocalListsManager(store: listsStoreSpy)
+        let (listsStoreSpy, sut) = makeSUT()
         
         sut.load() { _ in }
         
@@ -60,8 +57,7 @@ class LocalListsManagerTests: XCTestCase {
     }
     
     func test_load_returnsListsFromNonEmptyCache() {
-        let listsStoreSpy = ListsStoreSpy()
-        let sut = LocalListsManager(store: listsStoreSpy)
+        let (listsStoreSpy, sut) = makeSUT()
         
         let exp = expectation(description: "Wait for load to complete.")
         
@@ -75,6 +71,14 @@ class LocalListsManagerTests: XCTestCase {
         }
         
         wait(for: [exp], timeout: 1.0)
+    }
+    
+    // MARK: - Helpers
+    private func makeSUT() -> (listsStoreSpy: ListsStoreSpy, sut: LocalListsManager) {
+        let listsStoreSpy = ListsStoreSpy()
+        let sut = LocalListsManager(store: listsStoreSpy)
+        
+        return (listsStoreSpy, sut)
     }
     
     private class ListsStoreSpy: ListsStore {
