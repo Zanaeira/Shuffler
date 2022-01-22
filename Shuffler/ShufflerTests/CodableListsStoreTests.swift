@@ -87,7 +87,21 @@ final class CodableListsStore: ListsStore {
     }
     
     func delete(_ list: List, completion: @escaping ((Result<[List], Error>) -> Void)) {
-        completion(.success([]))
+        retrieve { result in
+            switch result {
+            case let .success(cachedLists):
+                let updatedLists = cachedLists.filter({ ![list].contains($0) })
+                do {
+                    let encoded = try JSONEncoder().encode(updatedLists.map(CodableList.init))
+                    try encoded.write(to: self.storeUrl)
+                    completion(.success(updatedLists))
+                } catch {
+                    completion(.failure(error))
+                }
+            case let .failure(error):
+                completion(.failure(error))
+            }
+        }
     }
     
 }
@@ -191,6 +205,18 @@ class CodableListsStoreTests: XCTestCase {
         expect(sut, toRetrieve: .success([])) {
             sut.delete(anyList()) { _ in }
         }
+    }
+    
+    func test_delete_removesSpecificListOnNonEmptyCache() {
+        let sut = makeSUT()
+        
+        let list = anyList()
+        let list2 = anyList()
+        
+        sut.append([list, list2]) { _ in }
+        sut.delete(list2) { _ in }
+        
+        expect(sut, toRetrieve: .success([list])) { }
     }
     
     // MARK: - Helpers
