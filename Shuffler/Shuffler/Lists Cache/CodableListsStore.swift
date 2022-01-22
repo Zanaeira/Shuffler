@@ -70,11 +70,15 @@ public final class CodableListsStore: ListsStore {
     }
     
     public func append(_ lists: [List], completion: @escaping ((Result<[List], Error>) -> Void)) {
-        retrieveCachedListsAndAmend(using: lists, by: +, completion: completion)
+        retrieveCachedListsAndAmend(using: lists, by: addingTo(), completion: completion)
     }
     
     public func delete(_ lists: [List], completion: @escaping ((Result<[List], Error>) -> Void)) {
         retrieveCachedListsAndAmend(using: lists, by: removingFrom, completion: completion)
+    }
+    
+    private func addingTo() -> ([List], [List]) -> [List] {
+        return (+)
     }
     
     private func removingFrom(mainList: [List], lists: [List]) -> [List] {
