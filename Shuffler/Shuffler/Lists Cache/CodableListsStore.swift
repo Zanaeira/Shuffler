@@ -17,36 +17,6 @@ public final class CodableListsStore: ListsStore {
         }
     }
     
-    private struct CodableList: Codable {
-        let id: UUID
-        let name: String
-        let items: [CodableItem]
-        
-        init(_ list: List) {
-            id = list.id
-            name = list.name
-            items = list.items.map(CodableItem.init)
-        }
-        
-        var modelList: List {
-            List(id: id, name: name, items: items.map({ $0.modelItem }))
-        }
-    }
-    
-    private struct CodableItem: Codable {
-        let id: UUID
-        let text: String
-        
-        init(_ item: Item) {
-            id = item.id
-            text = item.text
-        }
-        
-        var modelItem: Item {
-            Item(id: id, text: text)
-        }
-    }
-    
     private let storeUrl: URL
     
     public init(storeUrl: URL) {
@@ -132,6 +102,41 @@ public final class CodableListsStore: ListsStore {
             case let .failure(error):
                 completion(.failure(error))
             }
+        }
+    }
+    
+}
+
+// MARK: - Codable List and Item representations
+extension CodableListsStore {
+    
+    private struct CodableList: Codable {
+        let id: UUID
+        let name: String
+        let items: [CodableItem]
+        
+        init(_ list: List) {
+            id = list.id
+            name = list.name
+            items = list.items.map(CodableItem.init)
+        }
+        
+        var modelList: List {
+            List(id: id, name: name, items: items.map({ $0.modelItem }))
+        }
+    }
+    
+    private struct CodableItem: Codable {
+        let id: UUID
+        let text: String
+        
+        init(_ item: Item) {
+            id = item.id
+            text = item.text
+        }
+        
+        var modelItem: Item {
+            Item(id: id, text: text)
         }
     }
     
