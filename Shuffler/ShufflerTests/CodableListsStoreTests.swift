@@ -217,6 +217,21 @@ class CodableListsStoreTests: XCTestCase {
         expect(sut, toRetrieve: .success([list]))
     }
     
+    func test_delete_removesSpecificListOnNonEmptyCache() {
+        let sut = makeSUT()
+        
+        let list1 = anyList()
+        let list2 = anyList()
+        let list3 = anyList()
+        let list4 = anyList()
+        let list5 = anyList()
+        
+        sut.append([list1, list2, list3, list4, list5]) { _ in }
+        sut.delete(list3) { _ in }
+        
+        expect(sut, toRetrieve: .success([list1, list2, list4, list5]))
+    }
+    
     // MARK: - Helpers
     private func makeSUT() -> CodableListsStore {
         let sut = CodableListsStore(storeUrl: testStoreUrl())
