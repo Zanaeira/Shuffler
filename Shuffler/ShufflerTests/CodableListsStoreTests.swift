@@ -16,7 +16,6 @@ class CodableListsStoreTests: XCTestCase {
         try? FileManager.default.removeItem(at: testStoreUrl())
     }
     
-    
     override func tearDown() {
         super.tearDown()
         
