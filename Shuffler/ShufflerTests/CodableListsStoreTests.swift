@@ -68,8 +68,12 @@ final class CodableListsStore: ListsStore {
         }
     }
     
-    func update(_ list: List, updatedList: List) {
-        
+    enum UpdateError: Error {
+        case listNotFound
+    }
+    
+    func update(_ list: List, updatedList: List, completion: @escaping (Result<[List], UpdateError>) -> Void) {
+        completion(.failure(.listNotFound))
     }
     
     func append(_ lists: [List], completion: @escaping ((Result<[List], Error>) -> Void)) {
@@ -257,10 +261,38 @@ class CodableListsStoreTests: XCTestCase {
         let updatedItems: [Item] = [items.first!]
         let updatedList = List(id: list.id, name: list.name, items: updatedItems)
         
-        sut.update(list, updatedList: updatedList)
+        sut.update(list, updatedList: updatedList) { _ in }
         
         expect(sut, toRetrieve: .success([]))
     }
+    
+    func test_update_deliversErrorOnUpdatingListThatIsNotInCache() {
+        let sut = makeSUT()
+        
+        let items: [Item] = [
+            .init(id: UUID(), text: "Item 1"),
+            .init(id: UUID(), text: "Item 2")
+        ]
+        let list = List(id: UUID(), name: "My List", items: items)
+        
+        let updatedItems: [Item] = [items.first!]
+        let updatedList = List(id: list.id, name: list.name, items: updatedItems)
+        
+        sut.append([anyList()]) { _ in }
+        
+        let exp = expectation(description: "Wait for update to complete")
+        
+        sut.update(list, updatedList: updatedList) { result in
+            if case .failure(let error) = result {
+                XCTAssertEqual(error, .listNotFound)
+            }
+            
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
     
     // MARK: - Helpers
     private func makeSUT() -> CodableListsStore {
