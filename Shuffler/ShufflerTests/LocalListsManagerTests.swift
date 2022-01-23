@@ -101,6 +101,14 @@ class LocalListsManagerTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
+    func test_delete_sendsDeleteMessageToCache() {
+        let (listsStoreSpy, sut) = makeSUT()
+        
+        sut.delete([]) { _ in }
+        
+        XCTAssertEqual(listsStoreSpy.receivedMessages, [.delete])
+    }
+    
     // MARK: - Helpers
     private func makeSUT() -> (listsStoreSpy: ListsStoreSpy, sut: LocalListsManager) {
         let listsStoreSpy = ListsStoreSpy()
@@ -133,6 +141,7 @@ class LocalListsManagerTests: XCTestCase {
         
         enum Message {
             case retrieve
+            case delete
         }
         
         var completions: [(Result<[List], Error>) -> Void] = []
@@ -160,6 +169,7 @@ class LocalListsManagerTests: XCTestCase {
         }
         
         func delete(_ lists: [List], completion: @escaping ((Result<[List], Error>) -> Void)) {
+            receivedMessages.append(.delete)
             completions.append(completion)
         }
         
