@@ -35,21 +35,9 @@ class LocalListsManagerTests: XCTestCase {
     func test_load_onEmptyCacheReturnsEmptyLists() {
         let (listsStoreSpy, sut) = makeSUT()
         
-        let exp = expectation(description: "Wait for load to complete.")
-        
-        sut.load() { result in
-            if case let .success(lists) = result {
-                XCTAssertEqual(lists, [])
-            } else {
-                XCTFail("Expected empty list, got \(result) instead.")
-            }
-            
-            exp.fulfill()
+        expect(sut, toCompleteWith: .success([])) {
+            listsStoreSpy.completeWithSuccess()
         }
-        
-        listsStoreSpy.completeWithSuccess()
-        
-        wait(for: [exp], timeout: 1.0)
     }
     
     func test_load_sendsRetrieveMessageToCache() {
@@ -63,43 +51,21 @@ class LocalListsManagerTests: XCTestCase {
     func test_load_returnsListsFromNonEmptyCache() {
         let (listsStoreSpy, sut) = makeSUT()
         
-        let exp = expectation(description: "Wait for load to complete.")
-        
         let list = anyList()
         listsStoreSpy.lists = [list]
         
-        sut.load() { result in
-            if case let .success(lists) = result {
-                XCTAssertEqual(lists, [list])
-            } else {
-                XCTFail("Expected empty list, got \(result) instead.")
-            }
-            
-            exp.fulfill()
+        expect(sut, toCompleteWith: .success([list])) {
+            listsStoreSpy.completeWithSuccess()
         }
-        
-        listsStoreSpy.completeWithSuccess()
-        
-        wait(for: [exp], timeout: 1.0)
     }
     
     func test_load_deliversErrorOnCacheError() {
         let (listsStoreSpy, sut) = makeSUT()
         
-        let exp = expectation(description: "Wait for load to complete.")
-        
-        sut.load() { result in
-            switch result {
-            case .success: XCTFail("Expected error, got \(result)")
-            case .failure: break
-            }
-            
-            exp.fulfill()
+        let error = NSError(domain: "Test Error", code: 0)
+        expect(sut, toCompleteWith: .failure(error)) {
+            listsStoreSpy.completeWithError()
         }
-        
-        listsStoreSpy.completeWithError()
-        
-        wait(for: [exp], timeout: 1.0)
     }
     
     // MARK: - Helpers
@@ -108,6 +74,26 @@ class LocalListsManagerTests: XCTestCase {
         let sut = LocalListsManager(store: listsStoreSpy)
         
         return (listsStoreSpy, sut)
+    }
+    
+    private func expect(_ sut: LocalListsManager, toCompleteWith expectedResult: Result<[List], Error>, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+        let exp = expectation(description: "Wait for load to complete")
+        
+        sut.load { receivedResult in
+            switch (receivedResult, expectedResult) {
+            case let (.success(receivedLists), .success(expectedLists)):
+                XCTAssertEqual(receivedLists, expectedLists, file: file, line: line)
+            case let (.failure(receivedError as NSError), .failure(expectedError as NSError)):
+                XCTAssertEqual(receivedError, expectedError, file: file, line: line)
+            default:
+                XCTFail("Expected result: \(expectedResult), got \(receivedResult) instead.", file: file, line: line)
+            }
+            
+            exp.fulfill()
+        }
+        
+        action()
+        wait(for: [exp], timeout: 1.0)
     }
     
     private class ListsStoreSpy: ListsStore {
