@@ -88,6 +88,25 @@ class LocalListsManagerTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
+    func test_load_deliversErrorOnCacheError() {
+        let (listsStoreSpy, sut) = makeSUT()
+        
+        let exp = expectation(description: "Wait for load to complete.")
+        
+        sut.load() { result in
+            switch result {
+            case .success: XCTFail("Expected error, got \(result)")
+            case .failure: break
+            }
+            
+            exp.fulfill()
+        }
+        
+        listsStoreSpy.completeWithError()
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
     // MARK: - Helpers
     private func makeSUT() -> (listsStoreSpy: ListsStoreSpy, sut: LocalListsManager) {
         let listsStoreSpy = ListsStoreSpy()
@@ -113,6 +132,10 @@ class LocalListsManagerTests: XCTestCase {
         
         func completeWithSuccess() {
             completions[0](.success(lists))
+        }
+        
+        func completeWithError() {
+            completions[0](.failure(NSError(domain: "Test Error", code: 0)))
         }
         
         func update(_ list: List, updatedList: List, completion: @escaping (Result<[List], UpdateError>) -> Void) {
