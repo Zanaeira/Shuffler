@@ -22,6 +22,18 @@ final class LocalListsManager {
         }
     }
     
+    func delete(_ lists: [List], completion: @escaping (Result<[List], ListError>) -> Void) {
+        store.delete(lists) { result in
+            if case .failure = result {
+                completion(.failure(.listNotFound))
+            }
+        }
+    }
+    
+}
+
+enum ListError: Error {
+    case listNotFound
 }
 
 class LocalListsManagerTests: XCTestCase {
@@ -65,6 +77,26 @@ class LocalListsManagerTests: XCTestCase {
         expect(sut, toCompleteWith: .failure(anyError())) {
             listsStoreSpy.completeWithError()
         }
+    }
+    
+    func test_delete_onEmptyCacheDeliversListNotFoundError() {
+        let (listsStoreSpy, sut) = makeSUT()
+        
+        let exp = expectation(description: "Wait for delete to complete")
+        
+        sut.delete([anyList()]) { result in
+            if case let .failure(error) = result {
+                XCTAssertEqual(error, ListError.listNotFound)
+            } else {
+                XCTFail("Expected ListErorr.listNotFound error, gpt \(result) instead")
+            }
+            
+            exp.fulfill()
+        }
+        
+        listsStoreSpy.completeWithListNotFoundError()
+        
+        wait(for: [exp], timeout: 1.0)
     }
     
     // MARK: - Helpers
@@ -118,6 +150,10 @@ class LocalListsManagerTests: XCTestCase {
             completions[0](.failure(anyError()))
         }
         
+        func completeWithListNotFoundError() {
+            completions[0](.failure(ListError.listNotFound))
+        }
+        
         func update(_ list: List, updatedList: List, completion: @escaping (Result<[List], UpdateError>) -> Void) {
             
         }
@@ -127,7 +163,7 @@ class LocalListsManagerTests: XCTestCase {
         }
         
         func delete(_ lists: [List], completion: @escaping ((Result<[List], Error>) -> Void)) {
-            
+            completions.append(completion)
         }
         
     }
