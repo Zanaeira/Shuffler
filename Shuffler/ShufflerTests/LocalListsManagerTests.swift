@@ -62,8 +62,7 @@ class LocalListsManagerTests: XCTestCase {
     func test_load_deliversErrorOnCacheError() {
         let (listsStoreSpy, sut) = makeSUT()
         
-        let error = NSError(domain: "Test Error", code: 0)
-        expect(sut, toCompleteWith: .failure(error)) {
+        expect(sut, toCompleteWith: .failure(anyError())) {
             listsStoreSpy.completeWithError()
         }
     }
@@ -116,7 +115,7 @@ class LocalListsManagerTests: XCTestCase {
         }
         
         func completeWithError() {
-            completions[0](.failure(NSError(domain: "Test Error", code: 0)))
+            completions[0](.failure(anyError()))
         }
         
         func update(_ list: List, updatedList: List, completion: @escaping (Result<[List], UpdateError>) -> Void) {
