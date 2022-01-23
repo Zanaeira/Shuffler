@@ -18,12 +18,7 @@ final class LocalListsManager {
     
     func load(completion: @escaping (Result<[List], Error>) -> Void) {
         store.retrieve { result in
-            switch result {
-            case let .success(lists):
-                completion(.success(lists))
-            case let .failure(error):
-                completion(.failure(error))
-            }
+            completion(result)
         }
     }
     
