@@ -16,10 +16,13 @@ final class LocalListsManager {
         self.store = store
     }
     
-    func load(completion: @escaping ([List]) -> Void) {
+    func load(completion: @escaping (Result<[List], Error>) -> Void) {
         store.retrieve { result in
-            if case let .success(lists) = result {
-                completion(lists)
+            switch result {
+            case let .success(lists):
+                completion(.success(lists))
+            case let .failure(error):
+                completion(.failure(error))
             }
         }
     }
@@ -39,11 +42,17 @@ class LocalListsManagerTests: XCTestCase {
         
         let exp = expectation(description: "Wait for load to complete.")
         
-        sut.load() { lists in
-            XCTAssertEqual(lists, [])
+        sut.load() { result in
+            if case let .success(lists) = result {
+                XCTAssertEqual(lists, [])
+            } else {
+                XCTFail("Expected empty list, got \(result) instead.")
+            }
             
             exp.fulfill()
         }
+        
+        listsStoreSpy.completeWithSuccess()
         
         wait(for: [exp], timeout: 1.0)
     }
@@ -64,11 +73,17 @@ class LocalListsManagerTests: XCTestCase {
         let list = anyList()
         listsStoreSpy.lists = [list]
         
-        sut.load() { lists in
-            XCTAssertEqual(lists, [list])
+        sut.load() { result in
+            if case let .success(lists) = result {
+                XCTAssertEqual(lists, [list])
+            } else {
+                XCTFail("Expected empty list, got \(result) instead.")
+            }
             
             exp.fulfill()
         }
+        
+        listsStoreSpy.completeWithSuccess()
         
         wait(for: [exp], timeout: 1.0)
     }
@@ -87,12 +102,17 @@ class LocalListsManagerTests: XCTestCase {
             case retrieve
         }
         
+        var completions: [(Result<[List], Error>) -> Void] = []
         var receivedMessages: [Message] = []
         var lists: [List] = []
         
         func retrieve(completion: @escaping (Result<[List], Error>) -> Void) {
             receivedMessages.append(.retrieve)
-            completion(.success(lists))
+            completions.append(completion)
+        }
+        
+        func completeWithSuccess() {
+            completions[0](.success(lists))
         }
         
         func update(_ list: List, updatedList: List, completion: @escaping (Result<[List], UpdateError>) -> Void) {
