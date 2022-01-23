@@ -48,7 +48,7 @@ class LocalListsManagerTests: XCTestCase {
         let (listsStoreSpy, sut) = makeSUT()
         
         expect(sut, toCompleteWith: .success([])) {
-            listsStoreSpy.completeWithSuccess()
+            listsStoreSpy.complete(with: [])
         }
     }
     
@@ -64,18 +64,19 @@ class LocalListsManagerTests: XCTestCase {
         let (listsStoreSpy, sut) = makeSUT()
         
         let list = anyList()
-        listsStoreSpy.lists = [list]
         
         expect(sut, toCompleteWith: .success([list])) {
-            listsStoreSpy.completeWithSuccess()
+            listsStoreSpy.complete(with: [list])
         }
     }
     
     func test_load_deliversErrorOnCacheError() {
         let (listsStoreSpy, sut) = makeSUT()
         
-        expect(sut, toCompleteWith: .failure(anyError())) {
-            listsStoreSpy.completeWithError()
+        let error = anyError()
+        
+        expect(sut, toCompleteWith: .failure(error)) {
+            listsStoreSpy.complete(with: error)
         }
     }
     
@@ -95,7 +96,7 @@ class LocalListsManagerTests: XCTestCase {
             exp.fulfill()
         }
         
-        listsStoreSpy.completeWithListNotFoundError()
+        listsStoreSpy.complete(with: ListError.listNotFound)
         
         wait(for: [exp], timeout: 1.0)
     }
@@ -136,23 +137,18 @@ class LocalListsManagerTests: XCTestCase {
         
         var completions: [(Result<[List], Error>) -> Void] = []
         var receivedMessages: [Message] = []
-        var lists: [List] = []
         
         func retrieve(completion: @escaping (Result<[List], Error>) -> Void) {
             receivedMessages.append(.retrieve)
             completions.append(completion)
         }
         
-        func completeWithSuccess() {
+        func complete(with lists: [List]) {
             completions[0](.success(lists))
         }
         
-        func completeWithError() {
-            completions[0](.failure(anyError()))
-        }
-        
-        func completeWithListNotFoundError() {
-            completions[0](.failure(ListError.listNotFound))
+        func complete(with error: Error) {
+            completions[0](.failure(error))
         }
         
         func update(_ list: List, updatedList: List, completion: @escaping (Result<[List], UpdateError>) -> Void) {
