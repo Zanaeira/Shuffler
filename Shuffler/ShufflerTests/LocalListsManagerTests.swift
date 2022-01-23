@@ -88,6 +88,7 @@ class LocalListsManagerTests: XCTestCase {
             if case let .failure(error) = result {
                 XCTAssertEqual(error, ListError.listNotFound)
             } else {
+                XCTFail("Expected ListError.listNotFound error, got \(result) instead")
                 XCTFail("Expected ListErorr.listNotFound error, gpt \(result) instead")
             }
             
