@@ -105,7 +105,6 @@ class LocalListsManagerTests: XCTestCase {
                 XCTAssertEqual(error, ListError.listNotFound)
             } else {
                 XCTFail("Expected ListError.listNotFound error, got \(result) instead")
-                XCTFail("Expected ListErorr.listNotFound error, gpt \(result) instead")
             }
             
             exp.fulfill()
