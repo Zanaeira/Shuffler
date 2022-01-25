@@ -33,10 +33,15 @@ final class LocalListsManager {
         }
     }
     
+    func deleteItem(_ item: Item, from list: List, completion: @escaping (Result<[List], ListError>) -> Void) {
+        completion(.failure(.itemNotFound))
+    }
+    
 }
 
 enum ListError: Error {
     case listNotFound
+    case itemNotFound
 }
 
 class LocalListsManagerTests: XCTestCase {
@@ -132,6 +137,28 @@ class LocalListsManagerTests: XCTestCase {
         }
         
         listsStoreSpy.complete(with: [list2, list3])
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
+    func test_deleteItem_deliversItemNotFoundErrorIfItemNotInList() {
+        let (_, sut) = makeSUT()
+        
+        let item1 = Item(id: UUID(), text: "Item 1")
+        let item2 = Item(id: UUID(), text: "Item 2")
+        let item3 = Item(id: UUID(), text: "Item 3")
+        let list = List(id: UUID(), name: "My List", items: [item1, item2])
+        
+        let exp = expectation(description: "Wait for delete to finish")
+        
+        sut.deleteItem(item3, from: list) { result in
+            if case let .failure(error) = result {
+                XCTAssertEqual(error, ListError.itemNotFound)
+            } else {
+                XCTFail("Expected itemNotFound, got \(result)")
+            }
+            exp.fulfill()
+        }
         
         wait(for: [exp], timeout: 1.0)
     }
