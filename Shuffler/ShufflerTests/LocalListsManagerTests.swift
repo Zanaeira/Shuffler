@@ -24,7 +24,10 @@ final class LocalListsManager {
     
     func delete(_ lists: [List], completion: @escaping (Result<[List], ListError>) -> Void) {
         store.delete(lists) { result in
-            if case .failure = result {
+            switch result {
+            case let .success(receivedLists):
+                completion(.success(receivedLists))
+            case .failure:
                 completion(.failure(.listNotFound))
             }
         }
@@ -107,6 +110,30 @@ class LocalListsManagerTests: XCTestCase {
         sut.delete([]) { _ in }
         
         XCTAssertEqual(listsStoreSpy.receivedMessages, [.delete])
+    }
+    
+    func test_delete_deliversValuesOnSuccessfulDeletion() {
+        let (listsStoreSpy, sut) = makeSUT()
+        
+        let list1 = anyList()
+        let list2 = anyList()
+        let list3 = anyList()
+        
+        let exp = expectation(description: "Wait for delete to finish")
+        
+        sut.delete([list1]) { result in
+            if case let .success(receivedLists) = result {
+                XCTAssertEqual(receivedLists, [list2, list3])
+            } else {
+                XCTFail("Expected [list2, list3], got \(result) instead.")
+            }
+            
+            exp.fulfill()
+        }
+        
+        listsStoreSpy.complete(with: [list2, list3])
+        
+        wait(for: [exp], timeout: 1.0)
     }
     
     // MARK: - Helpers
