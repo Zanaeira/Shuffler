@@ -248,6 +248,31 @@ class LocalListsManagerTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
+    func test_deleteItem_deliversItemsFromCacheOnSuccessfulDeletion() {
+        let (listsStoreSpy, sut) = makeSUT()
+        
+        let item1 = Item(id: UUID(), text: "Item 1")
+        let item2 = Item(id: UUID(), text: "Item 2")
+        let list = List(id: UUID(), name: "My List", items: [item1, item2])
+        
+        let listToReturnFromCache = List(id: UUID(), name: "From cache", items: [])
+        
+        let exp = expectation(description: "Wait for delete to finish")
+        
+        sut.deleteItem(item2, from: list) { result in
+            if case let .success(receivedLists) = result {
+                XCTAssertEqual(receivedLists, [listToReturnFromCache])
+            } else {
+                XCTFail("Expected \(listToReturnFromCache), got \(result) instead")
+            }
+            exp.fulfill()
+        }
+        
+        listsStoreSpy.completeDeletion(with: [listToReturnFromCache])
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
     // MARK: - Helpers
     private func makeSUT() -> (listsStoreSpy: ListsStoreSpy, sut: LocalListsManager) {
         let listsStoreSpy = ListsStoreSpy()
