@@ -42,8 +42,11 @@ final class LocalListsManager {
         let updatedItems = list.items.filter({ $0 != item })
         let updatedList = List(id: list.id, name: list.name, items: updatedItems)
         store.update(list, updatedList: updatedList) { result in
-            if case let .success(receivedLists) = result {
+            switch result {
+            case let .success(receivedLists):
                 completion(.success(receivedLists))
+            case .failure:
+                completion(.failure(.unableToDeleteItem))
             }
         }
     }
@@ -53,6 +56,7 @@ final class LocalListsManager {
 enum ListError: Error {
     case listNotFound
     case itemNotFound
+    case unableToDeleteItem
 }
 
 class LocalListsManagerTests: XCTestCase {
@@ -221,6 +225,29 @@ class LocalListsManagerTests: XCTestCase {
         XCTAssertEqual(listsStoreSpy.receivedMessages, [.update])
     }
     
+    func test_deleteItem_deliversUnableToDeleteItemErrorOnCacheUpdateError() {
+        let (listsStoreSpy, sut) = makeSUT()
+        
+        let item1 = Item(id: UUID(), text: "Item 1")
+        let item2 = Item(id: UUID(), text: "Item 1")
+        let list = List(id: UUID(), name: "My List", items: [item1, item2])
+        
+        let exp = expectation(description: "Wait for deletion to complete")
+        
+        sut.deleteItem(item1, from: list) { result in
+            if case let .failure(error) = result {
+                XCTAssertEqual(error, ListError.unableToDeleteItem)
+            } else {
+                XCTFail("Expected unableToDeleteItem error, got \(result) instead")
+            }
+            exp.fulfill()
+        }
+        
+        listsStoreSpy.completeWithAnyCacheUpdateError()
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
     // MARK: - Helpers
     private func makeSUT() -> (listsStoreSpy: ListsStoreSpy, sut: LocalListsManager) {
         let listsStoreSpy = ListsStoreSpy()
@@ -281,6 +308,10 @@ class LocalListsManagerTests: XCTestCase {
         
         func completeDeletion(with lists: [List]) {
             updateCompletions[0](.success(lists))
+        }
+        
+        func completeWithAnyCacheUpdateError() {
+            updateCompletions[0](.failure(.couldNotSaveCache))
         }
         
         func append(_ lists: [List], completion: @escaping ((Result<[List], Error>) -> Void)) {
