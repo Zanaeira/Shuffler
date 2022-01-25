@@ -192,6 +192,17 @@ class LocalListsManagerTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
+    func test_deleteItem_doesNotSendMessageToCacheOnItemNotFoundError() {
+        let (listsStoreSpy, sut) = makeSUT()
+        
+        let list = anyList()
+        let item = Item(id: UUID(), text: "Any Item")
+        
+        sut.deleteItem(item, from: list) { _ in }
+        
+        XCTAssertEqual(listsStoreSpy.receivedMessages, [])
+    }
+    
     // MARK: - Helpers
     private func makeSUT() -> (listsStoreSpy: ListsStoreSpy, sut: LocalListsManager) {
         let listsStoreSpy = ListsStoreSpy()
