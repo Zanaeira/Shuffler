@@ -34,7 +34,14 @@ final class LocalListsManager {
     }
     
     func deleteItem(_ item: Item, from list: List, completion: @escaping (Result<[List], ListError>) -> Void) {
-        completion(.failure(.itemNotFound))
+        guard list.items.contains(item) else {
+            completion(.failure(.itemNotFound))
+            return
+        }
+        
+        let updatedItems = list.items.filter({ $0 != item })
+        let updatedList = List(id: list.id, name: list.name, items: updatedItems)
+        completion(.success([updatedList]))
     }
     
 }
@@ -156,6 +163,29 @@ class LocalListsManagerTests: XCTestCase {
                 XCTAssertEqual(error, ListError.itemNotFound)
             } else {
                 XCTFail("Expected itemNotFound, got \(result)")
+            }
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
+    func test_deleteItem_deliversItemsOnSuccessfulDeletion() {
+        let (_, sut) = makeSUT()
+        
+        let item1 = Item(id: UUID(), text: "Item 1")
+        let item2 = Item(id: UUID(), text: "Item 2")
+        let item3 = Item(id: UUID(), text: "Item 3")
+        let list = List(id: UUID(), name: "My List", items: [item1, item2, item3])
+        let expectedList = List(id: list.id, name: list.name, items: [item1, item3])
+        
+        let exp = expectation(description: "Wait for delete to finish")
+        
+        sut.deleteItem(item2, from: list) { result in
+            if case let .success(receivedLists) = result {
+                XCTAssertEqual(receivedLists, [expectedList])
+            } else {
+                XCTFail("Expected \(expectedList), got \(result) instead")
             }
             exp.fulfill()
         }
