@@ -41,7 +41,11 @@ final class LocalListsManager {
         
         let updatedItems = list.items.filter({ $0 != item })
         let updatedList = List(id: list.id, name: list.name, items: updatedItems)
-        completion(.success([updatedList]))
+        store.update(list, updatedList: updatedList) { result in
+            if case let .success(receivedLists) = result {
+                completion(.success(receivedLists))
+            }
+        }
     }
     
 }
@@ -170,7 +174,7 @@ class LocalListsManagerTests: XCTestCase {
     }
     
     func test_deleteItem_deliversItemsOnSuccessfulDeletion() {
-        let (_, sut) = makeSUT()
+        let (listsStoreSpy, sut) = makeSUT()
         
         let item1 = Item(id: UUID(), text: "Item 1")
         let item2 = Item(id: UUID(), text: "Item 2")
@@ -189,6 +193,8 @@ class LocalListsManagerTests: XCTestCase {
             exp.fulfill()
         }
         
+        listsStoreSpy.completeDeletion(with: [expectedList])
+        
         wait(for: [exp], timeout: 1.0)
     }
     
@@ -201,6 +207,18 @@ class LocalListsManagerTests: XCTestCase {
         sut.deleteItem(item, from: list) { _ in }
         
         XCTAssertEqual(listsStoreSpy.receivedMessages, [])
+    }
+    
+    func test_deleteItem_sendsMessageToCacheOnSuccessfulDeletion() {
+        let (listsStoreSpy, sut) = makeSUT()
+        
+        let item1 = Item(id: UUID(), text: "Item 1")
+        let item2 = Item(id: UUID(), text: "Item 1")
+        let list = List(id: UUID(), name: "My List", items: [item1, item2])
+        
+        sut.deleteItem(item1, from: list) { _ in }
+        
+        XCTAssertEqual(listsStoreSpy.receivedMessages, [.update])
     }
     
     // MARK: - Helpers
@@ -236,9 +254,11 @@ class LocalListsManagerTests: XCTestCase {
         enum Message {
             case retrieve
             case delete
+            case update
         }
         
         var completions: [(Result<[List], Error>) -> Void] = []
+        var updateCompletions: [(Result<[List], UpdateError>) -> Void] = []
         var receivedMessages: [Message] = []
         
         func retrieve(completion: @escaping (Result<[List], Error>) -> Void) {
@@ -255,7 +275,12 @@ class LocalListsManagerTests: XCTestCase {
         }
         
         func update(_ list: List, updatedList: List, completion: @escaping (Result<[List], UpdateError>) -> Void) {
-            
+            receivedMessages.append(.update)
+            updateCompletions.append(completion)
+        }
+        
+        func completeDeletion(with lists: [List]) {
+            updateCompletions[0](.success(lists))
         }
         
         func append(_ lists: [List], completion: @escaping ((Result<[List], Error>) -> Void)) {
