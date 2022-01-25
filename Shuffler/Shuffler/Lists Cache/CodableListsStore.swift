@@ -46,14 +46,7 @@ public final class CodableListsStore: ListsStore {
                     return
                 }
                 
-                var updatedLists = [List]()
-                for cachedList in cachedLists {
-                    if cachedList.id == list.id {
-                        updatedLists.append(updatedList)
-                    } else {
-                        updatedLists.append(cachedList)
-                    }
-                }
+                let updatedLists = cachedLists.map({ $0.id == list.id ? updatedList : $0 })
                 
                 do {
                     let encoded = try JSONEncoder().encode(updatedLists.map(CodableList.init))
