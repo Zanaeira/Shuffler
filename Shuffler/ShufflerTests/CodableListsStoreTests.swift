@@ -84,6 +84,29 @@ class CodableListsStoreTests: XCTestCase {
         expect(sut, toRetrieve: .success(lists1 + lists2))
     }
     
+    func test_append_onlyAppendsListsWithUniqueIDNotInCacheAndIgnoresListsWithIDAlreadyInCache() {
+        let sut = makeSUT()
+        
+        let list1 = anyList()
+        let list2 = anyList()
+        let list3 = anyList()
+        
+        sut.append([list1, list2]) { _ in }
+        
+        let exp = expectation(description: "Wait for append to finish")
+        sut.append([list1, list3]) { result in
+            switch result {
+            case let .success(receivedLists):
+                XCTAssertEqual(receivedLists, [list1, list2, list3])
+            case .failure:
+                XCTFail("Expected success with [list, list2], got \(result) instead")
+            }
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
     func test_delete_completesWithEmptyListOnEmptyCache() {
         let sut = makeSUT()
         
