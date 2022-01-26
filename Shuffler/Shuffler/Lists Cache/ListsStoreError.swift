@@ -7,6 +7,6 @@
 
 import Foundation
 
-public enum ListsStoreError {
+public enum ListsStoreError: Error {
     case couldNotInsertLists
 }

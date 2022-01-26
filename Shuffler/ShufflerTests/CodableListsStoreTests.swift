@@ -40,8 +40,32 @@ class CodableListsStoreTests: XCTestCase {
         let list = anyList()
         
         let exp = expectation(description: "Wait for insert to finish")
-        sut.insert([list]) { error in
-            XCTAssertEqual(error, .couldNotInsertLists)
+        sut.insert([list]) { result in
+            switch result {
+            case .success:
+                XCTFail("Expected couldNotInsertLists, got \(result) instead")
+            case let .failure(error):
+                XCTAssertEqual(error, .couldNotInsertLists)
+            }
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
+    func test_insert_deliversValuesOnValidStoreURL() {
+        let sut = makeSUT()
+        
+        let list = anyList()
+        
+        let exp = expectation(description: "Wait for insert to finish")
+        sut.insert([list]) { result in
+            switch result {
+            case let .success(lists):
+                XCTAssertEqual(lists, [list])
+            case .failure:
+                XCTFail("Expected success, got \(result) instead")
+            }
             exp.fulfill()
         }
         
