@@ -95,6 +95,7 @@ public final class ListsViewController: UIViewController {
             switch result {
             case let .success(lists):
                 self.lists = lists
+                self.updateSnapshot()
             case .failure:
                 return
             }
@@ -182,7 +183,6 @@ extension ListsViewController {
                     
                     let list = self.lists[indexPath.item-1]
                     self.delete(list)
-                    self.updateSnapshot()
                     
                     completion(true)
                 }
