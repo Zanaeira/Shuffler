@@ -78,9 +78,16 @@ public final class ListsViewController: UIViewController {
     }
     
     private func addNewList(_ listName: String) {
-        lists.append(List(id: UUID(), name: listName, items: []))
-        
-        updateSnapshot()
+        let newList = List(id: UUID(), name: listName, items: [])
+        listsManager.add([newList]) { result in
+            switch result {
+            case let .success(lists):
+                self.lists = lists
+                self.updateSnapshot()
+            case .failure:
+                return
+            }
+        }
     }
     
     private func delete(_ list: List) {
