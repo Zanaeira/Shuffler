@@ -22,6 +22,10 @@ final class LocalListsManager {
         }
     }
     
+    func add(_ lists: [List], completion: @escaping (Result<[List], Error>) -> Void) {
+        store.append(lists, completion: completion)
+    }
+    
     func delete(_ lists: [List], completion: @escaping (Result<[List], ListError>) -> Void) {
         store.delete(lists) { result in
             switch result {
@@ -273,6 +277,14 @@ class LocalListsManagerTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
+    func test_add_forwardsAppendMessageToCache() {
+        let (listsStoreSpy, sut) = makeSUT()
+        
+        sut.add([anyList()]) { _ in }
+        
+        XCTAssertEqual(listsStoreSpy.receivedMessages, [.append])
+    }
+    
     // MARK: - Helpers
     private func makeSUT() -> (listsStoreSpy: ListsStoreSpy, sut: LocalListsManager) {
         let listsStoreSpy = ListsStoreSpy()
@@ -305,6 +317,7 @@ class LocalListsManagerTests: XCTestCase {
         
         enum Message {
             case retrieve
+            case append
             case delete
             case update
         }
@@ -340,7 +353,7 @@ class LocalListsManagerTests: XCTestCase {
         }
         
         func append(_ lists: [List], completion: @escaping ((Result<[List], Error>) -> Void)) {
-            
+            receivedMessages.append(.append)
         }
         
         func delete(_ lists: [List], completion: @escaping ((Result<[List], Error>) -> Void)) {
