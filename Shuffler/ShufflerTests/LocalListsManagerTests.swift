@@ -52,14 +52,14 @@ class LocalListsManagerTests: XCTestCase {
         }
     }
     
-    func test_delete_onEmptyCacheDeliversListNotFoundError() {
+    func test_delete_deliversUnableToDeleteListErrorOnError() {
         let (listsStoreSpy, sut) = makeSUT()
         
         let exp = expectation(description: "Wait for delete to complete")
         
         sut.delete([anyList()]) { result in
             if case let .failure(error) = result {
-                XCTAssertEqual(error, ListError.listNotFound)
+                XCTAssertEqual(error, ListError.unableToDeleteList)
             } else {
                 XCTFail("Expected ListError.listNotFound error, got \(result) instead")
             }
@@ -67,7 +67,7 @@ class LocalListsManagerTests: XCTestCase {
             exp.fulfill()
         }
         
-        listsStoreSpy.completeRetrieve(with: ListError.listNotFound)
+        listsStoreSpy.completeRetrieve(with: ListError.unableToDeleteList)
         
         wait(for: [exp], timeout: 1.0)
     }

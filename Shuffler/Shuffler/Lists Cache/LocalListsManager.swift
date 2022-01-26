@@ -51,7 +51,7 @@ public final class LocalListsManager: ListsManager {
             case let .success(receivedLists):
                 completion(.success(receivedLists))
             case .failure:
-                completion(.failure(.listNotFound))
+                completion(.failure(.unableToDeleteList))
             }
         }
     }

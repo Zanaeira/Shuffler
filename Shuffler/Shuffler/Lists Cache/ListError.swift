@@ -12,4 +12,5 @@ public enum ListError: Error {
     case itemNotFound
     case unableToAddItem
     case unableToDeleteItem
+    case unableToDeleteList
 }
