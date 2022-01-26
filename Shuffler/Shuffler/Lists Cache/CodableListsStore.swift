@@ -70,15 +70,10 @@ public final class CodableListsStore: ListsStore {
         retrieveCachedListsAndAmend(by: removing, lists: lists, completion: completion)
     }
     
-    private func adding(mainList: [List], lists: [List]) -> [List] {
-        var listsNotAlreadyInMainList: [List] = []
-        for list in lists {
-            if !mainList.contains(list) {
-                listsNotAlreadyInMainList.append(list)
-            }
-        }
+    private func adding(mainLists: [List], lists: [List]) -> [List] {
+        let listsNotAlreadyInMainList = lists.filter({ !mainLists.contains($0) })
         
-        return mainList + listsNotAlreadyInMainList
+        return mainLists + listsNotAlreadyInMainList
     }
     
     private func removing(mainList: [List], lists: [List]) -> [List] {
