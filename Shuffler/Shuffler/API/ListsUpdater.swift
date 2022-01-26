@@ -8,6 +8,7 @@
 import Foundation
 
 public protocol ListsUpdater {
+    func insert(_ lists: [List], completion: @escaping (Result<[List],ListsStoreError>) -> Void)
     func add(_ lists: [List], completion: @escaping (Result<[List], Error>) -> Void)
     func addItem(_ item: Item, to list: List, completion: @escaping (Result<[List], ListError>) -> Void)
     func delete(_ lists: [List], completion: @escaping (Result<[List], ListError>) -> Void)
