@@ -33,12 +33,12 @@ final class LocalListsManager {
             case let .success(lists):
                 completion(.success(lists))
             case let .failure(error):
-                completion(.failure(self.map(error)))
+                completion(.failure(LocalListsManager.map(error)))
             }
         }
     }
     
-    private func map(_ error: UpdateError) -> ListError {
+    private static func map(_ error: UpdateError) -> ListError {
         if error == .listNotFound {
             return .listNotFound
         }
@@ -420,11 +420,19 @@ class LocalListsManagerTests: XCTestCase {
     }
     
     // MARK: - Helpers
-    private func makeSUT() -> (listsStoreSpy: ListsStoreSpy, sut: LocalListsManager) {
+    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (listsStoreSpy: ListsStoreSpy, sut: LocalListsManager) {
         let listsStoreSpy = ListsStoreSpy()
         let sut = LocalListsManager(store: listsStoreSpy)
+        trackForMemoryLeaks(listsStoreSpy, file: file, line: line)
+        trackForMemoryLeaks(sut, file: file, line: line)
         
         return (listsStoreSpy, sut)
+    }
+    
+    private func trackForMemoryLeaks(_ instance: AnyObject, file: StaticString = #filePath, line: UInt = #line) {
+        addTeardownBlock { [weak instance] in
+            XCTAssertNil(instance, "Instance should have been deallocated. Potential memory leak", file: file, line: line)
+        }
     }
     
     private func expect(_ sut: LocalListsManager, toCompleteWith expectedResult: Result<[List], Error>, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
