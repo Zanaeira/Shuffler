@@ -288,8 +288,8 @@ class LocalListsManagerTests: XCTestCase {
         XCTAssertEqual(listsStoreSpy.receivedMessages, [.append])
     }
     
-    func test_addItem_deliversListNotFoundErrorOnListNotInCache() {
-        let (_, sut) = makeSUT()
+    func test_addItem_deliversListNotFoundErrorOnCacheError() {
+        let (listsStoreSpy, sut) = makeSUT()
         
         let list = anyList()
         let item = Item(id: UUID(), text: "Item 1")
@@ -301,6 +301,8 @@ class LocalListsManagerTests: XCTestCase {
             
             exp.fulfill()
         }
+        
+        listsStoreSpy.completeWithAnyCacheUpdateError()
         
         wait(for: [exp], timeout: 1.0)
     }
