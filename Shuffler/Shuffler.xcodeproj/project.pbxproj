@@ -21,6 +21,8 @@
 		1B855BAF27A0FFC600D64F2C /* ListError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855BAE27A0FFC600D64F2C /* ListError.swift */; };
 		1B855BB127A1004A00D64F2C /* ListsUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855BB027A1004A00D64F2C /* ListsUpdater.swift */; };
 		1B855BB327A100EA00D64F2C /* ListsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855BB227A100EA00D64F2C /* ListsManager.swift */; };
+		1B855BC427A1715600D64F2C /* Shuffler.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B855B762799C71200D64F2C /* Shuffler.framework */; };
+		1B855BC527A1715700D64F2C /* Shuffler.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1B855B762799C71200D64F2C /* Shuffler.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,7 +33,28 @@
 			remoteGlobalIDString = 1B855B752799C71200D64F2C;
 			remoteInfo = Shuffler;
 		};
+		1B855BC627A1715700D64F2C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1B855B6D2799C71200D64F2C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1B855B752799C71200D64F2C;
+			remoteInfo = Shuffler;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1B855BC827A1715700D64F2C /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				1B855BC527A1715700D64F2C /* Shuffler.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		1B855B762799C71200D64F2C /* Shuffler.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Shuffler.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -72,6 +95,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B855BC427A1715600D64F2C /* Shuffler.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,6 +109,7 @@
 				1B855B822799C71300D64F2C /* ShufflerTests */,
 				1B855BBA27A16F8000D64F2C /* ShuffleriOS */,
 				1B855B772799C71200D64F2C /* Products */,
+				1B855BC327A1715600D64F2C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -164,6 +189,13 @@
 			path = ShuffleriOS;
 			sourceTree = "<group>";
 		};
+		1B855BC327A1715600D64F2C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -228,10 +260,12 @@
 				1B855BB527A16F8000D64F2C /* Sources */,
 				1B855BB627A16F8000D64F2C /* Frameworks */,
 				1B855BB727A16F8000D64F2C /* Resources */,
+				1B855BC827A1715700D64F2C /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				1B855BC727A1715700D64F2C /* PBXTargetDependency */,
 			);
 			name = ShuffleriOS;
 			productName = ShuffleriOS;
@@ -258,6 +292,7 @@
 					};
 					1B855BB827A16F8000D64F2C = {
 						CreatedOnToolsVersion = 13.2.1;
+						LastSwiftMigration = 1320;
 					};
 				};
 			};
@@ -348,6 +383,11 @@
 			target = 1B855B752799C71200D64F2C /* Shuffler */;
 			targetProxy = 1B855B802799C71300D64F2C /* PBXContainerItemProxy */;
 		};
+		1B855BC727A1715700D64F2C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1B855B752799C71200D64F2C /* Shuffler */;
+			targetProxy = 1B855BC627A1715700D64F2C /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
@@ -403,6 +443,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MACOSX_DEPLOYMENT_TARGET = 11.6;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -461,6 +502,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MACOSX_DEPLOYMENT_TARGET = 11.6;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -583,6 +625,7 @@
 		1B855BBE27A16F8000D64F2C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -605,6 +648,7 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -613,6 +657,7 @@
 		1B855BBF27A16F8000D64F2C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
