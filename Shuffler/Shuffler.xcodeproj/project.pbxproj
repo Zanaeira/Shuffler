@@ -23,6 +23,8 @@
 		1B855BB327A100EA00D64F2C /* ListsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855BB227A100EA00D64F2C /* ListsManager.swift */; };
 		1B855BC427A1715600D64F2C /* Shuffler.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B855B762799C71200D64F2C /* Shuffler.framework */; };
 		1B855BC527A1715700D64F2C /* Shuffler.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1B855B762799C71200D64F2C /* Shuffler.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		1B855BCB27A1723300D64F2C /* ListsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855BCA27A1723300D64F2C /* ListsViewController.swift */; };
+		1B855BCE27A1732800D64F2C /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855BCD27A1732800D64F2C /* Section.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,6 +75,8 @@
 		1B855BB027A1004A00D64F2C /* ListsUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListsUpdater.swift; sourceTree = "<group>"; };
 		1B855BB227A100EA00D64F2C /* ListsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListsManager.swift; sourceTree = "<group>"; };
 		1B855BB927A16F8000D64F2C /* ShuffleriOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ShuffleriOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1B855BCA27A1723300D64F2C /* ListsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListsViewController.swift; sourceTree = "<group>"; };
+		1B855BCD27A1732800D64F2C /* Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -185,6 +189,8 @@
 		1B855BBA27A16F8000D64F2C /* ShuffleriOS */ = {
 			isa = PBXGroup;
 			children = (
+				1B855BCC27A1731B00D64F2C /* Models */,
+				1B855BC927A1722000D64F2C /* View Controllers */,
 			);
 			path = ShuffleriOS;
 			sourceTree = "<group>";
@@ -194,6 +200,22 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		1B855BC927A1722000D64F2C /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				1B855BCA27A1723300D64F2C /* ListsViewController.swift */,
+			);
+			path = "View Controllers";
+			sourceTree = "<group>";
+		};
+		1B855BCC27A1731B00D64F2C /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				1B855BCD27A1732800D64F2C /* Section.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -372,6 +394,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B855BCB27A1723300D64F2C /* ListsViewController.swift in Sources */,
+				1B855BCE27A1732800D64F2C /* Section.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
