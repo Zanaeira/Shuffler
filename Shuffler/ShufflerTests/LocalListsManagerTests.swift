@@ -25,6 +25,7 @@ final class LocalListsManager {
     }
     
     func addItem(_ item: Item, to list: List, completion: @escaping (ListError) -> Void) {
+        store.update(list, updatedList: list) { _ in }
         completion(.listNotFound)
     }
     
@@ -302,6 +303,18 @@ class LocalListsManagerTests: XCTestCase {
         }
         
         wait(for: [exp], timeout: 1.0)
+    }
+    
+    func test_addItem_updatesListInCache() {
+        let (listsStoreSpy, sut) = makeSUT()
+        
+        let list = anyList()
+        let item = Item(id: UUID(), text: "Item 1")
+        
+        sut.add([list]) { _ in }
+        sut.addItem(item, to: list) { _ in }
+        
+        XCTAssertEqual(listsStoreSpy.receivedMessages, [.append, .update])
     }
     
     // MARK: - Helpers
