@@ -25,7 +25,8 @@ final class LocalListsManager {
     }
     
     func addItem(_ item: Item, to list: List, completion: @escaping (Result<[List], ListError>) -> Void) {
-        let updatedList = List(id: list.id, name: list.name, items: [item])
+        let updatedItems = list.items + [item]
+        let updatedList = List(id: list.id, name: list.name, items: updatedItems)
         
         store.update(list, updatedList: updatedList) { result in
             switch result {
@@ -364,6 +365,22 @@ class LocalListsManagerTests: XCTestCase {
         let expectedList = List(id: list.id, name: list.name, items: [item])
         
         sut.addItem(item, to: list) { _ in }
+        
+        XCTAssertEqual(list, listsStoreSpy.list1ToUpdate)
+        XCTAssertEqual(expectedList, listsStoreSpy.list2ToUpdate)
+    }
+    
+    func test_addItem_appendsNewItemToListItemsInsteadOfOverwritingItems() {
+        let (listsStoreSpy, sut) = makeSUT()
+        
+        let item = Item(id: UUID(), text: "Item 1")
+        let list = List(id: UUID(), name: "My List", items: [item])
+        
+        let newItem = Item(id: UUID(), text: "Item 2")
+        
+        let expectedList = List(id: list.id, name: list.name, items: [item, newItem])
+        
+        sut.addItem(newItem, to: list) { _ in }
         
         XCTAssertEqual(list, listsStoreSpy.list1ToUpdate)
         XCTAssertEqual(expectedList, listsStoreSpy.list2ToUpdate)
