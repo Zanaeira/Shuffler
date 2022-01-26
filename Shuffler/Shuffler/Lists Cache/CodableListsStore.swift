@@ -63,36 +63,22 @@ public final class CodableListsStore: ListsStore {
     }
     
     public func append(_ lists: [List], completion: @escaping ((Result<[List], Error>) -> Void)) {
-        retrieve { result in
-            switch result {
-            case let .success(cachedLists):
-                var listsNotAlreadyInCache: [List] = []
-                for list in lists {
-                    if !cachedLists.contains(list) {
-                        listsNotAlreadyInCache.append(list)
-                    }
-                }
-                
-                let updatedLists = cachedLists + listsNotAlreadyInCache
-                do {
-                    let encoded = try JSONEncoder().encode(updatedLists.map(CodableList.init))
-                    try encoded.write(to: self.storeUrl)
-                    completion(.success(updatedLists))
-                } catch {
-                    completion(.failure(error))
-                }
-            case let .failure(error):
-                completion(.failure(error))
-            }
-        }
+        retrieveCachedListsAndAmend(by: adding, lists: lists, completion: completion)
     }
     
     public func delete(_ lists: [List], completion: @escaping ((Result<[List], Error>) -> Void)) {
         retrieveCachedListsAndAmend(by: removing, lists: lists, completion: completion)
     }
     
-    private func adding() -> ([List], [List]) -> [List] {
-        return (+)
+    private func adding(mainList: [List], lists: [List]) -> [List] {
+        var listsNotAlreadyInMainList: [List] = []
+        for list in lists {
+            if !mainList.contains(list) {
+                listsNotAlreadyInMainList.append(list)
+            }
+        }
+        
+        return mainList + listsNotAlreadyInMainList
     }
     
     private func removing(mainList: [List], lists: [List]) -> [List] {
