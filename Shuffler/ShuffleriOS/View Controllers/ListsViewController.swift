@@ -83,6 +83,17 @@ public final class ListsViewController: UIViewController {
         updateSnapshot()
     }
     
+    private func delete(_ list: List) {
+        listsManager.delete([list]) { result in
+            switch result {
+            case let .success(lists):
+                self.lists = lists
+            case .failure:
+                return
+            }
+        }
+    }
+    
     private func configureAddAListLabel() {
         let text = "Tap the + button to add a list"
         let attributedText = NSMutableAttributedString(string: text, attributes: [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .title1)])
@@ -163,15 +174,8 @@ extension ListsViewController {
                     guard let self = self else { return }
                     
                     let list = self.lists[indexPath.item-1]
-                    self.listsManager.delete([list]) { result in
-                        switch result {
-                        case let .success(lists):
-                            self.lists = lists
-                            self.updateSnapshot()
-                        case .failure:
-                            return
-                        }
-                    }
+                    self.delete(list)
+                    self.updateSnapshot()
                     
                     completion(true)
                 }
