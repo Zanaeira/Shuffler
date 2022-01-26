@@ -42,6 +42,13 @@ public final class ListsViewController: UIViewController {
         updateSnapshot()
     }
     
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        loadLists()
+        updateSnapshot()
+    }
+    
     private func setupEditButton() {
         if !lists.isEmpty {
             navigationItem.leftBarButtonItem = editButtonItem

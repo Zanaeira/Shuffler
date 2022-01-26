@@ -119,10 +119,10 @@ public final class ListItemsViewController: UIViewController {
         textField.resignFirstResponder()
         textField.text = ""
         
-        var newItems = items
-        newItems.append(Item(id: UUID(), text: itemText))
+        let newItem = Item(id: UUID(), text: itemText)
+        listsManager.addItem(newItem, to: list) { _ in }
         
-        list = List(id: list.id, name: list.name, items: newItems)
+        list = List(id: list.id, name: list.name, items: list.items + [newItem])
         
         updateSnapshot()
     }
