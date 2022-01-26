@@ -32,10 +32,18 @@ final class LocalListsManager {
             switch result {
             case let .success(lists):
                 completion(.success(lists))
-            case .failure:
-                completion(.failure(.listNotFound))
+            case let .failure(error):
+                completion(.failure(self.map(error)))
             }
         }
+    }
+    
+    private func map(_ error: UpdateError) -> ListError {
+        if error == .listNotFound {
+            return .listNotFound
+        }
+        
+        return .unableToAddItem
     }
     
     func delete(_ lists: [List], completion: @escaping (Result<[List], ListError>) -> Void) {
@@ -72,6 +80,7 @@ final class LocalListsManager {
 enum ListError: Error {
     case listNotFound
     case itemNotFound
+    case unableToAddItem
     case unableToDeleteItem
 }
 
@@ -314,7 +323,7 @@ class LocalListsManagerTests: XCTestCase {
             exp.fulfill()
         }
         
-        listsStoreSpy.completeWithAnyCacheUpdateError()
+        listsStoreSpy.completeUpdate(with: .listNotFound)
         
         wait(for: [exp], timeout: 1.0)
     }
@@ -386,6 +395,30 @@ class LocalListsManagerTests: XCTestCase {
         XCTAssertEqual(expectedList, listsStoreSpy.list2ToUpdate)
     }
     
+    func test_addItem_deliversUnableToAddItemErrorOnOtherThanListNotFoundError() {
+        let (listsStoreSpy, sut) = makeSUT()
+        
+        let item = Item(id: UUID(), text: "Item 1")
+        let list = List(id: UUID(), name: "My List", items: [item])
+        
+        sut.add([list]) { _ in }
+        
+        let exp = expectation(description: "Wait for addItem to finish")
+        
+        sut.addItem(Item(id: UUID(), text: "New Item"), to: list) { result in
+            if case let .failure(error) = result {
+                XCTAssertEqual(error, .unableToAddItem)
+            } else {
+                XCTFail("Expected couldNotRetrieveCache, got \(result) instead")
+            }
+            exp.fulfill()
+        }
+        
+        listsStoreSpy.completeUpdate(with: .couldNotRetrieveCache)
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
     // MARK: - Helpers
     private func makeSUT() -> (listsStoreSpy: ListsStoreSpy, sut: LocalListsManager) {
         let listsStoreSpy = ListsStoreSpy()
@@ -455,6 +488,10 @@ class LocalListsManagerTests: XCTestCase {
         
         func completeUpdate(with lists: [List]) {
             updateCompletions[0](.success(lists))
+        }
+        
+        func completeUpdate(with error: UpdateError) {
+            updateCompletions[0](.failure(error))
         }
         
         func completeDeletion(with lists: [List]) {
