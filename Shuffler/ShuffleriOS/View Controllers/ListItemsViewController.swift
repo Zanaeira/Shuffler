@@ -97,6 +97,10 @@ public final class ListItemsViewController: UIViewController {
         textFieldStackView.layoutMargins = .init(top: 10, left: 10, bottom: 10, right: 10)
         textFieldStackView.isLayoutMarginsRelativeArrangement = true
         
+        setupTextFieldStackViewBorder()
+    }
+    
+    private func setupTextFieldStackViewBorder() {
         textFieldStackView.layer.borderColor = UIColor.label.cgColor
         textFieldStackView.layer.borderWidth = 1
         textFieldStackView.layer.cornerRadius = 8
@@ -192,6 +196,8 @@ public final class ListItemsViewController: UIViewController {
     
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
+        
+        setupTextFieldStackViewBorder()
         
         let isAccessibilityCategory = traitCollection.preferredContentSizeCategory.isAccessibilityCategory
         if isAccessibilityCategory != previousTraitCollection?.preferredContentSizeCategory.isAccessibilityCategory {
