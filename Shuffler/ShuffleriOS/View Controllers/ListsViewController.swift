@@ -137,7 +137,7 @@ public final class ListsViewController: UIViewController {
     }
     
     private func configureNoListsLabelVisibility() {
-        noListsLabel.isHidden = lists.isEmpty
+        noListsLabel.isHidden = !lists.isEmpty
     }
     
 }
