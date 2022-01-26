@@ -19,6 +19,8 @@
 		1B855BA2279B9DC400D64F2C /* UpdateError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855BA1279B9DC400D64F2C /* UpdateError.swift */; };
 		1B855BA4279BFD2B00D64F2C /* ListsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855BA3279BFD2B00D64F2C /* ListsLoader.swift */; };
 		1B855BA9279CAF6800D64F2C /* LocalListsManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855BA8279CAF6800D64F2C /* LocalListsManagerTests.swift */; };
+		1B855BAD27A0FF8700D64F2C /* LocalListsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855BAC27A0FF8700D64F2C /* LocalListsManager.swift */; };
+		1B855BAF27A0FFC600D64F2C /* ListError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855BAE27A0FFC600D64F2C /* ListError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +47,8 @@
 		1B855BA1279B9DC400D64F2C /* UpdateError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateError.swift; sourceTree = "<group>"; };
 		1B855BA3279BFD2B00D64F2C /* ListsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListsLoader.swift; sourceTree = "<group>"; };
 		1B855BA8279CAF6800D64F2C /* LocalListsManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalListsManagerTests.swift; sourceTree = "<group>"; };
+		1B855BAC27A0FF8700D64F2C /* LocalListsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalListsManager.swift; sourceTree = "<group>"; };
+		1B855BAE27A0FFC600D64F2C /* ListError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListError.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,6 +130,8 @@
 			isa = PBXGroup;
 			children = (
 				1B855B90279A1D5D00D64F2C /* LocalListsLoader.swift */,
+				1B855BAC27A0FF8700D64F2C /* LocalListsManager.swift */,
+				1B855BAE27A0FFC600D64F2C /* ListError.swift */,
 				1B855B92279A1D8200D64F2C /* ListsStore.swift */,
 				1B855BA1279B9DC400D64F2C /* UpdateError.swift */,
 				1B855B9F279B9C2D00D64F2C /* CodableListsStore.swift */,
@@ -258,6 +264,8 @@
 				1B855B91279A1D5D00D64F2C /* LocalListsLoader.swift in Sources */,
 				1B855BA0279B9C2D00D64F2C /* CodableListsStore.swift in Sources */,
 				1B855B95279A1D9A00D64F2C /* List.swift in Sources */,
+				1B855BAF27A0FFC600D64F2C /* ListError.swift in Sources */,
+				1B855BAD27A0FF8700D64F2C /* LocalListsManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
