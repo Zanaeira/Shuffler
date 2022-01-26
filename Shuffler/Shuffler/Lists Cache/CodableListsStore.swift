@@ -11,10 +11,6 @@ public final class CodableListsStore: ListsStore {
     
     private struct Cache: Codable {
         let codableLists: [CodableList]
-        
-        var modelLists: [List] {
-            codableLists.map({ $0.modelList })
-        }
     }
     
     private let storeUrl: URL
