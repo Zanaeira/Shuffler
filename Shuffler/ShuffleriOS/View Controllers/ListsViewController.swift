@@ -102,6 +102,18 @@ public final class ListsViewController: UIViewController {
         }
     }
     
+    private func updateListOrder(_ listsInNewOrder: [List]) {
+        self.listsManager.insert(listsInNewOrder) { result in
+            switch result {
+            case let .success(insertedLists):
+                self.lists = insertedLists
+                self.updateSnapshot()
+            case .failure:
+                return
+            }
+        }
+    }
+    
     private func configureAddAListLabel() {
         let text = "Tap the + button to add a list"
         let attributedText = NSMutableAttributedString(string: text, attributes: [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .title1)])
@@ -205,12 +217,24 @@ extension ListsViewController {
             let deleteAccessory: UICellAccessory = .delete(displayed: .whenEditing) { [weak self] in
                 self?.delete(item)
             }
+            let reorderAccessory: UICellAccessory = .reorder(displayed: .whenEditing)
             
-            cell.accessories = [deleteAccessory]
+            cell.accessories = [deleteAccessory, reorderAccessory]
         }
         
         let dataSource: UICollectionViewDiffableDataSource<Section, List> = .init(collectionView: collectionView) { collectionView, indexPath, itemIdentifier in
             collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: itemIdentifier)
+        }
+        
+        dataSource.reorderingHandlers.canReorderItem = { list -> Bool in
+            return true
+        }
+        
+        dataSource.reorderingHandlers.didReorder = { transaction in
+            let listsInNewOrder = transaction.finalSnapshot.itemIdentifiers(inSection: .main)
+            let listsInNewOrderWithoutHeader = Array(listsInNewOrder.dropFirst())
+            
+            self.updateListOrder(listsInNewOrderWithoutHeader)
         }
         
         return dataSource
