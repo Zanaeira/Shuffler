@@ -127,6 +127,22 @@ public final class ListItemsViewController: UIViewController {
         updateSnapshot()
     }
     
+    private func delete(_ item: Item) {
+        listsManager.deleteItem(item, from: list) { result in
+            switch result {
+            case let .success(lists):
+                guard let updatedList = lists.first(where: { $0.id == self.list.id } ) else {
+                    return
+                }
+                
+                self.list = updatedList
+                self.updateSnapshot()
+            case .failure:
+                return
+            }
+        }
+    }
+    
     private func updateSnapshot() {
         guard !items.isEmpty else {
             dataSource.apply(.init())
@@ -205,6 +221,21 @@ private extension ListItemsViewController {
         return UICollectionViewCompositionalLayout { section, layoutEnvironment in
             var config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
             config.headerMode = .firstItemInSection
+            
+            config.trailingSwipeActionsConfigurationProvider = { indexPath in
+                guard indexPath.item != 0 else { return UISwipeActionsConfiguration() }
+                
+                let delete = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (_, _, completion) in
+                    guard let self = self else { return }
+                    
+                    let item = self.items[indexPath.item-1]
+                    self.delete(item)
+                    
+                    completion(true)
+                }
+                
+                return UISwipeActionsConfiguration(actions: [delete])
+            }
             
             return NSCollectionLayoutSection.list(using: config, layoutEnvironment: layoutEnvironment)
         }
