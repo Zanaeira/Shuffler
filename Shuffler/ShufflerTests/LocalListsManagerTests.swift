@@ -17,9 +17,7 @@ final class LocalListsManager {
     }
     
     func load(completion: @escaping (Result<[List], Error>) -> Void) {
-        store.retrieve { result in
-            completion(result)
-        }
+        store.retrieve(completion: completion)
     }
     
     func add(_ lists: [List], completion: @escaping (Result<[List], Error>) -> Void) {
