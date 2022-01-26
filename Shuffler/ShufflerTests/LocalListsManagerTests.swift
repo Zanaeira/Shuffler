@@ -24,6 +24,10 @@ final class LocalListsManager {
         store.append(lists, completion: completion)
     }
     
+    func addItem(_ item: Item, to list: List, completion: @escaping (ListError) -> Void) {
+        completion(.listNotFound)
+    }
+    
     func delete(_ lists: [List], completion: @escaping (Result<[List], ListError>) -> Void) {
         store.delete(lists) { result in
             switch result {
@@ -281,6 +285,23 @@ class LocalListsManagerTests: XCTestCase {
         sut.add([anyList()]) { _ in }
         
         XCTAssertEqual(listsStoreSpy.receivedMessages, [.append])
+    }
+    
+    func test_addItem_deliversListNotFoundErrorOnListNotInCache() {
+        let (_, sut) = makeSUT()
+        
+        let list = anyList()
+        let item = Item(id: UUID(), text: "Item 1")
+        
+        let exp = expectation(description: "Wait for addItem to finish")
+        
+        sut.addItem(item, to: list) { error in
+            XCTAssertEqual(error, .listNotFound)
+            
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
     }
     
     // MARK: - Helpers
