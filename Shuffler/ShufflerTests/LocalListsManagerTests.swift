@@ -52,6 +52,16 @@ class LocalListsManagerTests: XCTestCase {
         }
     }
     
+    func test_insert_forwardsMessageToCache() {
+        let (listsStoreSpy, sut) = makeSUT()
+        
+        let list = anyList()
+        
+        sut.insert([list]) { _ in }
+        
+        XCTAssertEqual(listsStoreSpy.receivedMessages, [.insert])
+    }
+    
     func test_delete_deliversUnableToDeleteListErrorOnError() {
         let (listsStoreSpy, sut) = makeSUT()
         
@@ -383,6 +393,7 @@ class LocalListsManagerTests: XCTestCase {
         
         enum Message {
             case retrieve
+            case insert
             case append
             case delete
             case update
@@ -412,7 +423,7 @@ class LocalListsManagerTests: XCTestCase {
         }
         
         func insert(_ lists: [List], completion: @escaping (Result<[List], ListsStoreError>) -> Void) {
-            
+            receivedMessages.append(.insert)
         }
         
         func update(_ list: List, updatedList: List, completion: @escaping (Result<[List], UpdateError>) -> Void) {
