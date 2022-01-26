@@ -494,6 +494,11 @@ class LocalListsManagerTests: XCTestCase {
             updateCompletions[0](.failure(error))
         }
         
+        func delete(_ lists: [List], completion: @escaping ((Result<[List], Error>) -> Void)) {
+            receivedMessages.append(.delete)
+            completions.append(completion)
+        }
+        
         func completeDeletion(with lists: [List]) {
             updateCompletions[0](.success(lists))
         }
@@ -504,11 +509,6 @@ class LocalListsManagerTests: XCTestCase {
         
         func append(_ lists: [List], completion: @escaping ((Result<[List], Error>) -> Void)) {
             receivedMessages.append(.append)
-        }
-        
-        func delete(_ lists: [List], completion: @escaping ((Result<[List], Error>) -> Void)) {
-            receivedMessages.append(.delete)
-            completions.append(completion)
         }
         
     }
