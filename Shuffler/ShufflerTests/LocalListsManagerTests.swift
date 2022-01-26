@@ -25,7 +25,9 @@ final class LocalListsManager {
     }
     
     func addItem(_ item: Item, to list: List, completion: @escaping (Result<[List], ListError>) -> Void) {
-        store.update(list, updatedList: list) { result in
+        let updatedList = List(id: list.id, name: list.name, items: [item])
+        
+        store.update(list, updatedList: updatedList) { result in
             switch result {
             case let .success(lists):
                 completion(.success(lists))
@@ -353,6 +355,20 @@ class LocalListsManagerTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
+    func test_addItem_sendsCorrectListsToCacheUpdateCall() {
+        let (listsStoreSpy, sut) = makeSUT()
+        
+        let list = anyList()
+        let item = Item(id: UUID(), text: "Item 1")
+        
+        let expectedList = List(id: list.id, name: list.name, items: [item])
+        
+        sut.addItem(item, to: list) { _ in }
+        
+        XCTAssertEqual(list, listsStoreSpy.list1ToUpdate)
+        XCTAssertEqual(expectedList, listsStoreSpy.list2ToUpdate)
+    }
+    
     // MARK: - Helpers
     private func makeSUT() -> (listsStoreSpy: ListsStoreSpy, sut: LocalListsManager) {
         let listsStoreSpy = ListsStoreSpy()
@@ -392,6 +408,12 @@ class LocalListsManagerTests: XCTestCase {
         
         var completions: [(Result<[List], Error>) -> Void] = []
         var updateCompletions: [(Result<[List], UpdateError>) -> Void] = []
+        var list1ToUpdate: List?
+        var list2ToUpdate: List?
+        var listsToUpdateAreDifferent: Bool {
+            list1ToUpdate != list2ToUpdate
+        }
+        
         var receivedMessages: [Message] = []
         
         func retrieve(completion: @escaping (Result<[List], Error>) -> Void) {
@@ -410,6 +432,8 @@ class LocalListsManagerTests: XCTestCase {
         func update(_ list: List, updatedList: List, completion: @escaping (Result<[List], UpdateError>) -> Void) {
             receivedMessages.append(.update)
             updateCompletions.append(completion)
+            list1ToUpdate = list
+            list2ToUpdate = updatedList
         }
         
         func completeUpdate(with lists: [List]) {
