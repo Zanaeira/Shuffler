@@ -156,6 +156,29 @@ extension ListsViewController {
             var config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
             config.headerMode = .firstItemInSection
             
+            config.trailingSwipeActionsConfigurationProvider = { indexPath in
+                guard indexPath.item != 0 else { return UISwipeActionsConfiguration() }
+                
+                let delete = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (_, _, completion) in
+                    guard let self = self else { return }
+                    
+                    let list = self.lists[indexPath.item-1]
+                    self.listsManager.delete([list]) { result in
+                        switch result {
+                        case let .success(lists):
+                            self.lists = lists
+                            self.updateSnapshot()
+                        case .failure:
+                            return
+                        }
+                    }
+                    
+                    completion(true)
+                }
+                
+                return UISwipeActionsConfiguration(actions: [delete])
+            }
+            
             return NSCollectionLayoutSection.list(using: config, layoutEnvironment: layoutEnvironment)
         }
     }
