@@ -152,7 +152,9 @@ public final class ListsViewController: UIViewController {
         snapshot.appendSections([.main])
         snapshot.appendItems(listsForSnapshot, toSection: .main)
         
-        dataSource.apply(snapshot, animatingDifferences: true)
+        DispatchQueue.main.async {
+            self.dataSource.apply(snapshot, animatingDifferences: true)
+        }
     }
     
     private func configureNoListsLabelVisibility() {
