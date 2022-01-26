@@ -33,6 +33,10 @@ public final class CodableListsStore: ListsStore {
         }
     }
     
+    public func insert(_ lists: [List], completion: @escaping (ListsStoreError) -> Void) {
+        completion(.couldNotInsertLists)
+    }
+    
     public func update(_ list: List, updatedList: List, completion: @escaping (Result<[List], UpdateError>) -> Void) {
         retrieve { result in
             switch result {

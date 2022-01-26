@@ -34,6 +34,20 @@ class CodableListsStoreTests: XCTestCase {
         expect(sut, toRetrieve: .success([]))
     }
     
+    func test_insert_deliversCouldNotInsertListsErrorForInvalidStoreURL() {
+        let sut = CodableListsStore(storeUrl: URL(string: "www.invalid-url.com")!)
+        
+        let list = anyList()
+        
+        let exp = expectation(description: "Wait for insert to finish")
+        sut.insert([list]) { error in
+            XCTAssertEqual(error, .couldNotInsertLists)
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
     func test_append_returnsAppendedListOnEmptyCache() {
         let sut = makeSUT()
         
