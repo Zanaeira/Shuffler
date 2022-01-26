@@ -96,7 +96,7 @@ class LocalListsManagerTests: XCTestCase {
         let (listsStoreSpy, sut) = makeSUT()
         
         expect(sut, toCompleteWith: .success([])) {
-            listsStoreSpy.complete(with: [])
+            listsStoreSpy.completeRetrieve(with: [])
         }
     }
     
@@ -114,7 +114,7 @@ class LocalListsManagerTests: XCTestCase {
         let list = anyList()
         
         expect(sut, toCompleteWith: .success([list])) {
-            listsStoreSpy.complete(with: [list])
+            listsStoreSpy.completeRetrieve(with: [list])
         }
     }
     
@@ -124,7 +124,7 @@ class LocalListsManagerTests: XCTestCase {
         let error = anyError()
         
         expect(sut, toCompleteWith: .failure(error)) {
-            listsStoreSpy.complete(with: error)
+            listsStoreSpy.completeRetrieve(with: error)
         }
     }
     
@@ -143,7 +143,7 @@ class LocalListsManagerTests: XCTestCase {
             exp.fulfill()
         }
         
-        listsStoreSpy.complete(with: ListError.listNotFound)
+        listsStoreSpy.completeRetrieve(with: ListError.listNotFound)
         
         wait(for: [exp], timeout: 1.0)
     }
@@ -175,7 +175,7 @@ class LocalListsManagerTests: XCTestCase {
             exp.fulfill()
         }
         
-        listsStoreSpy.complete(with: [list2, list3])
+        listsStoreSpy.completeRetrieve(with: [list2, list3])
         
         wait(for: [exp], timeout: 1.0)
     }
@@ -471,11 +471,11 @@ class LocalListsManagerTests: XCTestCase {
             completions.append(completion)
         }
         
-        func complete(with lists: [List]) {
+        func completeRetrieve(with lists: [List]) {
             completions[0](.success(lists))
         }
         
-        func complete(with error: Error) {
+        func completeRetrieve(with error: Error) {
             completions[0](.failure(error))
         }
         
