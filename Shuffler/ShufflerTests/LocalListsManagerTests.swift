@@ -411,6 +411,10 @@ class LocalListsManagerTests: XCTestCase {
             completions[0](.failure(error))
         }
         
+        func insert(_ lists: [List], completion: @escaping (Result<[List], ListsStoreError>) -> Void) {
+            
+        }
+        
         func update(_ list: List, updatedList: List, completion: @escaping (Result<[List], UpdateError>) -> Void) {
             receivedMessages.append(.update)
             updateCompletions.append(completion)
