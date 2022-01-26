@@ -19,11 +19,13 @@ public final class ListsViewController: UIViewController {
     private lazy var dataSource = makeDataSource()
     
     private let listsManager: ListsManager
+    private let onListSelected: (List) -> Void
     private let headerList = List(id: UUID(), name: "My Lists", items: [])
     private var lists = [List]()
     
-    public init(listsManager: ListsManager) {
+    public init(listsManager: ListsManager, onListSelected: @escaping (List) -> Void) {
         self.listsManager = listsManager
+        self.onListSelected = onListSelected
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -246,6 +248,11 @@ extension ListsViewController {
 extension ListsViewController: UICollectionViewDelegate {
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard indexPath.item != 0 else { return }
+        
+        let list = lists[indexPath.item - 1]
+        onListSelected(list)
+        
         collectionView.deselectItem(at: indexPath, animated: true)
     }
     
