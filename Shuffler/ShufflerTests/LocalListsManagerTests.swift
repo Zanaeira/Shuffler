@@ -24,9 +24,15 @@ final class LocalListsManager {
         store.append(lists, completion: completion)
     }
     
-    func addItem(_ item: Item, to list: List, completion: @escaping (ListError) -> Void) {
-        store.update(list, updatedList: list) { _ in }
-        completion(.listNotFound)
+    func addItem(_ item: Item, to list: List, completion: @escaping (Result<[List], ListError>) -> Void) {
+        store.update(list, updatedList: list) { result in
+            switch result {
+            case let .success(lists):
+                completion(.success(lists))
+            case .failure:
+                completion(.failure(.listNotFound))
+            }
+        }
     }
     
     func delete(_ lists: [List], completion: @escaping (Result<[List], ListError>) -> Void) {
@@ -296,9 +302,12 @@ class LocalListsManagerTests: XCTestCase {
         
         let exp = expectation(description: "Wait for addItem to finish")
         
-        sut.addItem(item, to: list) { error in
-            XCTAssertEqual(error, .listNotFound)
-            
+        sut.addItem(item, to: list) { result in
+            if case let .failure(error) = result {
+                XCTAssertEqual(error, .listNotFound)
+            } else {
+                XCTFail("Expected listNotFound error, got \(result) instead")
+            }
             exp.fulfill()
         }
         
@@ -317,6 +326,31 @@ class LocalListsManagerTests: XCTestCase {
         sut.addItem(item, to: list) { _ in }
         
         XCTAssertEqual(listsStoreSpy.receivedMessages, [.append, .update])
+    }
+    
+    func test_addItem_deliversListsFromCacheOnSuccess() {
+        let (listsStoreSpy, sut) = makeSUT()
+        
+        let list = anyList()
+        let item = Item(id: UUID(), text: "Item 1")
+        
+        let expectedList = List(id: list.id, name: list.name, items: [item])
+        
+        let exp = expectation(description: "Wait for addItem to finish")
+        
+        sut.addItem(item, to: list) { result in
+            if case let .success(lists) = result {
+                XCTAssertEqual(lists, [expectedList])
+            } else {
+                XCTFail("Expected [\(expectedList)], got \(result) instead")
+            }
+            
+            exp.fulfill()
+        }
+        
+        listsStoreSpy.completeUpdate(with: [expectedList])
+        
+        wait(for: [exp], timeout: 1.0)
     }
     
     // MARK: - Helpers
@@ -376,6 +410,10 @@ class LocalListsManagerTests: XCTestCase {
         func update(_ list: List, updatedList: List, completion: @escaping (Result<[List], UpdateError>) -> Void) {
             receivedMessages.append(.update)
             updateCompletions.append(completion)
+        }
+        
+        func completeUpdate(with lists: [List]) {
+            updateCompletions[0](.success(lists))
         }
         
         func completeDeletion(with lists: [List]) {
