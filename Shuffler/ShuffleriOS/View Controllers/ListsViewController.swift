@@ -263,12 +263,20 @@ extension ListsViewController {
         let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, List> { (cell, indexPath, item) in
             cell.configure(with: item, itemOrList: "Item", numberOfLists: item.items.count)
             
+            let renameAction = UIAction(image: UIImage(systemName: "pencil")) { [weak self] _ in
+                guard let self = self else { return }
+                self.editName(for: item)
+            }
+            let renameButton = UIButton(primaryAction: renameAction)
+            let renameAccessoryConfiguration = UICellAccessory.CustomViewConfiguration(customView: renameButton, placement: .leading(displayed: .whenEditing))
+            let renameAccessory = UICellAccessory.customView(configuration: renameAccessoryConfiguration)
+            
             let deleteAccessory: UICellAccessory = .delete(displayed: .whenEditing) { [weak self] in
                 self?.delete(item)
             }
             let reorderAccessory: UICellAccessory = .reorder(displayed: .whenEditing)
             
-            cell.accessories = [deleteAccessory, reorderAccessory]
+            cell.accessories = [renameAccessory, deleteAccessory, reorderAccessory]
         }
         
         let dataSource: UICollectionViewDiffableDataSource<Section, List> = .init(collectionView: collectionView) { collectionView, indexPath, itemIdentifier in
