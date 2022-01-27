@@ -42,7 +42,7 @@ public final class ListItemsViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .systemGroupedBackground
         title = list.name
         setupKeyboardDismissTapGestureRecognizer()
         setupConstraints()
