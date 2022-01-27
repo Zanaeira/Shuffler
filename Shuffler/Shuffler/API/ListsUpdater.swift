@@ -8,10 +8,12 @@
 import Foundation
 
 public protocol ListsUpdater {
-    func insert(_ lists: [List], completion: @escaping (Result<[List], ListError>) -> Void)
-    func add(_ lists: [List], completion: @escaping (Result<[List], ListError>) -> Void)
-    func addItem(_ item: Item, to list: List, completion: @escaping (Result<[List], ListError>) -> Void)
-    func editName(_ list: List, newName: String, completion: @escaping (Result<[List], ListError>) -> Void)
-    func delete(_ lists: [List], completion: @escaping (Result<[List], ListError>) -> Void)
-    func deleteItem(_ item: Item, from list: List, completion: @escaping (Result<[List], ListError>) -> Void)
+    typealias Result = Swift.Result<[List], ListError>
+    
+    func insert(_ lists: [List], completion: @escaping (Result) -> Void)
+    func add(_ lists: [List], completion: @escaping (Result) -> Void)
+    func addItem(_ item: Item, to list: List, completion: @escaping (Result) -> Void)
+    func editName(_ list: List, newName: String, completion: @escaping (Result) -> Void)
+    func delete(_ lists: [List], completion: @escaping (Result) -> Void)
+    func deleteItem(_ item: Item, from list: List, completion: @escaping (Result) -> Void)
 }
