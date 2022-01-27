@@ -23,8 +23,15 @@ public final class LocalListsManager: ListsManager {
         store.insert(lists, completion: completion)
     }
     
-    public func add(_ lists: [List], completion: @escaping (Result<[List], Error>) -> Void) {
-        store.append(lists, completion: completion)
+    public func add(_ lists: [List], completion: @escaping (Result<[List], ListError>) -> Void) {
+        store.append(lists) { result in
+            switch result {
+            case let .success(lists):
+                completion(.success(lists))
+            case .failure:
+                completion(.failure(.unableToAddLists))
+            }
+        }
     }
     
     public func addItem(_ item: Item, to list: List, completion: @escaping (Result<[List], ListError>) -> Void) {
