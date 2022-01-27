@@ -173,11 +173,9 @@ public final class ListsViewController: UIViewController {
             return
         }
         
-        let listsForSnapshot = [headerList] + lists
-        
         var snapshot = NSDiffableDataSourceSnapshot<Section, List>()
         snapshot.appendSections([.main])
-        snapshot.appendItems(listsForSnapshot, toSection: .main)
+        snapshot.appendItems(lists, toSection: .main)
         
         DispatchQueue.main.async {
             self.dataSource.apply(snapshot, animatingDifferences: true)
@@ -202,15 +200,13 @@ extension ListsViewController {
     private func makeCollectionViewLayout() -> UICollectionViewLayout {
         return UICollectionViewCompositionalLayout { section, layoutEnvironment in
             var config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
-            config.headerMode = .firstItemInSection
+            config.headerMode = .supplementary
             
             config.trailingSwipeActionsConfigurationProvider = { indexPath in
-                guard indexPath.item != 0 else { return UISwipeActionsConfiguration() }
-                
                 let delete = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (_, _, completion) in
                     guard let self = self else { return }
                     
-                    let list = self.lists[indexPath.item-1]
+                    let list = self.lists[indexPath.item]
                     self.delete(list)
                     
                     completion(true)
@@ -225,11 +221,6 @@ extension ListsViewController {
     
     private func makeDataSource() -> UICollectionViewDiffableDataSource<Section, List> {
         let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, List> { (cell, indexPath, item) in
-            guard indexPath.item != 0 else {
-                cell.configure(with: item, itemOrList: "List", numberOfLists: self.lists.count)
-                return
-            }
-            
             cell.configure(with: item, itemOrList: "Item", numberOfLists: item.items.count)
             
             let deleteAccessory: UICellAccessory = .delete(displayed: .whenEditing) { [weak self] in
@@ -245,14 +236,22 @@ extension ListsViewController {
         }
         
         dataSource.reorderingHandlers.canReorderItem = { list -> Bool in
-            return list != self.headerList
+            return true
         }
         
         dataSource.reorderingHandlers.didReorder = { transaction in
             let listsInNewOrder = transaction.finalSnapshot.itemIdentifiers(inSection: .main)
-            let listsInNewOrderWithoutHeader = Array(listsInNewOrder.dropFirst())
             
-            self.updateListOrder(listsInNewOrderWithoutHeader)
+            self.updateListOrder(listsInNewOrder)
+        }
+        
+        let headerRegistration = UICollectionView.SupplementaryRegistration<UICollectionViewListCell>(elementKind: UICollectionView.elementKindSectionHeader) { supplementaryView, elementKind, indexPath in
+            let headerItem = self.headerList
+            supplementaryView.configure(with: headerItem, itemOrList: "List", numberOfLists: self.lists.count)
+        }
+        
+        dataSource.supplementaryViewProvider = { (collectionView, elementKind, indexPath) -> UICollectionReusableView? in
+            return collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: indexPath)
         }
         
         return dataSource
@@ -264,22 +263,10 @@ extension ListsViewController {
 extension ListsViewController: UICollectionViewDelegate {
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard indexPath.item != 0 else { return }
-        
-        let list = lists[indexPath.item - 1]
+        let list = lists[indexPath.item]
         onListSelected(list)
         
         collectionView.deselectItem(at: indexPath, animated: true)
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, targetIndexPathForMoveOfItemFromOriginalIndexPath originalIndexPath: IndexPath, atCurrentIndexPath currentIndexPath: IndexPath, toProposedIndexPath proposedIndexPath: IndexPath) -> IndexPath {
-        let originalSection = originalIndexPath.section
-        
-        if proposedIndexPath.item == 0 {
-            return IndexPath(item: 1, section: originalSection)
-        }
-        
-        return proposedIndexPath
     }
     
 }
