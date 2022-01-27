@@ -20,6 +20,7 @@ public final class ListItemsViewController: UIViewController {
     private let listsManager: ListsManager
     
     private let headerItem = Item(id: UUID(), text: "Items")
+    private var originalList: List
     private var list: List
     private var items: [Item] {
         list.items
@@ -33,6 +34,7 @@ public final class ListItemsViewController: UIViewController {
     private var accessibilityConstraints: [NSLayoutConstraint] = []
     
     public init(list: List, listsManager: ListsManager) {
+        self.originalList = list
         self.list = list
         self.listsManager = listsManager
         
@@ -124,21 +126,31 @@ public final class ListItemsViewController: UIViewController {
         textField.text = ""
         
         let newItem = Item(id: UUID(), text: itemText)
-        listsManager.addItem(newItem, to: list) { _ in }
-        
-        list = List(id: list.id, name: list.name, items: list.items + [newItem])
-        
-        updateSnapshot()
-    }
-    
-    private func delete(_ item: Item) {
-        listsManager.deleteItem(item, from: list) { result in
+        listsManager.addItem(newItem, to: originalList) { result in
             switch result {
             case let .success(lists):
                 guard let updatedList = lists.first(where: { $0.id == self.list.id } ) else {
                     return
                 }
                 
+                self.originalList = updatedList
+                self.list = updatedList
+                self.updateSnapshot()
+            case .failure:
+                return
+            }
+        }
+    }
+    
+    private func delete(_ item: Item) {
+        listsManager.deleteItem(item, from: originalList) { result in
+            switch result {
+            case let .success(lists):
+                guard let updatedList = lists.first(where: { $0.id == self.list.id } ) else {
+                    return
+                }
+                
+                self.originalList = updatedList
                 self.list = updatedList
                 self.updateSnapshot()
             case .failure:
