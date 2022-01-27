@@ -225,9 +225,12 @@ extension ListsViewController {
     
     private func makeDataSource() -> UICollectionViewDiffableDataSource<Section, List> {
         let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, List> { (cell, indexPath, item) in
-            cell.configure(with: item, lists: self.lists, at: indexPath)
+            guard indexPath.item != 0 else {
+                cell.configure(with: item, itemOrList: "List", numberOfLists: self.lists.count)
+                return
+            }
             
-            guard indexPath.item != 0 else { return }
+            cell.configure(with: item, itemOrList: "Item", numberOfLists: item.items.count)
             
             let deleteAccessory: UICellAccessory = .delete(displayed: .whenEditing) { [weak self] in
                 self?.delete(item)
@@ -273,28 +276,10 @@ extension ListsViewController: UICollectionViewDelegate {
 
 private extension UICollectionViewListCell {
     
-    func configure(with list: List, lists: [List], at indexPath: IndexPath) {
+    func configure(with list: List, itemOrList: String, numberOfLists: Int) {
         var config = defaultContentConfiguration()
         config.text = list.name
-        
-        let count: Int
-        let itemOrList: String
-        if indexPath.item == 0 {
-            count = lists.count
-            itemOrList = "List"
-        } else {
-            count = list.items.count
-            itemOrList = "Item"
-        }
-        
-        let secondaryText: String
-        
-        if count == 1 {
-            secondaryText = "1 \(itemOrList)"
-        } else {
-            secondaryText = "\(count) \(itemOrList)s"
-        }
-        config.secondaryText = secondaryText
+        config.secondaryText = "\(numberOfLists) \(itemOrList)\(numberOfLists == 1 ? "" : "s")"
         config.prefersSideBySideTextAndSecondaryText = true
         
         contentConfiguration = config
