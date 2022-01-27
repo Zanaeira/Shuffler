@@ -15,7 +15,7 @@ public final class LocalListsManager: ListsManager {
         self.store = store
     }
     
-    public func load(completion: @escaping (Result<[List], Error>) -> Void) {
+    public func load(completion: @escaping (Result<[List], ListError>) -> Void) {
         store.retrieve(completion: completion)
     }
     

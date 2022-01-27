@@ -45,7 +45,7 @@ class LocalListsManagerTests: XCTestCase {
     func test_load_deliversErrorOnCacheError() {
         let (listsStoreSpy, sut) = makeSUT()
         
-        let error = anyError()
+        let error = ListError.unableToLoadLists
         
         expect(sut, toCompleteWith: .failure(error)) {
             listsStoreSpy.completeRetrieve(with: error)
@@ -414,7 +414,7 @@ class LocalListsManagerTests: XCTestCase {
         }
     }
     
-    private func expect(_ sut: LocalListsManager, toCompleteWith expectedResult: Result<[List], Error>, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    private func expect(_ sut: LocalListsManager, toCompleteWith expectedResult: Result<[List], ListError>, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "Wait for load to complete")
         
         sut.load { receivedResult in
@@ -444,7 +444,7 @@ class LocalListsManagerTests: XCTestCase {
             case update
         }
         
-        var completions: [(Result<[List], Error>) -> Void] = []
+        var completions: [(ListsUpdater.Result) -> Void] = []
         var updateCompletions: [(Result<[List], UpdateError>) -> Void] = []
         var list1ToUpdate: List?
         var list2ToUpdate: List?
@@ -454,7 +454,7 @@ class LocalListsManagerTests: XCTestCase {
         
         var receivedMessages: [Message] = []
         
-        func retrieve(completion: @escaping (Result<[List], Error>) -> Void) {
+        func retrieve(completion: @escaping (Result<[List], ListError>) -> Void) {
             receivedMessages.append(.retrieve)
             completions.append(completion)
         }
@@ -463,11 +463,11 @@ class LocalListsManagerTests: XCTestCase {
             completions[0](.success(lists))
         }
         
-        func completeRetrieve(with error: Error) {
+        func completeRetrieve(with error: ListError) {
             completions[0](.failure(error))
         }
         
-        func insert(_ lists: [List], completion: @escaping (Result<[List], ListError>) -> Void) {
+        func insert(_ lists: [List], completion: @escaping (ListsUpdater.Result) -> Void) {
             receivedMessages.append(.insert)
         }
         
@@ -486,7 +486,7 @@ class LocalListsManagerTests: XCTestCase {
             updateCompletions[0](.failure(error))
         }
         
-        func delete(_ lists: [List], completion: @escaping ((Result<[List], Error>) -> Void)) {
+        func delete(_ lists: [List], completion: @escaping (ListsUpdater.Result) -> Void) {
             receivedMessages.append(.delete)
             completions.append(completion)
         }
@@ -499,7 +499,7 @@ class LocalListsManagerTests: XCTestCase {
             updateCompletions[0](.failure(.couldNotSaveCache))
         }
         
-        func append(_ lists: [List], completion: @escaping ((Result<[List], Error>) -> Void)) {
+        func append(_ lists: [List], completion: @escaping ((Result<[List], ListError>) -> Void)) {
             receivedMessages.append(.append)
         }
         

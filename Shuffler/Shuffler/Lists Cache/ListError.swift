@@ -10,6 +10,7 @@ import Foundation
 public enum ListError: Error {
     case listNotFound
     case itemNotFound
+    case unableToLoadLists
     case unableToAddItem
     case unableToAddLists
     case unableToInsertLists

@@ -19,7 +19,7 @@ public final class CodableListsStore: ListsStore {
         self.storeUrl = storeUrl
     }
     
-    public func retrieve(completion: @escaping (Result<[List], Error>) -> Void) {
+    public func retrieve(completion: @escaping (Result<[List], ListError>) -> Void) {
         guard let data = try? Data(contentsOf: storeUrl) else {
             completion(.success([]))
             return
@@ -29,7 +29,7 @@ public final class CodableListsStore: ListsStore {
             let lists = try JSONDecoder().decode([CodableList].self, from: data)
             completion(.success(lists.map({$0.modelList})))
         } catch {
-            completion(.failure(error))
+            completion(.failure(.unableToLoadLists))
         }
     }
     
@@ -68,11 +68,11 @@ public final class CodableListsStore: ListsStore {
         }
     }
     
-    public func append(_ lists: [List], completion: @escaping ((Result<[List], Error>) -> Void)) {
+    public func append(_ lists: [List], completion: @escaping ((Result<[List], ListError>) -> Void)) {
         retrieveCachedListsAndAmend(by: adding, lists: lists, completion: completion)
     }
     
-    public func delete(_ lists: [List], completion: @escaping ((Result<[List], Error>) -> Void)) {
+    public func delete(_ lists: [List], completion: @escaping ((Result<[List], ListError>) -> Void)) {
         retrieveCachedListsAndAmend(by: removing, lists: lists, completion: completion)
     }
     
@@ -86,7 +86,7 @@ public final class CodableListsStore: ListsStore {
         mainList.filter({ !lists.contains($0) })
     }
     
-    private func retrieveCachedListsAndAmend(by updatingListsFrom: @escaping ([List], [List]) -> [List], lists: [List], completion: @escaping (Result<[List], Error>) -> Void) {
+    private func retrieveCachedListsAndAmend(by updatingListsFrom: @escaping ([List], [List]) -> [List], lists: [List], completion: @escaping (Result<[List], ListError>) -> Void) {
         retrieve { result in
             switch result {
             case let .success(cachedLists):
@@ -96,10 +96,10 @@ public final class CodableListsStore: ListsStore {
                     try encoded.write(to: self.storeUrl)
                     completion(.success(updatedLists))
                 } catch {
-                    completion(.failure(error))
+                    completion(.failure(.unableToUpdateList))
                 }
-            case let .failure(error):
-                completion(.failure(error))
+            case .failure:
+                completion(.failure(.unableToLoadLists))
             }
         }
     }

@@ -11,7 +11,3 @@ import Shuffler
 func anyList() -> List {
     List(id: UUID(), name: "Any List", items: [])
 }
-
-func anyError() -> NSError {
-    NSError(domain: "Test Error", code: 0)
-}

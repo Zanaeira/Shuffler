@@ -8,9 +8,9 @@
 import Foundation
 
 public protocol ListsStore {
-    func retrieve(completion: @escaping (Result<[List], Error>) -> Void)
+    func retrieve(completion: @escaping (Result<[List], ListError>) -> Void)
     func insert(_ lists: [List], completion: @escaping (Result<[List],ListError>) -> Void)
     func update(_ list: List, updatedList: List, completion: @escaping (Result<[List], UpdateError>) -> Void)
-    func append(_ lists: [List], completion: @escaping ((Result<[List], Error>) -> Void))
-    func delete(_ lists: [List], completion: @escaping ((Result<[List], Error>) -> Void))
+    func append(_ lists: [List], completion: @escaping ((Result<[List], ListError>) -> Void))
+    func delete(_ lists: [List], completion: @escaping ((Result<[List], ListError>) -> Void))
 }
