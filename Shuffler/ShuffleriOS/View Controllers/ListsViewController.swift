@@ -105,7 +105,7 @@ public final class ListsViewController: UIViewController {
         }
     }
     
-    private func editName(for list: List) {
+    private func editListName(_ list: List) {
         let alertController = UIAlertController(title: "Edit \(list.name) name", message: "Enter the new name for list", preferredStyle: .alert)
         alertController.addTextField()
         alertController.textFields?.first?.autocapitalizationType = .words
@@ -114,21 +114,25 @@ public final class ListsViewController: UIViewController {
             guard let newListName = alertController.textFields?.first?.text,
                   !newListName.isEmpty else { return }
             
-            self.listsManager.editName(list, newName: newListName) { result in
-                switch result {
-                case let .success(lists):
-                    self.lists = lists
-                    self.updateSnapshot()
-                case .failure:
-                    return
-                }
-            }
+            self.changeListName(for: list, toNewName: newListName)
         }
         
         alertController.addAction(submitAction)
         alertController.addAction(.init(title: "Cancel", style: .cancel))
         
         present(alertController, animated: true)
+    }
+    
+    private func changeListName(for list: List, toNewName newListName: String) {
+        self.listsManager.editName(list, newName: newListName) { result in
+            switch result {
+            case let .success(lists):
+                self.lists = lists
+                self.updateSnapshot()
+            case .failure:
+                return
+            }
+        }
     }
     
     private func delete(_ list: List) {
@@ -231,7 +235,7 @@ extension ListsViewController {
             config.leadingSwipeActionsConfigurationProvider = { indexPath in
                 let list = self.lists[indexPath.item]
                 let renameListActionHandler: UIContextualAction.Handler = { action, view, completion in
-                    self.editName(for: list)
+                    self.editListName(list)
                     completion(true)
                 }
                 
@@ -265,7 +269,7 @@ extension ListsViewController {
             
             let renameAction = UIAction(image: UIImage(systemName: "pencil")) { [weak self] _ in
                 guard let self = self else { return }
-                self.editName(for: item)
+                self.editListName(item)
             }
             let renameButton = UIButton(primaryAction: renameAction)
             let renameAccessoryConfiguration = UICellAccessory.CustomViewConfiguration(customView: renameButton, placement: .leading(displayed: .whenEditing))
