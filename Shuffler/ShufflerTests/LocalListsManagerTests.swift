@@ -353,6 +353,29 @@ class LocalListsManagerTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
+    func test_editName_editsTheNameOfTheList() {
+        let (listsStoreSpy, sut) = makeSUT()
+        
+        let item = Item(id: UUID(), text: "An Item")
+        let list = List(id: UUID(), name: "My List", items: [item])
+        let editedName = "Edited Name"
+        let expectedList = List(id: list.id, name: editedName, items: [item])
+        
+        let exp = expectation(description: "Wait for editName to finish")
+        sut.editName(list, newName: editedName) { result in
+            if case let .success(lists) = result {
+                XCTAssertEqual([expectedList], lists)
+            } else {
+                XCTFail("Expected success with \(expectedList), got \(result) instead")
+            }
+            exp.fulfill()
+        }
+        
+        listsStoreSpy.completeUpdate(with: [expectedList])
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
     // MARK: - Helpers
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (listsStoreSpy: ListsStoreSpy, sut: LocalListsManager) {
         let listsStoreSpy = ListsStoreSpy()

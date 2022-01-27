@@ -41,6 +41,19 @@ public final class LocalListsManager: ListsManager {
         }
     }
     
+    public func editName(_ list: List, newName: String, completion: @escaping (Result<[List], ListError>) -> Void) {
+        let updatedList = List(id: list.id, name: newName, items: list.items)
+        
+        store.update(list, updatedList: updatedList) { result in
+            switch result {
+            case let .success(lists):
+                completion(.success(lists))
+            case let .failure(error):
+                completion(.failure(LocalListsManager.map(error)))
+            }
+        }
+    }
+    
     private static func map(_ error: UpdateError) -> ListError {
         if error == .listNotFound {
             return .listNotFound
