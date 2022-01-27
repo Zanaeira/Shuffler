@@ -376,6 +376,28 @@ class LocalListsManagerTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
+    func test_editName_deliversUnableToUpdateListErrorOnFailure() {
+        let (listsStoreSpy, sut) = makeSUT()
+        
+        let item = Item(id: UUID(), text: "An Item")
+        let list = List(id: UUID(), name: "My List", items: [item])
+        let editedName = "Edited Name"
+        
+        let exp = expectation(description: "Wait for editName to finish")
+        sut.editName(list, newName: editedName) { result in
+            if case let .failure(error) = result {
+                XCTAssertEqual(error, .unableToUpdateList)
+            } else {
+                XCTFail("Expected unableToUpdateList error, got \(result) instead")
+            }
+            exp.fulfill()
+        }
+        
+        listsStoreSpy.completeWithAnyCacheUpdateError()
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
     // MARK: - Helpers
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (listsStoreSpy: ListsStoreSpy, sut: LocalListsManager) {
         let listsStoreSpy = ListsStoreSpy()

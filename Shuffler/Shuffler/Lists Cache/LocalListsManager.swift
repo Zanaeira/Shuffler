@@ -36,7 +36,7 @@ public final class LocalListsManager: ListsManager {
             case let .success(lists):
                 completion(.success(lists))
             case let .failure(error):
-                completion(.failure(LocalListsManager.map(error)))
+                completion(.failure(LocalListsManager.mapNonListNotFoundError(error, toListError: .unableToAddItem)))
             }
         }
     }
@@ -49,17 +49,17 @@ public final class LocalListsManager: ListsManager {
             case let .success(lists):
                 completion(.success(lists))
             case let .failure(error):
-                completion(.failure(LocalListsManager.map(error)))
+                completion(.failure(LocalListsManager.mapNonListNotFoundError(error, toListError: .unableToUpdateList)))
             }
         }
     }
     
-    private static func map(_ error: UpdateError) -> ListError {
+    private static func mapNonListNotFoundError(_ error: UpdateError, toListError listError: ListError) -> ListError {
         if error == .listNotFound {
             return .listNotFound
         }
         
-        return .unableToAddItem
+        return listError
     }
     
     public func delete(_ lists: [List], completion: @escaping (Result<[List], ListError>) -> Void) {
