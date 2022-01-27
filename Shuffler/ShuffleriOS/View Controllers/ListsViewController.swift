@@ -45,14 +45,12 @@ public final class ListsViewController: UIViewController {
         configureHierarchy()
         configureAddAListLabel()
         loadLists()
-        updateSnapshot()
     }
     
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         loadLists()
-        updateSnapshot()
     }
     
     private func setupEditButton() {
@@ -92,19 +90,6 @@ public final class ListsViewController: UIViewController {
         present(alertController, animated: true)
     }
     
-    private func addNewList(_ listName: String) {
-        let newList = List(id: UUID(), name: listName, items: [])
-        listsManager.add([newList]) { result in
-            switch result {
-            case let .success(lists):
-                self.lists = lists
-                self.updateSnapshot()
-            case .failure:
-                return
-            }
-        }
-    }
-    
     private func editListName(_ list: List) {
         let alertController = UIAlertController(title: "Edit \(list.name) name", message: "Enter the new name for list", preferredStyle: .alert)
         alertController.addTextField()
@@ -123,39 +108,30 @@ public final class ListsViewController: UIViewController {
         present(alertController, animated: true)
     }
     
+    private func addNewList(_ listName: String) {
+        let newList = List(id: UUID(), name: listName, items: [])
+        listsManager.add([newList], completion: handleResult)
+    }
+    
     private func changeListName(for list: List, toNewName newListName: String) {
-        self.listsManager.editName(list, newName: newListName) { result in
-            switch result {
-            case let .success(lists):
-                self.lists = lists
-                self.updateSnapshot()
-            case .failure:
-                return
-            }
-        }
+        listsManager.editName(list, newName: newListName, completion: handleResult)
     }
     
     private func delete(_ list: List) {
-        listsManager.delete([list]) { result in
-            switch result {
-            case let .success(lists):
-                self.lists = lists
-                self.updateSnapshot()
-            case .failure:
-                return
-            }
-        }
+        listsManager.delete([list], completion: handleResult)
     }
     
     private func updateListOrder(_ listsInNewOrder: [List]) {
-        self.listsManager.insert(listsInNewOrder) { result in
-            switch result {
-            case let .success(insertedLists):
-                self.lists = insertedLists
-                self.updateSnapshot()
-            case .failure:
-                return
-            }
+        listsManager.insert(listsInNewOrder, completion: handleResult)
+    }
+    
+    private func handleResult(_ result: ListsUpdater.Result) {
+        switch result {
+        case let .success(lists):
+            self.lists = lists
+            self.updateSnapshot()
+        case .failure:
+            return
         }
     }
     
@@ -182,16 +158,7 @@ public final class ListsViewController: UIViewController {
     }
     
     private func loadLists() {
-        listsManager.load { [weak self] result in
-            guard let self = self else { return }
-            
-            switch result {
-            case .success(let lists):
-                self.lists = lists
-            case .failure:
-                return
-            }
-        }
+        listsManager.load(completion: handleResult)
     }
     
     private func updateSnapshot() {
