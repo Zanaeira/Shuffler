@@ -34,7 +34,7 @@ class CodableListsStoreTests: XCTestCase {
         expect(sut, toRetrieve: .success([]))
     }
     
-    func test_insert_deliversCouldNotInsertListsErrorForInvalidStoreURL() {
+    func test_insert_deliversUnableToInsertListsErrorForInvalidStoreURL() {
         let sut = CodableListsStore(storeUrl: URL(string: "www.invalid-url.com")!)
         
         let list = anyList()
@@ -45,7 +45,7 @@ class CodableListsStoreTests: XCTestCase {
             case .success:
                 XCTFail("Expected couldNotInsertLists, got \(result) instead")
             case let .failure(error):
-                XCTAssertEqual(error, .couldNotInsertLists)
+                XCTAssertEqual(error, .unableToInsertLists)
             }
             exp.fulfill()
         }

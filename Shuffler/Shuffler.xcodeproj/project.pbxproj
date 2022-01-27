@@ -25,7 +25,6 @@
 		1B855BC527A1715700D64F2C /* Shuffler.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1B855B762799C71200D64F2C /* Shuffler.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		1B855BCB27A1723300D64F2C /* ListsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855BCA27A1723300D64F2C /* ListsViewController.swift */; };
 		1B855BCE27A1732800D64F2C /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855BCD27A1732800D64F2C /* Section.swift */; };
-		1B855BFC27A1C3B600D64F2C /* ListsStoreError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855BFB27A1C3B600D64F2C /* ListsStoreError.swift */; };
 		1B855C0327A1FB6600D64F2C /* ListItemsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855C0227A1FB6600D64F2C /* ListItemsViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -79,7 +78,6 @@
 		1B855BB927A16F8000D64F2C /* ShuffleriOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ShuffleriOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1B855BCA27A1723300D64F2C /* ListsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListsViewController.swift; sourceTree = "<group>"; };
 		1B855BCD27A1732800D64F2C /* Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section.swift; sourceTree = "<group>"; };
-		1B855BFB27A1C3B600D64F2C /* ListsStoreError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListsStoreError.swift; sourceTree = "<group>"; };
 		1B855C0227A1FB6600D64F2C /* ListItemsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItemsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -173,7 +171,6 @@
 			children = (
 				1B855BAC27A0FF8700D64F2C /* LocalListsManager.swift */,
 				1B855BAE27A0FFC600D64F2C /* ListError.swift */,
-				1B855BFB27A1C3B600D64F2C /* ListsStoreError.swift */,
 				1B855B92279A1D8200D64F2C /* ListsStore.swift */,
 				1B855BA1279B9DC400D64F2C /* UpdateError.swift */,
 				1B855B9F279B9C2D00D64F2C /* CodableListsStore.swift */,
@@ -380,7 +377,6 @@
 				1B855BA4279BFD2B00D64F2C /* ListsLoader.swift in Sources */,
 				1B855BA0279B9C2D00D64F2C /* CodableListsStore.swift in Sources */,
 				1B855B95279A1D9A00D64F2C /* List.swift in Sources */,
-				1B855BFC27A1C3B600D64F2C /* ListsStoreError.swift in Sources */,
 				1B855BAF27A0FFC600D64F2C /* ListError.swift in Sources */,
 				1B855BAD27A0FF8700D64F2C /* LocalListsManager.swift in Sources */,
 				1B855BB127A1004A00D64F2C /* ListsUpdater.swift in Sources */,

@@ -33,13 +33,13 @@ public final class CodableListsStore: ListsStore {
         }
     }
     
-    public func insert(_ lists: [List], completion: @escaping (Result<[List],ListsStoreError>) -> Void) {
+    public func insert(_ lists: [List], completion: @escaping (Result<[List], ListError>) -> Void) {
         do {
             let encoded = try JSONEncoder().encode(lists.map(CodableList.init))
             try encoded.write(to: self.storeUrl)
             completion(.success(lists))
         } catch {
-            completion(.failure(.couldNotInsertLists))
+            completion(.failure(.unableToInsertLists))
         }
     }
     

@@ -19,7 +19,7 @@ public final class LocalListsManager: ListsManager {
         store.retrieve(completion: completion)
     }
     
-    public func insert(_ lists: [List], completion: @escaping (Result<[List],ListsStoreError>) -> Void) {
+    public func insert(_ lists: [List], completion: @escaping (Result<[List], ListError>) -> Void) {
         store.insert(lists, completion: completion)
     }
     
