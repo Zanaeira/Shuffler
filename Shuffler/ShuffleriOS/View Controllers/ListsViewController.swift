@@ -245,7 +245,7 @@ extension ListsViewController {
         }
         
         dataSource.reorderingHandlers.canReorderItem = { list -> Bool in
-            return true
+            return list != self.headerList
         }
         
         dataSource.reorderingHandlers.didReorder = { transaction in
@@ -270,6 +270,16 @@ extension ListsViewController: UICollectionViewDelegate {
         onListSelected(list)
         
         collectionView.deselectItem(at: indexPath, animated: true)
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, targetIndexPathForMoveOfItemFromOriginalIndexPath originalIndexPath: IndexPath, atCurrentIndexPath currentIndexPath: IndexPath, toProposedIndexPath proposedIndexPath: IndexPath) -> IndexPath {
+        let originalSection = originalIndexPath.section
+        
+        if proposedIndexPath.item == 0 {
+            return IndexPath(item: 1, section: originalSection)
+        }
+        
+        return proposedIndexPath
     }
     
 }
