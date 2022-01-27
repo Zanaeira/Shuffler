@@ -21,7 +21,13 @@ public final class ListsViewController: UIViewController {
     private let listsManager: ListsManager
     private let onListSelected: (List) -> Void
     private let headerList = List(id: UUID(), name: "My Lists", items: [])
-    private var lists = [List]()
+    private var lists = [List]() {
+        didSet {
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
+        }
+    }
     
     public init(listsManager: ListsManager, onListSelected: @escaping (List) -> Void) {
         self.listsManager = listsManager
@@ -219,7 +225,7 @@ extension ListsViewController {
     
     private func makeDataSource() -> UICollectionViewDiffableDataSource<Section, List> {
         let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, List> { (cell, indexPath, item) in
-            cell.configure(with: item)
+            cell.configure(with: item, lists: self.lists, at: indexPath)
             
             guard indexPath.item != 0 else { return }
             
@@ -267,9 +273,29 @@ extension ListsViewController: UICollectionViewDelegate {
 
 private extension UICollectionViewListCell {
     
-    func configure(with list: List) {
+    func configure(with list: List, lists: [List], at indexPath: IndexPath) {
         var config = defaultContentConfiguration()
         config.text = list.name
+        
+        let count: Int
+        let itemOrList: String
+        if indexPath.item == 0 {
+            count = lists.count
+            itemOrList = "List"
+        } else {
+            count = list.items.count
+            itemOrList = "Item"
+        }
+        
+        let secondaryText: String
+        
+        if count == 1 {
+            secondaryText = "1 \(itemOrList)"
+        } else {
+            secondaryText = "\(count) \(itemOrList)s"
+        }
+        config.secondaryText = secondaryText
+        config.prefersSideBySideTextAndSecondaryText = true
         
         contentConfiguration = config
     }
