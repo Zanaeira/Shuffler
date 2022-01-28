@@ -126,36 +126,25 @@ public final class ListItemsViewController: UIViewController {
         textField.text = ""
         
         let newItem = Item(id: UUID(), text: itemText)
-        listsManager.addItem(newItem, to: originalList) { result in
-            switch result {
-            case let .success(lists):
-                guard let updatedList = lists.first(where: { $0.id == self.list.id } ) else {
-                    return
-                }
-                
-                self.originalList = updatedList
-                self.list = updatedList
-                self.updateSnapshot()
-            case .failure:
-                return
-            }
-        }
+        listsManager.addItem(newItem, to: originalList, completion: handleResult)
     }
     
     private func delete(_ item: Item) {
-        listsManager.deleteItem(item, from: originalList) { result in
-            switch result {
-            case let .success(lists):
-                guard let updatedList = lists.first(where: { $0.id == self.list.id } ) else {
-                    return
-                }
-                
-                self.originalList = updatedList
-                self.list = updatedList
-                self.updateSnapshot()
-            case .failure:
+        listsManager.deleteItem(item, from: originalList, completion: handleResult)
+    }
+    
+    private func handleResult(_ result: ListsUpdater.Result) {
+        switch result {
+        case let .success(lists):
+            guard let updatedList = lists.first(where: { $0.id == self.list.id } ) else {
                 return
             }
+            
+            self.originalList = updatedList
+            self.list = updatedList
+            self.updateSnapshot()
+        case .failure:
+            return
         }
     }
     
