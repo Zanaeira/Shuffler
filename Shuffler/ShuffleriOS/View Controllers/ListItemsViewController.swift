@@ -92,18 +92,20 @@ public final class ListItemsViewController: UIViewController {
         textField.adjustsFontForContentSizeCategory = true
         textField.clearButtonMode = .whileEditing
         textField.delegate = self
+        textField.backgroundColor = .systemBackground
         
         textFieldStackView.translatesAutoresizingMaskIntoConstraints = false
         textFieldStackView.addArrangedSubview(textField)
         textFieldStackView.layoutMargins = .init(top: 10, left: 10, bottom: 10, right: 10)
         textFieldStackView.isLayoutMarginsRelativeArrangement = true
+        textFieldStackView.backgroundColor = .systemBackground
         
         setupTextFieldStackViewBorder()
     }
     
     private func setupTextFieldStackViewBorder() {
         textFieldStackView.layer.borderColor = UIColor.label.cgColor
-        textFieldStackView.layer.borderWidth = 1
+        textFieldStackView.layer.borderWidth = 1.5
         textFieldStackView.layer.cornerRadius = 8
     }
     
