@@ -73,25 +73,19 @@ public final class ListsViewController: UIViewController {
     }
     
     @objc private func addList() {
-        let alertController = UIAlertController(title: "Add list", message: "Enter the name of your new list", preferredStyle: .alert)
-        alertController.addTextField()
-        alertController.textFields?.first?.autocapitalizationType = .words
-        
-        let submitAction = UIAlertAction(title: "Submit", style: .default) { _ in
-            guard let newListName = alertController.textFields?.first?.text,
-                  !newListName.isEmpty else { return }
-            
+        requestListName(alertTitle: "Add list", alertMessage: "Enter the name of your new list") { newListName in
             self.addNewList(newListName)
         }
-        
-        alertController.addAction(submitAction)
-        alertController.addAction(.init(title: "Cancel", style: .cancel))
-        
-        present(alertController, animated: true)
     }
     
     private func editListName(_ list: List) {
-        let alertController = UIAlertController(title: "Edit \(list.name) name", message: "Enter the new name for list", preferredStyle: .alert)
+        requestListName(alertTitle: "Edit \(list.name) name", alertMessage: "Enter the new name for list") { newListName in
+            self.changeListName(for: list, toNewName: newListName)
+        }
+    }
+    
+    private func requestListName(alertTitle: String, alertMessage: String, action: @escaping (String) -> Void) {
+        let alertController = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .alert)
         alertController.addTextField()
         alertController.textFields?.first?.autocapitalizationType = .words
         
@@ -99,7 +93,7 @@ public final class ListsViewController: UIViewController {
             guard let newListName = alertController.textFields?.first?.text,
                   !newListName.isEmpty else { return }
             
-            self.changeListName(for: list, toNewName: newListName)
+            action(newListName)
         }
         
         alertController.addAction(submitAction)
