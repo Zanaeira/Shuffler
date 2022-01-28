@@ -91,7 +91,7 @@ public final class ListsViewController: UIViewController {
         alertController.textFields?.first?.text = textFieldText
         
         let submitAction = UIAlertAction(title: "Submit", style: .default) { _ in
-            guard let newListName = alertController.textFields?.first?.text,
+            guard let newListName = alertController.textFields?.first?.text?.trimmingCharacters(in: .whitespaces),
                   !newListName.isEmpty else { return }
             
             action(newListName)
