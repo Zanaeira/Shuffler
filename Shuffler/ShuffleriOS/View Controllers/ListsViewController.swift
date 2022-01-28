@@ -79,15 +79,16 @@ public final class ListsViewController: UIViewController {
     }
     
     private func editListName(_ list: List) {
-        requestListName(alertTitle: "Edit \(list.name) name", alertMessage: "Enter the new name for list") { newListName in
+        requestListName(alertTitle: "Edit \"\(list.name)\" name", alertMessage: "Enter the new name for list", textFieldText: list.name) { newListName in
             self.changeListName(for: list, toNewName: newListName)
         }
     }
     
-    private func requestListName(alertTitle: String, alertMessage: String, action: @escaping (String) -> Void) {
+    private func requestListName(alertTitle: String, alertMessage: String, textFieldText: String? = nil, action: @escaping (String) -> Void) {
         let alertController = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .alert)
         alertController.addTextField()
         alertController.textFields?.first?.autocapitalizationType = .words
+        alertController.textFields?.first?.text = textFieldText
         
         let submitAction = UIAlertAction(title: "Submit", style: .default) { _ in
             guard let newListName = alertController.textFields?.first?.text,
