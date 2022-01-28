@@ -118,7 +118,7 @@ public final class ListItemsViewController: UIViewController {
     }
     
     @objc private func addItem() {
-        guard let itemText = textField.text,
+        guard let itemText = textField.text?.trimmingCharacters(in: .whitespaces),
               !itemText.isEmpty else { return }
         
         textField.resignFirstResponder()
