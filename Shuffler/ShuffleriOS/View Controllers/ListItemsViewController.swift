@@ -51,7 +51,6 @@ public final class ListItemsViewController: UIViewController {
         setupTextFieldAndButton()
         configureHierarchy()
         updateSnapshot()
-        setupPullToShuffle()
     }
     
     private func setupKeyboardDismissTapGestureRecognizer() {
@@ -149,6 +148,8 @@ public final class ListItemsViewController: UIViewController {
     }
     
     private func updateSnapshot() {
+        setupShuffleBarButtonItem()
+        
         guard !items.isEmpty else {
             dataSource.apply(.init())
             return
@@ -163,18 +164,19 @@ public final class ListItemsViewController: UIViewController {
         dataSource.apply(snapshot, animatingDifferences: true)
     }
     
-    private func setupPullToShuffle() {
-        let refreshControl = UIRefreshControl()
-        collectionView.alwaysBounceVertical = true
-        refreshControl.addTarget(self, action: #selector(shuffle), for: .valueChanged)
+    private func setupShuffleBarButtonItem() {
+        let shuffleBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "shuffle.circle"), style: .plain, target: self, action: #selector(shuffle))
         
-        collectionView.refreshControl = refreshControl
+        if items.count > 1 {
+            navigationItem.setRightBarButton(shuffleBarButtonItem, animated: true)
+        } else {
+            navigationItem.setRightBarButton(nil, animated: true)
+        }
     }
     
     @objc private func shuffle() {
         list = List(id: list.id, name: list.name, items: list.items.shuffled())
         updateSnapshot()
-        collectionView.refreshControl?.endRefreshing()
     }
     
     private func addTextFieldAndButton() {
