@@ -208,13 +208,11 @@ extension ListsViewController {
             }
             
             config.trailingSwipeActionsConfigurationProvider = { indexPath in
-                let delete = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (_, _, completion) in
+                let delete = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (_, _, _) in
                     guard let self = self else { return }
                     
                     let list = self.lists[indexPath.item]
                     self.delete(list)
-                    
-                    completion(true)
                 }
                 
                 return UISwipeActionsConfiguration(actions: [delete])
