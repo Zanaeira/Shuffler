@@ -28,7 +28,7 @@ public final class ListItemsViewController: UIViewController {
     
     private let textField = UITextField()
     private let textFieldStackView = UIStackView()
-    private let button = UIButton()
+    private let addItemButton = UIButton()
     
     private var normalConstraints: [NSLayoutConstraint] = []
     private var accessibilityConstraints: [NSLayoutConstraint] = []
@@ -48,7 +48,7 @@ public final class ListItemsViewController: UIViewController {
         title = list.name
         setupKeyboardDismissTapGestureRecognizer()
         setupConstraints()
-        setupTextFieldAndButton()
+        setupTextFieldAndAddItemButton()
         configureHierarchy()
         updateSnapshot()
     }
@@ -60,12 +60,12 @@ public final class ListItemsViewController: UIViewController {
     
     private func setupConstraints() {
         normalConstraints = [
-            button.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
-            button.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24),
-            textFieldStackView.trailingAnchor.constraint(equalTo: button.leadingAnchor, constant: -24),
-            textFieldStackView.topAnchor.constraint(equalTo: button.topAnchor),
+            addItemButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
+            addItemButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24),
+            textFieldStackView.trailingAnchor.constraint(equalTo: addItemButton.leadingAnchor, constant: -24),
+            textFieldStackView.topAnchor.constraint(equalTo: addItemButton.topAnchor),
             textFieldStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10),
-            button.centerYAnchor.constraint(equalTo: textFieldStackView.centerYAnchor)
+            addItemButton.centerYAnchor.constraint(equalTo: textFieldStackView.centerYAnchor)
         ]
         
         accessibilityConstraints = [
@@ -73,15 +73,15 @@ public final class ListItemsViewController: UIViewController {
             textFieldStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
             textFieldStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10),
             
-            button.topAnchor.constraint(equalTo: textFieldStackView.bottomAnchor, constant: 10),
-            button.centerXAnchor.constraint(equalTo: textFieldStackView.centerXAnchor)
+            addItemButton.topAnchor.constraint(equalTo: textFieldStackView.bottomAnchor, constant: 10),
+            addItemButton.centerXAnchor.constraint(equalTo: textFieldStackView.centerXAnchor)
         ]
     }
     
-    private func setupTextFieldAndButton() {
+    private func setupTextFieldAndAddItemButton() {
         setupTextField()
-        setupButton()
-        addTextFieldAndButton()
+        setupAddItemButton()
+        addTextFieldAndAddItemButton()
     }
     
     private func setupTextField() {
@@ -107,14 +107,14 @@ public final class ListItemsViewController: UIViewController {
         textFieldStackView.layer.cornerRadius = 8
     }
     
-    private func setupButton() {
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        button.setTitle("Add", for: .normal)
-        button.titleLabel?.adjustsFontForContentSizeCategory = true
-        button.titleLabel?.font = .preferredFont(forTextStyle: .body)
-        button.setTitleColor(.systemBlue, for: .normal)
-        button.addTarget(self, action: #selector(addItem), for: .touchUpInside)
+    private func setupAddItemButton() {
+        addItemButton.translatesAutoresizingMaskIntoConstraints = false
+        addItemButton.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        addItemButton.setTitle("Add", for: .normal)
+        addItemButton.titleLabel?.adjustsFontForContentSizeCategory = true
+        addItemButton.titleLabel?.font = .preferredFont(forTextStyle: .body)
+        addItemButton.setTitleColor(.systemBlue, for: .normal)
+        addItemButton.addTarget(self, action: #selector(addItem), for: .touchUpInside)
     }
     
     @objc private func addItem() {
@@ -179,9 +179,9 @@ public final class ListItemsViewController: UIViewController {
         updateSnapshot()
     }
     
-    private func addTextFieldAndButton() {
+    private func addTextFieldAndAddItemButton() {
         view.addSubview(textFieldStackView)
-        view.addSubview(button)
+        view.addSubview(addItemButton)
         
         updateConstraints()
     }
@@ -220,7 +220,7 @@ private extension ListItemsViewController {
         view.addSubview(collectionView)
         NSLayoutConstraint.activate([
             collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            collectionView.topAnchor.constraint(equalTo: button.bottomAnchor, constant: 16),
+            collectionView.topAnchor.constraint(equalTo: addItemButton.bottomAnchor, constant: 16),
             collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10)
         ])
