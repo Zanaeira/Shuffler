@@ -22,6 +22,7 @@ final class ListsNavigator {
         navigationController = UINavigationController()
         let onListSelectedHandler = ListsNavigator.listSelectedHandler(listsManager: listsManager, navigationController: navigationController)
         listsViewController = ListsViewController(listsManager: listsManager, onListSelected: onListSelectedHandler)
+        listsViewController.title = "Shuffler"
         
         navigationController.pushViewController(listsViewController, animated: true)
     }
