@@ -19,6 +19,11 @@ public final class RandomItemViewController: UIViewController {
     private let listsManager: ListsManager
     private let listId: UUID
     private var items: [Item]?
+    private var currentItem: Item? {
+        didSet {
+            itemNameLabel.text = currentItem?.text
+        }
+    }
     
     public init(listId: UUID, listsManager: ListsManager) {
         self.listId = listId
@@ -48,7 +53,13 @@ public final class RandomItemViewController: UIViewController {
     
     public func displayRandomItem() {
         loadItems()
-        itemNameLabel.text = items?.randomElement()?.text
+        guard currentItem != nil else {
+            currentItem = items?.randomElement()
+            return
+        }
+        
+        let newItem = items?.filter({ $0 != currentItem }).randomElement()
+        currentItem = newItem
     }
     
     private func setupLabel() {
