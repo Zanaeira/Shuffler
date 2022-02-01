@@ -16,10 +16,13 @@ public final class RandomItemViewController: UIViewController {
     
     private let itemNameLabel = UILabel()
     
-    private let list: List
+    private let listsManager: ListsManager
+    private let listId: UUID
+    private var items: [Item]?
     
-    public init(list: List) {
-        self.list = list
+    public init(listId: UUID, listsManager: ListsManager) {
+        self.listId = listId
+        self.listsManager = listsManager
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -28,10 +31,24 @@ public final class RandomItemViewController: UIViewController {
         super.viewDidLoad()
         
         setupLabel()
+        loadItems()
+    }
+    
+    private func loadItems() {
+        listsManager.load { [weak self] result in
+            guard let self = self else { return }
+            
+            if case let .success(lists) = result {
+                self.items = lists.filter({ $0.id == self.listId }).first?.items
+            } else {
+                self.items = []
+            }
+        }
     }
     
     public func displayRandomItem() {
-        itemNameLabel.text = list.randomItemName()
+        loadItems()
+        itemNameLabel.text = items?.randomElement()?.text
     }
     
     private func setupLabel() {
@@ -48,10 +65,4 @@ public final class RandomItemViewController: UIViewController {
         ])
     }
     
-}
-
-private extension List {
-    func randomItemName() -> String? {
-        items.randomElement()?.text
-    }
 }

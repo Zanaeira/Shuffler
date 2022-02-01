@@ -20,7 +20,7 @@ final class ListItemsSegmentedViewController: UIViewController {
     private let segmentedControl = UISegmentedControl(items: ["List", "Random"])
     
     init(list: List, listsManager: ListsManager) {
-        randomItemViewController = RandomItemViewController(list: list)
+        randomItemViewController = RandomItemViewController(listId: list.id, listsManager: listsManager)
         listItemsViewController = ListItemsViewController(list: list, listsManager: listsManager)
         
         super.init(nibName: nil, bundle: nil)
