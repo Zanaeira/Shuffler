@@ -62,7 +62,7 @@ public final class ListItemsViewController: UIViewController {
     
     private func setupConstraints() {
         normalConstraints = [
-            addItemButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
+            addItemButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
             addItemButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24),
             textFieldStackView.trailingAnchor.constraint(equalTo: addItemButton.leadingAnchor, constant: -24),
             textFieldStackView.topAnchor.constraint(equalTo: addItemButton.topAnchor),
@@ -72,7 +72,7 @@ public final class ListItemsViewController: UIViewController {
         
         accessibilityConstraints = [
             textFieldStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10),
-            textFieldStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
+            textFieldStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
             textFieldStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10),
             
             addItemButton.topAnchor.constraint(equalTo: textFieldStackView.bottomAnchor, constant: 10),
