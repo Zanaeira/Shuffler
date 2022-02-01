@@ -29,9 +29,9 @@ final class ListsNavigator {
     
     private static func listSelectedHandler(listsManager: ListsManager, navigationController: UINavigationController) -> ((List) -> Void) {
         let handler: (List) -> Void = { list in
-            let listItemsViewController = ListItemsViewController(list: list, listsManager: listsManager)
+            let listItemsSegmentedViewController = ListItemsSegmentedViewController(list: list, listsManager: listsManager)
             
-            navigationController.pushViewController(listItemsViewController, animated: true)
+            navigationController.pushViewController(listItemsSegmentedViewController, animated: true)
         }
         
         return handler

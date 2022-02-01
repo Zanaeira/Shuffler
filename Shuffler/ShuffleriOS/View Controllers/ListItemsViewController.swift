@@ -33,6 +33,8 @@ public final class ListItemsViewController: UIViewController {
     private var normalConstraints: [NSLayoutConstraint] = []
     private var accessibilityConstraints: [NSLayoutConstraint] = []
     
+    public var onUpdated: (() -> Void)?
+    
     public init(list: List, listsManager: ListsManager) {
         self.originalList = list
         self.list = list
@@ -150,7 +152,7 @@ public final class ListItemsViewController: UIViewController {
     }
     
     private func updateSnapshot() {
-        setupShuffleBarButtonItem()
+        onUpdated?()
         
         guard !items.isEmpty else {
             dataSource.apply(.init())
@@ -166,17 +168,11 @@ public final class ListItemsViewController: UIViewController {
         dataSource.apply(snapshot, animatingDifferences: true)
     }
     
-    private func setupShuffleBarButtonItem() {
-        let shuffleBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "shuffle.circle"), style: .plain, target: self, action: #selector(shuffle))
-        
-        if items.count > 1 {
-            navigationItem.setRightBarButton(shuffleBarButtonItem, animated: true)
-        } else {
-            navigationItem.setRightBarButton(nil, animated: true)
-        }
+    public func canBeShuffled() -> Bool {
+        items.count > 1
     }
     
-    @objc private func shuffle() {
+    @objc public func shuffle() {
         list = List(id: list.id, name: list.name, items: list.items.shuffled())
         updateSnapshot()
     }

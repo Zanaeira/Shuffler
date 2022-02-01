@@ -16,6 +16,7 @@
 		1B855BF627A1829800D64F2C /* ShuffleriOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B855BF327A1829800D64F2C /* ShuffleriOS.framework */; };
 		1B855BF727A1829800D64F2C /* ShuffleriOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1B855BF327A1829800D64F2C /* ShuffleriOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1B855C0127A1F9C300D64F2C /* ListsNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855C0027A1F9C300D64F2C /* ListsNavigator.swift */; };
+		1B855C0527A8A2D000D64F2C /* ListItemsSegmentedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855C0427A8A2CF00D64F2C /* ListItemsSegmentedViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -43,6 +44,7 @@
 		1B855BF227A1829800D64F2C /* Shuffler.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Shuffler.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1B855BF327A1829800D64F2C /* ShuffleriOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ShuffleriOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1B855C0027A1F9C300D64F2C /* ListsNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListsNavigator.swift; sourceTree = "<group>"; };
+		1B855C0427A8A2CF00D64F2C /* ListItemsSegmentedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItemsSegmentedViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +83,7 @@
 				1B855BDB27A1813F00D64F2C /* AppDelegate.swift */,
 				1B855BDD27A1813F00D64F2C /* SceneDelegate.swift */,
 				1B855C0027A1F9C300D64F2C /* ListsNavigator.swift */,
+				1B855C0427A8A2CF00D64F2C /* ListItemsSegmentedViewController.swift */,
 				1B855BE427A1814100D64F2C /* Assets.xcassets */,
 				1B855BE627A1814100D64F2C /* LaunchScreen.storyboard */,
 				1B855BE927A1814100D64F2C /* Info.plist */,
@@ -170,6 +173,7 @@
 			files = (
 				1B855BDC27A1813F00D64F2C /* AppDelegate.swift in Sources */,
 				1B855C0127A1F9C300D64F2C /* ListsNavigator.swift in Sources */,
+				1B855C0527A8A2D000D64F2C /* ListItemsSegmentedViewController.swift in Sources */,
 				1B855BDE27A1813F00D64F2C /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
