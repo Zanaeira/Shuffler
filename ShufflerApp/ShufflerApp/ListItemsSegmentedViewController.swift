@@ -23,6 +23,8 @@ final class ListItemsSegmentedViewController: UIViewController {
         listItemsViewController = ListItemsViewController(list: list, listsManager: listsManager)
         
         super.init(nibName: nil, bundle: nil)
+        
+        title = list.name
     }
     
     override func viewDidLoad() {
@@ -42,6 +44,7 @@ final class ListItemsSegmentedViewController: UIViewController {
     private func setupSegmentedControl() {
         navigationItem.titleView = segmentedControl
         segmentedControl.selectedSegmentIndex = 0
+        navigationController?.navigationBar.prefersLargeTitles = true
     }
     
     private func setupShuffleBarButtonItem() {
