@@ -26,6 +26,7 @@
 		1B855BCB27A1723300D64F2C /* ListsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855BCA27A1723300D64F2C /* ListsViewController.swift */; };
 		1B855BCE27A1732800D64F2C /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855BCD27A1732800D64F2C /* Section.swift */; };
 		1B855C0327A1FB6600D64F2C /* ListItemsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855C0227A1FB6600D64F2C /* ListItemsViewController.swift */; };
+		1B855C0727A9517500D64F2C /* RandomItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855C0627A9517500D64F2C /* RandomItemViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,6 +80,7 @@
 		1B855BCA27A1723300D64F2C /* ListsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListsViewController.swift; sourceTree = "<group>"; };
 		1B855BCD27A1732800D64F2C /* Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section.swift; sourceTree = "<group>"; };
 		1B855C0227A1FB6600D64F2C /* ListItemsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItemsViewController.swift; sourceTree = "<group>"; };
+		1B855C0627A9517500D64F2C /* RandomItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomItemViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -209,6 +211,7 @@
 			children = (
 				1B855BCA27A1723300D64F2C /* ListsViewController.swift */,
 				1B855C0227A1FB6600D64F2C /* ListItemsViewController.swift */,
+				1B855C0627A9517500D64F2C /* RandomItemViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -397,6 +400,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B855C0727A9517500D64F2C /* RandomItemViewController.swift in Sources */,
 				1B855BCB27A1723300D64F2C /* ListsViewController.swift in Sources */,
 				1B855C0327A1FB6600D64F2C /* ListItemsViewController.swift in Sources */,
 				1B855BCE27A1732800D64F2C /* Section.swift in Sources */,

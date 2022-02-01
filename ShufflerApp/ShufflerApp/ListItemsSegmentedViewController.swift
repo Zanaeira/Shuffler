@@ -16,10 +16,11 @@ final class ListItemsSegmentedViewController: UIViewController {
     }
     
     private let listItemsViewController: ListItemsViewController
-    
+    private let randomItemViewController: RandomItemViewController
     private let segmentedControl = UISegmentedControl(items: ["List", "Random"])
     
     init(list: List, listsManager: ListsManager) {
+        randomItemViewController = RandomItemViewController(list: list)
         listItemsViewController = ListItemsViewController(list: list, listsManager: listsManager)
         
         super.init(nibName: nil, bundle: nil)
@@ -39,12 +40,32 @@ final class ListItemsSegmentedViewController: UIViewController {
         add(listItemsViewController)
         listItemsViewController.view.frame = view.bounds
         listItemsViewController.onUpdated = setupShuffleBarButtonItem
+        
+        add(randomItemViewController)
+        randomItemViewController.view.frame = view.bounds
     }
     
     private func setupSegmentedControl() {
-        navigationItem.titleView = segmentedControl
-        segmentedControl.selectedSegmentIndex = 0
         navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.titleView = segmentedControl
+        segmentedControl.addTarget(self, action: #selector(segmentChanged), for: .valueChanged)
+        segmentedControl.selectedSegmentIndex = 0
+        showSelectedViewController()
+    }
+    
+    @objc private func segmentChanged() {
+        showSelectedViewController()
+    }
+    
+    private func showSelectedViewController() {
+        if segmentedControl.selectedSegmentIndex == 0 {
+            randomItemViewController.view.alpha = 0
+            listItemsViewController.view.alpha = 1
+        } else if segmentedControl.selectedSegmentIndex == 1 {
+            listItemsViewController.view.alpha = 0
+            randomItemViewController.view.alpha = 1
+            randomItemViewController.displayRandomItem()
+        }
     }
     
     private func setupShuffleBarButtonItem() {
@@ -58,7 +79,11 @@ final class ListItemsSegmentedViewController: UIViewController {
     }
     
     @objc private func shuffle() {
-        listItemsViewController.shuffle()
+        if segmentedControl.selectedSegmentIndex == 0 {
+            listItemsViewController.shuffle()
+        } else if segmentedControl.selectedSegmentIndex == 1 {
+            randomItemViewController.displayRandomItem()
+        }
     }
     
 }
