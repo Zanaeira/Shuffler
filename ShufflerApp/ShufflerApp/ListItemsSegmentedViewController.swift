@@ -17,7 +17,7 @@ final class ListItemsSegmentedViewController: UIViewController {
     
     private let listItemsViewController: ListItemsViewController
     
-    private let segmentedControl = UISegmentedControl(items: ["List", "Random Item"])
+    private let segmentedControl = UISegmentedControl(items: ["List", "Random"])
     
     init(list: List, listsManager: ListsManager) {
         listItemsViewController = ListItemsViewController(list: list, listsManager: listsManager)
