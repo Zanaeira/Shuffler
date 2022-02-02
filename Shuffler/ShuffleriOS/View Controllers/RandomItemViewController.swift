@@ -15,6 +15,7 @@ public final class RandomItemViewController: UIViewController {
     }
     
     private let itemNameLabel = UILabel()
+    private let instructionsLabel = UILabel()
     
     private let listsManager: ListsManager
     private let listId: UUID
@@ -32,7 +33,8 @@ public final class RandomItemViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .systemGroupedBackground
-        setupLabel()
+        setupItemNameLabel()
+        setupInstructionsLabel()
         setupTimer()
         loadItems()
     }
@@ -72,9 +74,11 @@ public final class RandomItemViewController: UIViewController {
                 self.itemNameLabel.text = self.items?.randomElement()?.text
             })
         }
+        
+        toggleInstructionsText()
     }
     
-    private func setupLabel() {
+    private func setupItemNameLabel() {
         itemNameLabel.font = .preferredFont(forTextStyle: .largeTitle)
         itemNameLabel.textAlignment = .center
         itemNameLabel.adjustsFontForContentSizeCategory = true
@@ -88,6 +92,52 @@ public final class RandomItemViewController: UIViewController {
             itemNameLabel.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor, constant: 10),
             itemNameLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
+    }
+    
+    private func setupInstructionsLabel() {
+        instructionsLabel.textAlignment = .center
+        instructionsLabel.adjustsFontForContentSizeCategory = true
+        instructionsLabel.numberOfLines = 0
+        instructionsLabel.translatesAutoresizingMaskIntoConstraints = false
+        setInitialInstructionsText()
+        
+        view.addSubview(instructionsLabel)
+        NSLayoutConstraint.activate([
+            instructionsLabel.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor, constant: 10),
+            instructionsLabel.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor, constant: 10),
+            instructionsLabel.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16)
+        ])
+    }
+    
+    private func toggleInstructionsText() {
+        setInstructionsText()
+    }
+    
+    private func setInstructionsText() {
+        let text: String
+        let length: Int
+        let color: UIColor
+        if timer?.isValid ?? false {
+            text = "Tap the screen to stop shuffling"
+            length = 4
+            color = .systemRed
+        } else {
+            text = "Tap the screen to start shuffling"
+            length = 5
+            color = .systemGreen
+        }
+        
+        let attributedText = NSMutableAttributedString(string: text, attributes: [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .callout)])
+        attributedText.addAttribute(.foregroundColor, value: color, range: .init(location: 18, length: length))
+        
+        instructionsLabel.attributedText = attributedText
+    }
+    
+    private func setInitialInstructionsText() {
+        let attributedText = NSMutableAttributedString(string: "Tap the screen to stop shuffling", attributes: [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .callout)])
+        attributedText.addAttribute(.foregroundColor, value: UIColor.systemRed, range: .init(location: 18, length: 4))
+        
+        instructionsLabel.attributedText = attributedText
     }
     
 }
