@@ -19,11 +19,7 @@ public final class RandomItemViewController: UIViewController {
     private let listsManager: ListsManager
     private let listId: UUID
     private var items: [Item]?
-    private var currentItem: Item? {
-        didSet {
-            itemNameLabel.text = currentItem?.text
-        }
-    }
+    private var timer: Timer?
     
     public init(listId: UUID, listsManager: ListsManager) {
         self.listId = listId
@@ -35,7 +31,13 @@ public final class RandomItemViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
+        view.backgroundColor = .systemGroupedBackground
         setupLabel()
+        setupTimer()
+        loadItems()
+    }
+    
+    public func reloadItems() {
         loadItems()
     }
     
@@ -51,15 +53,25 @@ public final class RandomItemViewController: UIViewController {
         }
     }
     
-    public func displayRandomItem() {
-        loadItems()
-        guard currentItem != nil else {
-            currentItem = items?.randomElement()
-            return
-        }
+    private func setupTimer() {
+        self.timer = .scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { _ in
+            self.itemNameLabel.text = self.items?.randomElement()?.text
+        })
         
-        let newItem = items?.filter({ $0 != currentItem }).randomElement()
-        currentItem = newItem
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(toggleTimer))
+        view.addGestureRecognizer(tapGestureRecognizer)
+    }
+    
+    @objc private func toggleTimer() {
+        guard let timer = timer else { return }
+        
+        if timer.isValid {
+            timer.invalidate()
+        } else {
+            self.timer = .scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { _ in
+                self.itemNameLabel.text = self.items?.randomElement()?.text
+            })
+        }
     }
     
     private func setupLabel() {
@@ -67,7 +79,6 @@ public final class RandomItemViewController: UIViewController {
         itemNameLabel.adjustsFontForContentSizeCategory = true
         itemNameLabel.textColor = .systemBlue
         itemNameLabel.translatesAutoresizingMaskIntoConstraints = false
-        displayRandomItem()
         
         view.addSubview(itemNameLabel)
         NSLayoutConstraint.activate([

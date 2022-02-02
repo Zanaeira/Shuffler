@@ -55,6 +55,7 @@ final class ListItemsSegmentedViewController: UIViewController {
     
     @objc private func segmentChanged() {
         showSelectedViewController()
+        setupShuffleBarButtonItem()
     }
     
     private func showSelectedViewController() {
@@ -64,14 +65,14 @@ final class ListItemsSegmentedViewController: UIViewController {
         } else if segmentedControl.selectedSegmentIndex == 1 {
             listItemsViewController.view.alpha = 0
             randomItemViewController.view.alpha = 1
-            randomItemViewController.displayRandomItem()
+            randomItemViewController.reloadItems()
         }
     }
     
     private func setupShuffleBarButtonItem() {
         let shuffleBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "shuffle.circle"), style: .plain, target: self, action: #selector(shuffle))
         
-        if listItemsViewController.canBeShuffled() {
+        if listItemsViewController.canBeShuffled() && segmentedControl.selectedSegmentIndex == 0 {
             navigationItem.setRightBarButton(shuffleBarButtonItem, animated: true)
         } else {
             navigationItem.setRightBarButton(nil, animated: true)
@@ -79,11 +80,7 @@ final class ListItemsSegmentedViewController: UIViewController {
     }
     
     @objc private func shuffle() {
-        if segmentedControl.selectedSegmentIndex == 0 {
-            listItemsViewController.shuffle()
-        } else if segmentedControl.selectedSegmentIndex == 1 {
-            randomItemViewController.displayRandomItem()
-        }
+        listItemsViewController.shuffle()
     }
     
 }
