@@ -50,6 +50,7 @@ public final class ListsViewController: UIViewController {
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        navigationController?.navigationBar.prefersLargeTitles = false
         loadLists()
     }
     
