@@ -187,6 +187,7 @@ extension ListsViewController {
     private func configureHierarchy() {
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.delegate = self
+        collectionView.backgroundColor = .systemGroupedBackground
         view.addSubview(collectionView)
     }
     

@@ -198,6 +198,7 @@ private extension ListItemsViewController {
     private func configureHierarchy() {
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .systemGroupedBackground
         collectionView.delegate = self
         view.addSubview(collectionView)
         NSLayoutConstraint.activate([
