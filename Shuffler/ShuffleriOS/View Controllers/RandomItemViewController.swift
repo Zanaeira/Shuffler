@@ -76,13 +76,16 @@ public final class RandomItemViewController: UIViewController {
     
     private func setupLabel() {
         itemNameLabel.font = .preferredFont(forTextStyle: .largeTitle)
+        itemNameLabel.textAlignment = .center
         itemNameLabel.adjustsFontForContentSizeCategory = true
+        itemNameLabel.numberOfLines = 3
         itemNameLabel.textColor = .systemBlue
         itemNameLabel.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(itemNameLabel)
         NSLayoutConstraint.activate([
-            itemNameLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            itemNameLabel.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor, constant: 10),
+            itemNameLabel.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor, constant: 10),
             itemNameLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
