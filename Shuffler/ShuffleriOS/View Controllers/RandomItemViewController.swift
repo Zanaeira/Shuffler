@@ -127,15 +127,16 @@ public final class RandomItemViewController: UIViewController {
             color = .systemGreen
         }
         
-        let attributedText = NSMutableAttributedString(string: text, attributes: [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .callout)])
-        attributedText.addAttribute(.foregroundColor, value: color, range: .init(location: 18, length: length))
-        
-        instructionsLabel.attributedText = attributedText
+        setInstructionsAttributedText(text: text, font: UIFont.preferredFont(forTextStyle: .callout), color: color, location: 18, length: length)
     }
     
     private func setInitialInstructionsText() {
-        let attributedText = NSMutableAttributedString(string: "Tap the screen to stop shuffling", attributes: [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .callout)])
-        attributedText.addAttribute(.foregroundColor, value: UIColor.systemRed, range: .init(location: 18, length: 4))
+        setInstructionsAttributedText(text: "Tap the screen to stop shuffling", font: UIFont.preferredFont(forTextStyle: .callout), color: .systemRed, location: 18, length: 4)
+    }
+    
+    private func setInstructionsAttributedText(text: String, font: UIFont, color: UIColor, location: Int, length: Int) {
+        let attributedText = NSMutableAttributedString(string: text, attributes: [NSAttributedString.Key.font: font])
+        attributedText.addAttribute(.foregroundColor, value: color, range: .init(location: location, length: length))
         
         instructionsLabel.attributedText = attributedText
     }
