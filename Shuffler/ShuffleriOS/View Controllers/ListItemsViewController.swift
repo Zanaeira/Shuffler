@@ -27,7 +27,6 @@ public final class ListItemsViewController: UIViewController {
     }
     
     private let textField = UITextField()
-    private let textFieldStackView = UIStackView()
     private let addItemButton = UIButton()
     
     private var normalConstraints: [NSLayoutConstraint] = []
@@ -64,19 +63,19 @@ public final class ListItemsViewController: UIViewController {
         normalConstraints = [
             addItemButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
             addItemButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24),
-            textFieldStackView.trailingAnchor.constraint(equalTo: addItemButton.leadingAnchor, constant: -24),
-            textFieldStackView.topAnchor.constraint(equalTo: addItemButton.topAnchor),
-            textFieldStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10),
-            addItemButton.centerYAnchor.constraint(equalTo: textFieldStackView.centerYAnchor)
+            textField.trailingAnchor.constraint(equalTo: addItemButton.leadingAnchor, constant: -24),
+            textField.topAnchor.constraint(equalTo: addItemButton.topAnchor),
+            textField.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            addItemButton.centerYAnchor.constraint(equalTo: textField.centerYAnchor)
         ]
         
         accessibilityConstraints = [
-            textFieldStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10),
-            textFieldStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
-            textFieldStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10),
+            textField.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            textField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            textField.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
             
-            addItemButton.topAnchor.constraint(equalTo: textFieldStackView.bottomAnchor, constant: 10),
-            addItemButton.centerXAnchor.constraint(equalTo: textFieldStackView.centerXAnchor)
+            addItemButton.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 10),
+            addItemButton.centerXAnchor.constraint(equalTo: textField.centerXAnchor)
         ]
     }
     
@@ -93,22 +92,9 @@ public final class ListItemsViewController: UIViewController {
         textField.font = .preferredFont(forTextStyle: .body)
         textField.adjustsFontForContentSizeCategory = true
         textField.clearButtonMode = .whileEditing
+        textField.backgroundColor = .secondarySystemGroupedBackground
+        textField.borderStyle = .roundedRect
         textField.delegate = self
-        textField.backgroundColor = .systemBackground
-        
-        textFieldStackView.translatesAutoresizingMaskIntoConstraints = false
-        textFieldStackView.addArrangedSubview(textField)
-        textFieldStackView.layoutMargins = .init(top: 10, left: 10, bottom: 10, right: 10)
-        textFieldStackView.isLayoutMarginsRelativeArrangement = true
-        textFieldStackView.backgroundColor = .systemBackground
-        
-        setupTextFieldStackViewBorder()
-    }
-    
-    private func setupTextFieldStackViewBorder() {
-        textFieldStackView.layer.borderColor = UIColor.label.cgColor
-        textFieldStackView.layer.borderWidth = 1.5
-        textFieldStackView.layer.cornerRadius = 8
     }
     
     private func setupAddItemButton() {
@@ -178,7 +164,7 @@ public final class ListItemsViewController: UIViewController {
     }
     
     private func addTextFieldAndAddItemButton() {
-        view.addSubview(textFieldStackView)
+        view.addSubview(textField)
         view.addSubview(addItemButton)
         
         updateConstraints()
@@ -197,8 +183,6 @@ public final class ListItemsViewController: UIViewController {
     
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        
-        setupTextFieldStackViewBorder()
         
         let isAccessibilityCategory = traitCollection.preferredContentSizeCategory.isAccessibilityCategory
         if isAccessibilityCategory != previousTraitCollection?.preferredContentSizeCategory.isAccessibilityCategory {
