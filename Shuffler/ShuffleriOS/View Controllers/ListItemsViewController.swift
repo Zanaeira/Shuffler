@@ -26,6 +26,7 @@ public final class ListItemsViewController: UIViewController {
         list.items
     }
     
+    private let titleLabel = UILabel()
     private let textField = UITextField()
     private let addItemButton = UIButton()
     
@@ -46,10 +47,10 @@ public final class ListItemsViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .systemGroupedBackground
-        title = list.name
+        
         setupKeyboardDismissTapGestureRecognizer()
         setupConstraints()
-        setupTextFieldAndAddItemButton()
+        setupSubviews()
         configureHierarchy()
         updateSnapshot()
     }
@@ -61,7 +62,10 @@ public final class ListItemsViewController: UIViewController {
     
     private func setupConstraints() {
         normalConstraints = [
-            addItemButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            titleLabel.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor, constant: 10),
+            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            titleLabel.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor, constant: -10),
+            addItemButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
             addItemButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24),
             textField.trailingAnchor.constraint(equalTo: addItemButton.leadingAnchor, constant: -24),
             textField.topAnchor.constraint(equalTo: addItemButton.topAnchor),
@@ -70,8 +74,11 @@ public final class ListItemsViewController: UIViewController {
         ]
         
         accessibilityConstraints = [
+            titleLabel.leadingAnchor.constraint(equalTo: view.readableContentGuide.leadingAnchor, constant: 10),
+            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            titleLabel.trailingAnchor.constraint(equalTo: view.readableContentGuide.trailingAnchor, constant: -10),
             textField.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-            textField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            textField.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
             textField.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
             
             addItemButton.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 10),
@@ -79,10 +86,21 @@ public final class ListItemsViewController: UIViewController {
         ]
     }
     
-    private func setupTextFieldAndAddItemButton() {
+    private func setupSubviews() {
+        setupTitleLabel()
         setupTextField()
         setupAddItemButton()
-        addTextFieldAndAddItemButton()
+        
+        addSubviews()
+    }
+    
+    private func setupTitleLabel() {
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.text = list.name
+        titleLabel.font = .preferredFont(forTextStyle: .title1)
+        titleLabel.adjustsFontForContentSizeCategory = true
+        titleLabel.numberOfLines = 0
+        titleLabel.textAlignment = .natural
     }
     
     private func setupTextField() {
@@ -163,7 +181,8 @@ public final class ListItemsViewController: UIViewController {
         updateSnapshot()
     }
     
-    private func addTextFieldAndAddItemButton() {
+    private func addSubviews() {
+        view.addSubview(titleLabel)
         view.addSubview(textField)
         view.addSubview(addItemButton)
         

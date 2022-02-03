@@ -46,7 +46,6 @@ final class ListItemsSegmentedViewController: UIViewController {
     }
     
     private func setupSegmentedControl() {
-        navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.titleView = segmentedControl
         segmentedControl.addTarget(self, action: #selector(segmentChanged), for: .valueChanged)
         segmentedControl.selectedSegmentIndex = 0
