@@ -1,6 +1,8 @@
 # Shuffler
 
-This app allows the user to create lists of items that they can then shuffle. Teachers can use it to create an arbitrary order for their students to perform tasks in. Users can make a list of recipes based on the ingredients they have in stock, and then generate a random list to decide what to cook today, or for the rest of the week.
+This app allows the user to create lists of items that they can then shuffle. It is currently in the [App Store](https://apps.apple.com/gb/app/shuffler/id1608246757).
+
+Teachers can use it to create an arbitrary order for their students to perform tasks in. Users can make a list of recipes based on the ingredients they have in stock, and then generate a random list to decide what to cook today, or for the rest of the week. It can be used for any kind of list that a user would like to shuffle, or to just get a random item from the list.
 
 ## Table of Contents
 
