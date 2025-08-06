@@ -25,7 +25,13 @@ public final class ListItemsViewController: UIViewController {
     private var items: [Item] {
         list.items
     }
-    
+		private var ascendingItems: [Item] {
+				list.items.sorted()
+		}
+		private var descendingItems: [Item] {
+				list.items.sorted { $0 > $1 }
+		}
+
     private let titleLabel = UILabel()
     private let textField = UITextField()
     private let addItemButton = UIButton()
@@ -176,11 +182,18 @@ public final class ListItemsViewController: UIViewController {
         items.count > 1
     }
     
-    @objc public func shuffle() {
-        list = List(id: list.id, name: list.name, items: list.items.shuffled())
-        updateSnapshot()
-    }
-    
+		@objc public func shuffle() {
+				list = List(id: list.id, name: list.name, items: list.items.shuffled())
+				updateSnapshot()
+		}
+
+		@objc public func alphabetise() {
+				let items: [Item] = list.items == ascendingItems ? descendingItems : ascendingItems
+
+				list = List(id: list.id, name: list.name, items: items)
+				updateSnapshot()
+		}
+
     private func addSubviews() {
         view.addSubview(titleLabel)
         view.addSubview(textField)

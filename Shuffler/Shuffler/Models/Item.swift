@@ -7,8 +7,8 @@
 
 import Foundation
 
-public struct Item: Hashable {
-    
+public struct Item: Hashable, Comparable {
+
     public let id: UUID
     public let text: String
     
@@ -16,5 +16,9 @@ public struct Item: Hashable {
         self.id = id
         self.text = text
     }
-    
+
+		public static func <(lhs: Item, rhs: Item) -> Bool {
+				lhs.text < rhs.text
+		}
+
 }
