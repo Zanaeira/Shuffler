@@ -80,7 +80,7 @@ final class ListItemsSegmentedViewController: UIViewController {
         if listItemsViewController.canBeShuffled() && segmentedControl.selectedSegmentIndex == 0 {
 						navigationItem.rightBarButtonItems = [shuffleBarButtonItem, alphabetiseBarButtonItem]
         } else {
-            navigationItem.setRightBarButton(nil, animated: true)
+            navigationItem.rightBarButtonItems = []
         }
     }
     
