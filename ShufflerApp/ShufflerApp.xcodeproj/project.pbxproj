@@ -322,6 +322,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = W9VTYR7L86;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ShufflerApp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Shuffler;
@@ -353,6 +354,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = W9VTYR7L86;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ShufflerApp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Shuffler;
