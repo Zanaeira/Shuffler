@@ -114,6 +114,19 @@ class StoreMigratingListsStoreTests: XCTestCase {
 		expect(fallbackListsStore, toRetrieve: .success([]))
 	}
 
+	func test_append_forwardsMessageToPrimaryStoreOnly() {
+		let primaryListsStore = CodableListsStore(storeUrl: testStoreUrl(.documentDirectory))
+		let fallbackListsStore = CodableListsStore(storeUrl: testStoreUrl(.cachesDirectory))
+		let lists: [List] = [anyList(), anyList()]
+		let sut = StoreMigratingListsStore(primaryListsStore: primaryListsStore, fallbackListsStoreToMigrateFrom: fallbackListsStore)
+
+		sut.append(lists) { _ in }
+
+		expect(sut, toRetrieve: .success(lists))
+		expect(primaryListsStore, toRetrieve: .success(lists))
+		expect(fallbackListsStore, toRetrieve: .success([]))
+	}
+
 
 	// MARK: - Helpers
 
