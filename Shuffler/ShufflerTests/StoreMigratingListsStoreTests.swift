@@ -10,10 +10,34 @@ import Shuffler
 
 class StoreMigratingListsStoreTests: XCTestCase {
 
+	override func setUp() {
+		super.setUp()
+
+		try? FileManager.default.removeItem(at: testStoreUrl(.documentDirectory))
+		try? FileManager.default.removeItem(at: testStoreUrl(.cachesDirectory))
+	}
+
+	override func tearDown() {
+		super.tearDown()
+
+		try? FileManager.default.removeItem(at: testStoreUrl(.documentDirectory))
+		try? FileManager.default.removeItem(at: testStoreUrl(.cachesDirectory))
+	}
+
 	func test_retrieve_deliversEmptyOnEmptyCache() {
 		let sut = makeSUT()
 
 		expect(sut, toRetrieve: .success([]))
+	}
+
+	func test_retrieve_deliversValuesOnNonEmptyCache() {
+		let sut = makeSUT()
+
+		let lists: [List] = [anyList(), anyList()]
+
+		sut.append(lists) { _ in }
+
+		expect(sut, toRetrieve: .success(lists))
 	}
 
 	// MARK: - Helpers
@@ -77,12 +101,11 @@ class StoreMigratingListsStore: ListsStore {
 	}
 
 	func append(_ lists: [Shuffler.List], completion: @escaping (Result<[Shuffler.List], Shuffler.ListError>) -> Void) {
-
+		primaryListsStore.append(lists, completion: completion)
 	}
 
 	func delete(_ lists: [Shuffler.List], completion: @escaping (Result<[Shuffler.List], Shuffler.ListError>) -> Void) {
 
 	}
-
 
 }
