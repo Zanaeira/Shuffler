@@ -62,6 +62,18 @@ class StoreMigratingListsStoreTests: XCTestCase {
 		expect(sut, toRetrieve: .success(lists))
 	}
 
+	func test_retrieve_migratesValuesOnEmptyCacheWithNonEmptyFallback() {
+		let primaryListsStore = CodableListsStore(storeUrl: testStoreUrl(.documentDirectory))
+		let fallbackListsStoreToMigrateFrom = CodableListsStore(storeUrl: testStoreUrl(.cachesDirectory))
+		let lists: [List] = [anyList(), anyList()]
+		fallbackListsStoreToMigrateFrom.append(lists) { _ in }
+
+		let sut = StoreMigratingListsStore(primaryListsStore: primaryListsStore, fallbackListsStoreToMigrateFrom: fallbackListsStoreToMigrateFrom)
+
+		expect(sut, toRetrieve: .success(lists))
+		expect(primaryListsStore, toRetrieve: .success(lists))
+	}
+
 	// MARK: - Helpers
 
 	private func makeSUT() -> StoreMigratingListsStore {
@@ -79,7 +91,7 @@ class StoreMigratingListsStoreTests: XCTestCase {
 		return storeUrl!
 	}
 
-	private func expect(_ sut: StoreMigratingListsStore, toRetrieve expectedResult: Result<[List], Error>, file: StaticString = #filePath, line: UInt = #line) {
+	private func expect(_ sut: ListsStore, toRetrieve expectedResult: Result<[List], Error>, file: StaticString = #filePath, line: UInt = #line) {
 		let exp = expectation(description: "Wait for load to complete")
 
 		sut.retrieve { receivedResult in
@@ -115,7 +127,22 @@ class StoreMigratingListsStore: ListsStore {
 			switch result {
 			case .success(let lists):
 				if lists.isEmpty {
-					self?.fallbackListsStoreToMigrateFrom.retrieve(completion: completion)
+					self?.fallbackListsStoreToMigrateFrom.retrieve { [weak self] result in
+						switch result {
+						case .success(let lists):
+							if !lists.isEmpty {
+								self?.primaryListsStore.append(lists) { result in
+									switch result {
+									case .success(let lists): completion(.success(lists))
+									case .failure(let error): completion(.failure(error))
+									}
+								}
+							} else {
+								completion(.success([]))
+							}
+						case .failure(let error): completion(.failure(error))
+						}
+					}
 				} else {
 					completion(.success(lists))
 				}
