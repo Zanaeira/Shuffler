@@ -209,59 +209,35 @@ class StoreMigratingListsStore: ListsStore {
 	}
 
 	func retrieve(completion: @escaping (Result<[Shuffler.List], Shuffler.ListError>) -> Void) {
-		primaryListsStore.retrieve { [weak self] result in
+		fallbackListsStoreToMigrateFrom.retrieve { [weak self] result in
 			switch result {
-			case .success(let lists):
-				if lists.isEmpty {
-					self?.fallbackListsStoreToMigrateFrom.retrieve { [weak self] result in
+			case .success(let fallbackLists):
+				if fallbackLists.isEmpty {
+					self?.primaryListsStore.retrieve(completion: completion)
+				} else {
+					self?.primaryListsStore.retrieve { [weak self] result in
 						switch result {
 						case .success(let lists):
-							if !lists.isEmpty {
-								self?.primaryListsStore.append(lists) { [weak self] result in
-									switch result {
-									case .success(let lists):
-										self?.fallbackListsStoreToMigrateFrom.delete(lists) { result in
-											switch result {
-											case .success: completion(.success(lists))
-											case .failure(let error): completion(.failure(error))
-											}
-										}
-									case .failure(let error): completion(.failure(error))
-									}
-								}
-							} else {
-								completion(.success([]))
-							}
-						case .failure(let error): completion(.failure(error))
-						}
-					}
-				} else {
-					self?.fallbackListsStoreToMigrateFrom.retrieve { [weak self] result in
-						switch result {
-						case .success(let fallbackLists):
 							let difference = fallbackLists.filter { !lists.contains($0) }
-							if difference.isEmpty {
-								completion(.success(lists))
-							} else {
-								self?.primaryListsStore.append(difference) { [weak self] result in
-									switch result {
-									case .success:
-										self?.fallbackListsStoreToMigrateFrom.delete(fallbackLists) { result in
-											switch result {
-											case .success: completion(.success(lists + fallbackLists))
-											case .failure(let error): completion(.failure(error))
-											}
+							self?.primaryListsStore.append(lists + difference) { result in
+								switch result {
+								case .success:
+									self?.fallbackListsStoreToMigrateFrom.delete(fallbackLists) { result in
+										switch result {
+										case .success: completion(.success(lists + difference))
+										case .failure(let error): completion(.failure(error))
 										}
-									case .failure(let error): completion(.failure(error))
 									}
+								case .failure(let error): completion(.failure(error))
 								}
 							}
-						case .failure(let error): completion(.failure(error))
+						case .failure(let error):
+							completion(.failure(error))
 						}
 					}
 				}
-			case .failure(let error):
-				completion(.failure(error))
+			case .failure:
+				self?.primaryListsStore.retrieve(completion: completion)
 			}
 		}
 	}
