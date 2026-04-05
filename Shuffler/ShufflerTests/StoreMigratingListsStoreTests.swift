@@ -127,6 +127,21 @@ class StoreMigratingListsStoreTests: XCTestCase {
 		expect(fallbackListsStore, toRetrieve: .success([]))
 	}
 
+	func test_update_forwardsMessageToPrimaryStoreOnly() {
+		let primaryListsStore = CodableListsStore(storeUrl: testStoreUrl(.documentDirectory))
+		let fallbackListsStore = CodableListsStore(storeUrl: testStoreUrl(.cachesDirectory))
+		let list = anyList()
+		let updatedList = anyList()
+		let sut = StoreMigratingListsStore(primaryListsStore: primaryListsStore, fallbackListsStoreToMigrateFrom: fallbackListsStore)
+		sut.insert([list]) { _ in }
+
+		sut.update(list, updatedList: updatedList) { _ in }
+
+		expect(sut, toRetrieve: .success([updatedList]))
+		expect(primaryListsStore, toRetrieve: .success([updatedList]))
+		expect(fallbackListsStore, toRetrieve: .success([]))
+	}
+
 	func test_delete_forwardsMessageToBothStores() {
 		let primaryListsStore = CodableListsStore(storeUrl: testStoreUrl(.documentDirectory))
 		let fallbackListsStore = CodableListsStore(storeUrl: testStoreUrl(.cachesDirectory))
@@ -242,7 +257,7 @@ class StoreMigratingListsStore: ListsStore {
 	}
 
 	func update(_ list: Shuffler.List, updatedList: Shuffler.List, completion: @escaping (Result<[Shuffler.List], Shuffler.UpdateError>) -> Void) {
-
+		primaryListsStore.update(list, updatedList: updatedList, completion: completion)
 	}
 
 	func append(_ lists: [Shuffler.List], completion: @escaping (Result<[Shuffler.List], Shuffler.ListError>) -> Void) {
