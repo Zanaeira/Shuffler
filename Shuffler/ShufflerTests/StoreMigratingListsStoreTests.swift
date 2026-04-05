@@ -72,6 +72,7 @@ class StoreMigratingListsStoreTests: XCTestCase {
 
 		expect(sut, toRetrieve: .success(lists))
 		expect(primaryListsStore, toRetrieve: .success(lists))
+		expect(fallbackListsStoreToMigrateFrom, toRetrieve: .success([]))
 	}
 
 	func test_retrieve_migratesValuesOnEmptyCacheWithNonEmptyFallbackOnlyOnce() {
@@ -215,9 +216,15 @@ class StoreMigratingListsStore: ListsStore {
 						switch result {
 						case .success(let lists):
 							if !lists.isEmpty {
-								self?.primaryListsStore.append(lists) { result in
+								self?.primaryListsStore.append(lists) { [weak self] result in
 									switch result {
-									case .success(let lists): completion(.success(lists))
+									case .success(let lists):
+										self?.fallbackListsStoreToMigrateFrom.delete(lists) { result in
+											switch result {
+											case .success: completion(.success(lists))
+											case .failure(let error): completion(.failure(error))
+											}
+										}
 									case .failure(let error): completion(.failure(error))
 									}
 								}
