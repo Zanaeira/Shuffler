@@ -100,6 +100,7 @@ class StoreMigratingListsStoreTests: XCTestCase {
 
 		expect(sut, toRetrieve: .success(lists + lists2))
 		expect(primaryListsStore, toRetrieve: .success(lists + lists2))
+		expect(fallbackListsStoreToMigrateFrom, toRetrieve: .success([]))
 	}
 
 	func test_insert_forwardsMessageToPrimaryStoreOnly() {
@@ -242,9 +243,15 @@ class StoreMigratingListsStore: ListsStore {
 							if difference.isEmpty {
 								completion(.success(lists))
 							} else {
-								self?.primaryListsStore.append(difference) { result in
+								self?.primaryListsStore.append(difference) { [weak self] result in
 									switch result {
-									case .success: completion(.success(lists + fallbackLists))
+									case .success:
+										self?.fallbackListsStoreToMigrateFrom.delete(fallbackLists) { result in
+											switch result {
+											case .success: completion(.success(lists + fallbackLists))
+											case .failure(let error): completion(.failure(error))
+											}
+										}
 									case .failure(let error): completion(.failure(error))
 									}
 								}
