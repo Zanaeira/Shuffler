@@ -51,6 +51,17 @@ class StoreMigratingListsStoreTests: XCTestCase {
 		expect(sut, toRetrieve: .success(lists))
 	}
 
+	func test_retrieve_deliversValuesOnEmptyCacheWithNonEmptyFallback() {
+		let primaryListsStore = CodableListsStore(storeUrl: testStoreUrl(.documentDirectory))
+		let fallbackListsStoreToMigrateFrom = CodableListsStore(storeUrl: testStoreUrl(.cachesDirectory))
+		let lists: [List] = [anyList(), anyList()]
+		fallbackListsStoreToMigrateFrom.append(lists) { _ in }
+
+		let sut = StoreMigratingListsStore(primaryListsStore: primaryListsStore, fallbackListsStoreToMigrateFrom: fallbackListsStoreToMigrateFrom)
+
+		expect(sut, toRetrieve: .success(lists))
+	}
+
 	// MARK: - Helpers
 
 	private func makeSUT() -> StoreMigratingListsStore {
@@ -100,7 +111,18 @@ class StoreMigratingListsStore: ListsStore {
 	}
 
 	func retrieve(completion: @escaping (Result<[Shuffler.List], Shuffler.ListError>) -> Void) {
-		primaryListsStore.retrieve(completion: completion)
+		primaryListsStore.retrieve { [weak self] result in
+			switch result {
+			case .success(let lists):
+				if lists.isEmpty {
+					self?.fallbackListsStoreToMigrateFrom.retrieve(completion: completion)
+				} else {
+					completion(.success(lists))
+				}
+			case .failure(let error):
+				completion(.failure(error))
+			}
+		}
 	}
 
 	func insert(_ lists: [Shuffler.List], completion: @escaping (Result<[Shuffler.List], Shuffler.ListError>) -> Void) {
