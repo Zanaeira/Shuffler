@@ -26,6 +26,7 @@
 		1B855BCE27A1732800D64F2C /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855BCD27A1732800D64F2C /* Section.swift */; };
 		1B855C0327A1FB6600D64F2C /* ListItemsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855C0227A1FB6600D64F2C /* ListItemsViewController.swift */; };
 		1B855C0727A9517500D64F2C /* RandomItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855C0627A9517500D64F2C /* RandomItemViewController.swift */; };
+		1B87CCC02F82FF0400E2C3DB /* StoreMigratingListsStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B87CCBF2F82FF0400E2C3DB /* StoreMigratingListsStoreTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +67,7 @@
 		1B855BCD27A1732800D64F2C /* Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section.swift; sourceTree = "<group>"; };
 		1B855C0227A1FB6600D64F2C /* ListItemsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItemsViewController.swift; sourceTree = "<group>"; };
 		1B855C0627A9517500D64F2C /* RandomItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomItemViewController.swift; sourceTree = "<group>"; };
+		1B87CCBF2F82FF0400E2C3DB /* StoreMigratingListsStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreMigratingListsStoreTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,6 +134,7 @@
 				1B855B9A279A326400D64F2C /* Helpers */,
 				1B855BA8279CAF6800D64F2C /* LocalListsManagerTests.swift */,
 				1B855B96279A1F9100D64F2C /* CodableListsStoreTests.swift */,
+				1B87CCBF2F82FF0400E2C3DB /* StoreMigratingListsStoreTests.swift */,
 			);
 			path = ShufflerTests;
 			sourceTree = "<group>";
@@ -374,6 +377,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B87CCC02F82FF0400E2C3DB /* StoreMigratingListsStoreTests.swift in Sources */,
 				1B855B97279A1F9100D64F2C /* CodableListsStoreTests.swift in Sources */,
 				1B855B9C279A328700D64F2C /* SharedTestHelpers.swift in Sources */,
 				1B855BA9279CAF6800D64F2C /* LocalListsManagerTests.swift in Sources */,
@@ -534,11 +538,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = HHWJTGZ862;
+				DEVELOPMENT_TEAM = W9VTYR7L86;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -565,11 +570,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = HHWJTGZ862;
+				DEVELOPMENT_TEAM = W9VTYR7L86;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -645,7 +651,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = HHWJTGZ862;
+				DEVELOPMENT_TEAM = W9VTYR7L86;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -677,7 +683,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = HHWJTGZ862;
+				DEVELOPMENT_TEAM = W9VTYR7L86;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
