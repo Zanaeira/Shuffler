@@ -127,6 +127,21 @@ class StoreMigratingListsStoreTests: XCTestCase {
 		expect(fallbackListsStore, toRetrieve: .success([]))
 	}
 
+	func test_delete_forwardsMessageToBothStores() {
+		let primaryListsStore = CodableListsStore(storeUrl: testStoreUrl(.documentDirectory))
+		let fallbackListsStore = CodableListsStore(storeUrl: testStoreUrl(.cachesDirectory))
+		let listToDelete = anyList()
+		let listToSave = anyList()
+		let sut = StoreMigratingListsStore(primaryListsStore: primaryListsStore, fallbackListsStoreToMigrateFrom: fallbackListsStore)
+
+		primaryListsStore.insert([listToSave, listToDelete]) { _ in }
+		fallbackListsStore.insert([listToDelete]) { _ in }
+		sut.delete([listToDelete]) { _ in }
+
+		expect(sut, toRetrieve: .success([listToSave]))
+		expect(primaryListsStore, toRetrieve: .success([listToSave]))
+		expect(fallbackListsStore, toRetrieve: .success([]))
+	}
 
 	// MARK: - Helpers
 
@@ -235,7 +250,8 @@ class StoreMigratingListsStore: ListsStore {
 	}
 
 	func delete(_ lists: [Shuffler.List], completion: @escaping (Result<[Shuffler.List], Shuffler.ListError>) -> Void) {
-
+		primaryListsStore.delete(lists, completion: completion)
+		fallbackListsStoreToMigrateFrom.delete(lists, completion: completion)
 	}
 
 }
