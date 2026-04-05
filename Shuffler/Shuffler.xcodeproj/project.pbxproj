@@ -27,6 +27,7 @@
 		1B855C0327A1FB6600D64F2C /* ListItemsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855C0227A1FB6600D64F2C /* ListItemsViewController.swift */; };
 		1B855C0727A9517500D64F2C /* RandomItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B855C0627A9517500D64F2C /* RandomItemViewController.swift */; };
 		1B87CCC02F82FF0400E2C3DB /* StoreMigratingListsStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B87CCBF2F82FF0400E2C3DB /* StoreMigratingListsStoreTests.swift */; };
+		1B87CCC22F831E7800E2C3DB /* StoreMigratingListsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B87CCC12F831E7800E2C3DB /* StoreMigratingListsStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +69,7 @@
 		1B855C0227A1FB6600D64F2C /* ListItemsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItemsViewController.swift; sourceTree = "<group>"; };
 		1B855C0627A9517500D64F2C /* RandomItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomItemViewController.swift; sourceTree = "<group>"; };
 		1B87CCBF2F82FF0400E2C3DB /* StoreMigratingListsStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreMigratingListsStoreTests.swift; sourceTree = "<group>"; };
+		1B87CCC12F831E7800E2C3DB /* StoreMigratingListsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreMigratingListsStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -164,6 +166,7 @@
 				1B855B92279A1D8200D64F2C /* ListsStore.swift */,
 				1B855BA1279B9DC400D64F2C /* UpdateError.swift */,
 				1B855B9F279B9C2D00D64F2C /* CodableListsStore.swift */,
+				1B87CCC12F831E7800E2C3DB /* StoreMigratingListsStore.swift */,
 			);
 			path = "Lists Cache";
 			sourceTree = "<group>";
@@ -362,6 +365,7 @@
 			files = (
 				1B855B99279A308900D64F2C /* Item.swift in Sources */,
 				1B855BA2279B9DC400D64F2C /* UpdateError.swift in Sources */,
+				1B87CCC22F831E7800E2C3DB /* StoreMigratingListsStore.swift in Sources */,
 				1B855BB327A100EA00D64F2C /* ListsManager.swift in Sources */,
 				1B855B93279A1D8200D64F2C /* ListsStore.swift in Sources */,
 				1B855BA4279BFD2B00D64F2C /* ListsLoader.swift in Sources */,
