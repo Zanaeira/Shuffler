@@ -87,6 +87,21 @@ class StoreMigratingListsStoreTests: XCTestCase {
 		expect(primaryListsStore, toRetrieve: .success(lists))
 	}
 
+	func test_retrieve_migratesNewFallbackValuesToNonEmptyPrimaryStore() {
+		let primaryListsStore = CodableListsStore(storeUrl: testStoreUrl(.documentDirectory))
+		let fallbackListsStoreToMigrateFrom = CodableListsStore(storeUrl: testStoreUrl(.cachesDirectory))
+		let lists: [List] = [anyList(), anyList(), anyList()]
+		let lists2: [List] = [anyList(), anyList(), anyList(), anyList()]
+		primaryListsStore.append(lists) { _ in }
+		fallbackListsStoreToMigrateFrom.append(lists2) { _ in }
+
+		let sut = StoreMigratingListsStore(primaryListsStore: primaryListsStore, fallbackListsStoreToMigrateFrom: fallbackListsStoreToMigrateFrom)
+
+		expect(sut, toRetrieve: .success(lists + lists2))
+		expect(primaryListsStore, toRetrieve: .success(lists + lists2))
+	}
+
+
 	// MARK: - Helpers
 
 	private func makeSUT() -> StoreMigratingListsStore {
@@ -157,7 +172,23 @@ class StoreMigratingListsStore: ListsStore {
 						}
 					}
 				} else {
-					completion(.success(lists))
+					self?.fallbackListsStoreToMigrateFrom.retrieve { [weak self] result in
+						switch result {
+						case .success(let fallbackLists):
+							let difference = fallbackLists.filter { !lists.contains($0) }
+							if difference.isEmpty {
+								completion(.success(lists))
+							} else {
+								self?.primaryListsStore.append(difference) { result in
+									switch result {
+									case .success: completion(.success(lists + fallbackLists))
+									case .failure(let error): completion(.failure(error))
+									}
+								}
+							}
+						case .failure(let error): completion(.failure(error))
+						}
+					}
 				}
 			case .failure(let error):
 				completion(.failure(error))
