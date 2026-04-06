@@ -25,13 +25,13 @@ class StoreMigratingListsStoreTests: XCTestCase {
 	}
 
 	func test_retrieve_deliversEmptyOnEmptyCache() {
-		let sut = makeSUT()
+		let (sut, _, _) = makeSUT()
 
 		expect(sut, toRetrieve: .success([]))
 	}
 
 	func test_retrieve_deliversValuesOnNonEmptyCache() {
-		let sut = makeSUT()
+		let (sut, _, _) = makeSUT()
 
 		let lists: [List] = [anyList(), anyList()]
 
@@ -41,133 +41,110 @@ class StoreMigratingListsStoreTests: XCTestCase {
 	}
 
 	func test_retrieve_deliversValuesFromPrimaryListsStore() {
-		let primaryListsStore = CodableListsStore(storeUrl: testStoreUrl(.documentDirectory))
-		let fallbackListsStoreToMigrateFrom = CodableListsStore(storeUrl: testStoreUrl(.cachesDirectory))
+		let (sut, primaryStore, _) = makeSUT()
 		let lists: [List] = [anyList(), anyList()]
-		primaryListsStore.append(lists) { _ in }
-
-		let sut = StoreMigratingListsStore(primaryListsStore: primaryListsStore, fallbackListsStoreToMigrateFrom: fallbackListsStoreToMigrateFrom)
+		primaryStore.append(lists) { _ in }
 
 		expect(sut, toRetrieve: .success(lists))
 	}
 
 	func test_retrieve_deliversValuesOnEmptyCacheWithNonEmptyFallback() {
-		let primaryListsStore = CodableListsStore(storeUrl: testStoreUrl(.documentDirectory))
-		let fallbackListsStoreToMigrateFrom = CodableListsStore(storeUrl: testStoreUrl(.cachesDirectory))
+		let (sut, _, fallbackStore) = makeSUT()
 		let lists: [List] = [anyList(), anyList()]
-		fallbackListsStoreToMigrateFrom.append(lists) { _ in }
-
-		let sut = StoreMigratingListsStore(primaryListsStore: primaryListsStore, fallbackListsStoreToMigrateFrom: fallbackListsStoreToMigrateFrom)
+		fallbackStore.append(lists) { _ in }
 
 		expect(sut, toRetrieve: .success(lists))
 	}
 
 	func test_retrieve_migratesValuesOnEmptyCacheWithNonEmptyFallback() {
-		let primaryListsStore = CodableListsStore(storeUrl: testStoreUrl(.documentDirectory))
-		let fallbackListsStoreToMigrateFrom = CodableListsStore(storeUrl: testStoreUrl(.cachesDirectory))
+		let (sut, primaryStore, fallbackStore) = makeSUT()
 		let lists: [List] = [anyList(), anyList()]
-		fallbackListsStoreToMigrateFrom.append(lists) { _ in }
-
-		let sut = StoreMigratingListsStore(primaryListsStore: primaryListsStore, fallbackListsStoreToMigrateFrom: fallbackListsStoreToMigrateFrom)
+		fallbackStore.append(lists) { _ in }
 
 		expect(sut, toRetrieve: .success(lists))
-		expect(primaryListsStore, toRetrieve: .success(lists))
-		expect(fallbackListsStoreToMigrateFrom, toRetrieve: .success([]))
+		expect(primaryStore, toRetrieve: .success(lists))
+		expect(fallbackStore, toRetrieve: .success([]))
 	}
 
 	func test_retrieve_migratesValuesOnEmptyCacheWithNonEmptyFallbackOnlyOnce() {
-		let primaryListsStore = CodableListsStore(storeUrl: testStoreUrl(.documentDirectory))
-		let fallbackListsStoreToMigrateFrom = CodableListsStore(storeUrl: testStoreUrl(.cachesDirectory))
+		let (sut, primaryStore, fallbackStore) = makeSUT()
 		let lists: [List] = [anyList(), anyList()]
-		fallbackListsStoreToMigrateFrom.append(lists) { _ in }
-
-		let sut = StoreMigratingListsStore(primaryListsStore: primaryListsStore, fallbackListsStoreToMigrateFrom: fallbackListsStoreToMigrateFrom)
+		fallbackStore.append(lists) { _ in }
 
 		expect(sut, toRetrieve: .success(lists))
 		expect(sut, toRetrieve: .success(lists))
-		expect(primaryListsStore, toRetrieve: .success(lists))
+		expect(primaryStore, toRetrieve: .success(lists))
 	}
 
 	func test_retrieve_migratesNewFallbackValuesToNonEmptyPrimaryStore() {
-		let primaryListsStore = CodableListsStore(storeUrl: testStoreUrl(.documentDirectory))
-		let fallbackListsStoreToMigrateFrom = CodableListsStore(storeUrl: testStoreUrl(.cachesDirectory))
+		let (sut, primaryStore, fallbackStore) = makeSUT()
 		let lists: [List] = [anyList(), anyList(), anyList()]
 		let lists2: [List] = [anyList(), anyList(), anyList(), anyList()]
-		primaryListsStore.append(lists) { _ in }
-		fallbackListsStoreToMigrateFrom.append(lists2) { _ in }
-
-		let sut = StoreMigratingListsStore(primaryListsStore: primaryListsStore, fallbackListsStoreToMigrateFrom: fallbackListsStoreToMigrateFrom)
+		primaryStore.append(lists) { _ in }
+		fallbackStore.append(lists2) { _ in }
 
 		expect(sut, toRetrieve: .success(lists + lists2))
-		expect(primaryListsStore, toRetrieve: .success(lists + lists2))
-		expect(fallbackListsStoreToMigrateFrom, toRetrieve: .success([]))
+		expect(primaryStore, toRetrieve: .success(lists + lists2))
+		expect(fallbackStore, toRetrieve: .success([]))
 	}
 
 	func test_insert_forwardsMessageToPrimaryStoreOnly() {
-		let primaryListsStore = CodableListsStore(storeUrl: testStoreUrl(.documentDirectory))
-		let fallbackListsStore = CodableListsStore(storeUrl: testStoreUrl(.cachesDirectory))
+		let (sut, primaryStore, fallbackStore) = makeSUT()
 		let lists: [List] = [anyList(), anyList()]
-		let sut = StoreMigratingListsStore(primaryListsStore: primaryListsStore, fallbackListsStoreToMigrateFrom: fallbackListsStore)
 
 		sut.insert(lists) { _ in }
 
 		expect(sut, toRetrieve: .success(lists))
-		expect(primaryListsStore, toRetrieve: .success(lists))
-		expect(fallbackListsStore, toRetrieve: .success([]))
+		expect(primaryStore, toRetrieve: .success(lists))
+		expect(fallbackStore, toRetrieve: .success([]))
 	}
 
 	func test_append_forwardsMessageToPrimaryStoreOnly() {
-		let primaryListsStore = CodableListsStore(storeUrl: testStoreUrl(.documentDirectory))
-		let fallbackListsStore = CodableListsStore(storeUrl: testStoreUrl(.cachesDirectory))
+		let (sut, primaryStore, fallbackStore) = makeSUT()
 		let lists: [List] = [anyList(), anyList()]
-		let sut = StoreMigratingListsStore(primaryListsStore: primaryListsStore, fallbackListsStoreToMigrateFrom: fallbackListsStore)
 
 		sut.append(lists) { _ in }
 
 		expect(sut, toRetrieve: .success(lists))
-		expect(primaryListsStore, toRetrieve: .success(lists))
-		expect(fallbackListsStore, toRetrieve: .success([]))
+		expect(primaryStore, toRetrieve: .success(lists))
+		expect(fallbackStore, toRetrieve: .success([]))
 	}
 
 	func test_update_forwardsMessageToPrimaryStoreOnly() {
-		let primaryListsStore = CodableListsStore(storeUrl: testStoreUrl(.documentDirectory))
-		let fallbackListsStore = CodableListsStore(storeUrl: testStoreUrl(.cachesDirectory))
+		let (sut, primaryStore, fallbackStore) = makeSUT()
 		let list = anyList()
 		let updatedList = anyList()
-		let sut = StoreMigratingListsStore(primaryListsStore: primaryListsStore, fallbackListsStoreToMigrateFrom: fallbackListsStore)
 		sut.insert([list]) { _ in }
 
 		sut.update(list, updatedList: updatedList) { _ in }
 
 		expect(sut, toRetrieve: .success([updatedList]))
-		expect(primaryListsStore, toRetrieve: .success([updatedList]))
-		expect(fallbackListsStore, toRetrieve: .success([]))
+		expect(primaryStore, toRetrieve: .success([updatedList]))
+		expect(fallbackStore, toRetrieve: .success([]))
 	}
 
 	func test_delete_forwardsMessageToBothStores() {
-		let primaryListsStore = CodableListsStore(storeUrl: testStoreUrl(.documentDirectory))
-		let fallbackListsStore = CodableListsStore(storeUrl: testStoreUrl(.cachesDirectory))
+		let (sut, primaryStore, fallbackStore) = makeSUT()
 		let listToDelete = anyList()
 		let listToSave = anyList()
-		let sut = StoreMigratingListsStore(primaryListsStore: primaryListsStore, fallbackListsStoreToMigrateFrom: fallbackListsStore)
 
-		primaryListsStore.insert([listToSave, listToDelete]) { _ in }
-		fallbackListsStore.insert([listToDelete]) { _ in }
+		primaryStore.insert([listToSave, listToDelete]) { _ in }
+		fallbackStore.insert([listToDelete]) { _ in }
 		sut.delete([listToDelete]) { _ in }
 
 		expect(sut, toRetrieve: .success([listToSave]))
-		expect(primaryListsStore, toRetrieve: .success([listToSave]))
-		expect(fallbackListsStore, toRetrieve: .success([]))
+		expect(primaryStore, toRetrieve: .success([listToSave]))
+		expect(fallbackStore, toRetrieve: .success([]))
 	}
 
 	// MARK: - Helpers
 
-	private func makeSUT() -> StoreMigratingListsStore {
+	private func makeSUT() -> (sut: StoreMigratingListsStore, primaryStore: ListsStore, fallbackStore: ListsStore) {
 		let primaryListsStore = CodableListsStore(storeUrl: testStoreUrl(.documentDirectory))
 		let fallbackListsStoreToMigrateFrom = CodableListsStore(storeUrl: testStoreUrl(.cachesDirectory))
 		let sut = StoreMigratingListsStore(primaryListsStore: primaryListsStore, fallbackListsStoreToMigrateFrom: fallbackListsStoreToMigrateFrom)
 
-		return sut
+		return (sut, primaryListsStore, fallbackListsStoreToMigrateFrom)
 	}
 
 	private func testStoreUrl(_ path: FileManager.SearchPathDirectory) -> URL {
