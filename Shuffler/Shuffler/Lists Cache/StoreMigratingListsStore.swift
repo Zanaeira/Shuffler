@@ -65,7 +65,7 @@ public class StoreMigratingListsStore: ListsStore {
 
 	public func delete(_ lists: [Shuffler.List], completion: @escaping (Result<[Shuffler.List], Shuffler.ListError>) -> Void) {
 		primaryListsStore.delete(lists, completion: completion)
-		fallbackListsStoreToMigrateFrom.delete(lists, completion: completion)
+		fallbackListsStoreToMigrateFrom.delete(lists) { _ in }
 	}
 
 }

@@ -130,8 +130,8 @@ class StoreMigratingListsStoreTests: XCTestCase {
 
 		primaryStore.insert([listToSave, listToDelete]) { _ in }
 		fallbackStore.insert([listToDelete]) { _ in }
-		sut.delete([listToDelete]) { _ in }
 
+		expectDelete(lists: [listToDelete], from: sut, toRetrieve: .success([listToSave]))
 		expect(sut, toRetrieve: .success([listToSave]))
 		expect(primaryStore, toRetrieve: .success([listToSave]))
 		expect(fallbackStore, toRetrieve: .success([]))
@@ -158,6 +158,25 @@ class StoreMigratingListsStoreTests: XCTestCase {
 		let exp = expectation(description: "Wait for load to complete")
 
 		sut.retrieve { receivedResult in
+			switch (receivedResult, expectedResult) {
+			case let (.success(receivedLists), .success(expectedLists)):
+				XCTAssertEqual(receivedLists, expectedLists, file: file, line: line)
+			case let (.failure(receivedError as NSError), .failure(expectedError as NSError)):
+				XCTAssertEqual(receivedError, expectedError, file: file, line: line)
+			default:
+				XCTFail("Expected result: \(expectedResult), got \(receivedResult) instead.", file: file, line: line)
+			}
+
+			exp.fulfill()
+		}
+
+		wait(for: [exp], timeout: 1.0)
+	}
+
+	private func expectDelete(lists: [List], from sut: ListsStore, toRetrieve expectedResult: Result<[List], Error>, file: StaticString = #filePath, line: UInt = #line) {
+		let exp = expectation(description: "Wait for load to complete")
+
+		sut.delete(lists) { receivedResult in
 			switch (receivedResult, expectedResult) {
 			case let (.success(receivedLists), .success(expectedLists)):
 				XCTAssertEqual(receivedLists, expectedLists, file: file, line: line)
